@@ -26,11 +26,11 @@ export const signUp = (req, res) => {
       const hashedPassword = await bcrypt.hash(password, 10);
 
       db.run(
-        "INSERT INTO users (email, username, birbName, friendCode, password) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO users (email, username, birb_name, friend_code, password) VALUES (?, ?, ?, ?, ?)",
         [email, username, birbName, friendCode, hashedPassword],
         function (err) {
           if (err) {
-            return res.status(500).json({ message: "Error creating use" });
+            return res.status(500).json({ message: "Error creating user" });
           }
           const token = jwt.sign(
             { email, username, birbName, friendCode },
