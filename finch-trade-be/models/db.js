@@ -20,7 +20,7 @@ if (dropTablesFlag) {
   db.serialize(() => {
     db.run("DROP TABLE IF EXISTS users");
     db.run("DROP TABLE IF EXISTS items");
-    db.run("DROP TABLE IF EXISTS userItems");
+    db.run("DROP TABLE IF EXISTS user_items");
     db.run("DROP TABLE IF EXISTS trades");
   });
 } else {
@@ -32,9 +32,9 @@ db.serialize(() => {
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE,
-    friendCode TEXT UNIQUE,
+    friend_code TEXT UNIQUE,
     username TEXT,
-    birbName TEXT,
+    birb_name TEXT,
     password TEXT
   )
 `);
@@ -42,33 +42,51 @@ db.serialize(() => {
   db.run(`
   CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    color TEXT
+    name TEXT
   )
 `);
 
   db.run(`
-  CREATE TABLE IF NOT EXISTS userItems (
+  CREATE TABLE IF NOT EXISTS colors (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    userId INTEGER,
-    itemId INTEGER,
-    FOREIGN KEY (userId) REFERENCES users(id),
-    FOREIGN KEY (itemId) REFERENCES items(id)
+    color TEXT UNIQUE
+  )
+`);
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS item_colors (
+    item_id INTEGER,
+    color_id INTEGER,
+    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (color_id) REFERENCES colors(id),
+    PRIMARY KEY (item_id, color_id)
+  )
+`);
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS user_items (
+    user_id INTEGER,
+    item_id INTEGER,
+    color_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (item_id) REFERENCES items(id),
+    FOREIGN KEY (color_id) REFERENCES colors(id),
+    PRIMARY KEY (user_id, item_id, color_id)
   )
 `);
 
   db.run(`
   CREATE TABLE IF NOT EXISTS trades (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    userId1 INTEGER,
-    userId2 INTEGER,
-    itemId1 INTEGER,
-    itemId2 INTEGER,
+    user_id1 INTEGER,
+    user_id2 INTEGER,
+    item_color_id1 INTEGER,
+    item_color_id2 INTEGER,
     status TEXT,
-    FOREIGN KEY (userId1) REFERENCES users(id),
-    FOREIGN KEY (userId2) REFERENCES users(id)
-    FOREIGN KEY (itemId1) REFERENCES items(id),
-    FOREIGN KEY (itemId2) REFERENCES items(id)
+    FOREIGN KEY (user_id1) REFERENCES users(id),
+    FOREIGN KEY (user_id2) REFERENCES users(id),
+    FOREIGN KEY (item_color_id1) REFERENCES item_colors(id),
+    FOREIGN KEY (item_color_id2) REFERENCES item_colors(id)
   )
 `);
 });
