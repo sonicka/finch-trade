@@ -1,5 +1,7 @@
 import sqlite3 from "sqlite3";
 
+const dropTablesFlag = process.argv.includes("--drop-tables");
+
 const db = new sqlite3.Database(
   "./finch-trade.db",
   sqlite3.verbose(),
@@ -11,12 +13,21 @@ const db = new sqlite3.Database(
     }
   }
 );
-db.serialize(() => {
-  db.run("DROP TABLE IF EXISTS users");
-  db.run("DROP TABLE IF EXISTS items");
-  db.run("DROP TABLE IF EXISTS userItems");
-  db.run("DROP TABLE IF EXISTS trades");
 
+if (dropTablesFlag) {
+  console.log("Tables dropped");
+
+  db.serialize(() => {
+    db.run("DROP TABLE IF EXISTS users");
+    db.run("DROP TABLE IF EXISTS items");
+    db.run("DROP TABLE IF EXISTS userItems");
+    db.run("DROP TABLE IF EXISTS trades");
+  });
+} else {
+  console.log("Skipping table drop");
+}
+
+db.serialize(() => {
   db.run(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
