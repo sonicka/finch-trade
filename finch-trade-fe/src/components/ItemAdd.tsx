@@ -1,22 +1,12 @@
 import { FC, FormEventHandler } from "react";
-
-const colors = [
-  "any",
-  "black",
-  "white",
-  "gray",
-  "yellow",
-  "orange",
-  "red",
-  "pink",
-  "purple",
-];
+import { Color } from "../types";
 
 interface Props {
+  colors: Color[];
   handleSubmit: FormEventHandler<HTMLFormElement>;
 }
 
-const ItemAdd: FC<Props> = ({ handleSubmit }: Props) => {
+const ItemAdd: FC<Props> = ({ colors, handleSubmit }: Props) => {
   return (
     <form
       onSubmit={handleSubmit}
@@ -36,9 +26,9 @@ const ItemAdd: FC<Props> = ({ handleSubmit }: Props) => {
         <option value="" disabled>
           Select color
         </option>
-        {colors.map((color) => (
-          <option key={color} value={color}>
-            {color}
+        {colors.map((color: Color) => (
+          <option key={color.id} value={color.color}>
+            {color.color}
           </option>
         ))}
       </select>

@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
+import { Color } from "../types";
+
+interface Props {
+  colors: Color[];
+}
 
 interface Item {
   color: string;
@@ -8,11 +13,12 @@ interface Item {
   id: string;
 }
 
+// todo
 const dummyItems: Item[] = [
   { color: "red", name: "T-shirt", id: "T-shirtred" },
 ];
 
-const TradeList: React.FC = () => {
+const TradeList: React.FC<Props> = ({ colors }) => {
   const [items, setItems] = useState<Item[]>(dummyItems);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,7 +53,7 @@ const TradeList: React.FC = () => {
           />
         ))}
       </div>
-      <ItemAdd handleSubmit={handleSubmit} />
+      <ItemAdd handleSubmit={handleSubmit} colors={colors} />
     </>
   );
 };

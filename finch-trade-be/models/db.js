@@ -1,4 +1,5 @@
 import sqlite3 from "sqlite3";
+import { DEFAULT_COLORS } from "../constants.js";
 
 const dropTablesFlag = process.argv.includes("--drop-tables");
 
@@ -89,6 +90,18 @@ db.serialize(() => {
     FOREIGN KEY (item_color_id2) REFERENCES item_colors(id)
   )
 `);
+
+  DEFAULT_COLORS.forEach((color) => {
+    db.run(
+      `INSERT OR IGNORE INTO colors (color) VALUES (?)`,
+      [color],
+      (err) => {
+        if (err) {
+          console.error("Error inserting color:", err.message);
+        }
+      }
+    );
+  });
 });
 
 export default db;

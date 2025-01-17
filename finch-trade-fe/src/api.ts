@@ -24,3 +24,13 @@ export const logIn = async (credentials: LoginCredentials) => {
   if (!response.ok) throw new Error(data.message || "Login failed");
   return data.token;
 };
+
+// colors
+export const getColors = async () => {
+  const response = await fetch("http://localhost:5000/api/items/colors", {});
+  if (!response.ok) {
+    throw new Error("Failed to fetch colors");
+  }
+  const data = await response.json();
+  return data;
+};
