@@ -69,10 +69,11 @@ db.serialize(() => {
     user_id INTEGER,
     item_id INTEGER,
     color_id INTEGER,
+    list_type TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (item_id) REFERENCES items(id),
     FOREIGN KEY (color_id) REFERENCES colors(id),
-    PRIMARY KEY (user_id, item_id, color_id)
+    PRIMARY KEY (user_id, item_id, color_id, list_type)
   )
 `);
 
@@ -102,6 +103,8 @@ db.serialize(() => {
       }
     );
   });
+
+  // todo add default user after dropping tables
 });
 
 export default db;

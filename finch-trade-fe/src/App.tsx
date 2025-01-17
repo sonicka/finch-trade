@@ -4,13 +4,13 @@ import Lists from "./pages/Lists";
 import Trades from "./pages/Trades";
 import NotFound from "./pages/404";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./components/AuthProvider";
+import { Providers } from "./contexts/Providers";
 import UserHeader from "./components/UserHeader";
 import BottomButton from "./components/BottomButton";
 
 const App = () => {
   return (
-    <AuthProvider>
+    <Providers>
       <Router>
         <UserHeader />
         <Routes>
@@ -35,7 +35,7 @@ const App = () => {
         </Routes>
         <BottomButton />
       </Router>
-    </AuthProvider>
+    </Providers>
   );
 };
 

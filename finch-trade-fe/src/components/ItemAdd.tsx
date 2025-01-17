@@ -12,6 +12,7 @@ const ItemAdd: FC<Props> = ({ colors, handleSubmit }: Props) => {
       onSubmit={handleSubmit}
       className="flex space-x-4 p-4 border rounded-lg"
     >
+      {/* // todo make this autocomplete having the items values*/}
       <input
         type="text"
         name="itemName"
@@ -27,7 +28,7 @@ const ItemAdd: FC<Props> = ({ colors, handleSubmit }: Props) => {
           Select color
         </option>
         {colors.map((color: Color) => (
-          <option key={color.id} value={color.color}>
+          <option key={color.id} value={color.id}>
             {color.color}
           </option>
         ))}

@@ -1,41 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
 import { Color } from "../types";
-
-interface Props {
-  colors: Color[];
-}
+import { addItem, fetchItems } from "../api";
+import { useColors } from "../contexts/ColorsProvider";
+import { useAuth } from "../contexts/AuthProvider";
 
 interface Item {
-  color: string;
+  color: number;
   name: string;
-  id: string;
+  id: number;
 }
 
-// todo
-const dummyItems: Item[] = [
-  { color: "red", name: "T-shirt", id: "T-shirtred" },
-];
+const WishList: React.FC = () => {
+  const [items, setItems] = useState<Item[]>([]);
+  const colors = useColors();
+  const { user } = useAuth();
 
-const WishList: React.FC<Props> = ({ colors }) => {
-  const [items, setItems] = useState<Item[]>(dummyItems);
+  const getColor = (color: number) =>
+    colors.find((c: Color) => c.id === color)?.color; // todo make it nicer and make reusable
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const itemName = formData.get("itemName") as string;
-    const itemColor = formData.get("itemColor") as string;
-
-    if (itemName && itemColor) {
-      setItems([
-        ...items,
-        { name: itemName, color: itemColor, id: itemName + itemColor },
-      ]);
+  const getItems = async () => {
+    try {
+      const response = await fetchItems("wishlist");
+      setItems(response);
+    } catch (error) {
+      console.error("Error fetching items:", error);
     }
   };
 
-  const handleRemove = (itemId: string) => {
+  useEffect(() => {
+    getItems();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const itemName = formData.get("itemName") as string;
+    const itemColor = Number(formData.get("itemColor"));
+
+    if (itemName && itemColor) {
+      await addItem({
+        //id: null,
+        name: itemName,
+        color: itemColor,
+        userId: user.id,
+        listType: "wishlist",
+      });
+    }
+    await getItems();
+  };
+
+  // todo
+  const handleRemove = (itemId: number) => {
     const newItems = items.filter((item) => item.id !== itemId);
     setItems(newItems);
   };
@@ -46,8 +63,8 @@ const WishList: React.FC<Props> = ({ colors }) => {
         {items.map((item) => (
           <Item
             key={item.name + item.color}
-            id={item.name + item.color}
-            color={item.color}
+            id={item.id}
+            color={{ id: item.color, color: getColor(item.color) ?? "white" }}
             text={item.name}
             handleRemove={handleRemove}
           />

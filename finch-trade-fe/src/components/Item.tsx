@@ -1,9 +1,10 @@
 import { FC } from "react";
+import { Color } from "../types";
 
 interface Props {
-  color: string;
+  color: Color;
   text: string;
-  id: string;
+  id: number;
   handleRemove: Function;
 }
 
@@ -13,7 +14,7 @@ const Item: FC<Props> = ({ color, text, id, handleRemove }: Props) => {
       <div className="flex gap-4">
         <div
           className="w-6 h-6 rounded-full object-cover"
-          style={{ backgroundColor: color }}
+          style={{ backgroundColor: color.color }}
         />
         <p className={`text-${color}-500 w-auto`}>{text}</p>
       </div>

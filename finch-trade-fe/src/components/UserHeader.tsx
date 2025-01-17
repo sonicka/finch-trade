@@ -1,11 +1,10 @@
 import { FC } from "react";
-import { useAuth } from "./AuthProvider";
+import { useAuth } from "../contexts/AuthProvider";
 
 const UserHeader: FC = () => {
   const { user, logout } = useAuth();
   const imageUrl = "https://placecats.com/200/200";
-  const birbName = user?.birbName;
-  const userName = user?.username;
+  const { birbName, username, friendCode } = user || {};
 
   if (!user) return null;
   return (
@@ -17,7 +16,7 @@ const UserHeader: FC = () => {
           alt={birbName}
           className="w-16 h-16 rounded-full object-cover"
         />
-        <span className="text-lg font-semibold text-gray-800">{`${birbName} & ${userName}`}</span>
+        <span className="text-lg font-semibold text-gray-800">{`${birbName} & ${username} (${friendCode})`}</span>
       </div>
       <button
         className="bg-white text-gray-300 px-2 py-1 rounded-full shadow-lg border-2 border-gray-300 hover:bg-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-300"

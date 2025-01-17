@@ -1,5 +1,9 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, JSX } from "react";
 import { jwtDecode, JwtPayload } from "jwt-decode";
+
+interface Props {
+  children: JSX.Element;
+}
 
 const AuthContext = createContext({} as any);
 
@@ -7,8 +11,9 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-export const AuthProvider = ({ children }: { children: any }) => {
+export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<JwtPayload | null>(null);
+  console.log("user", user);
 
   // Check if the user is logged in when the app loads
   useEffect(() => {

@@ -1,6 +1,7 @@
 export const DEFAULT_COLORS = [
   "any",
   "black",
+  "brown",
   "white",
   "gray",
   "yellow",
@@ -8,4 +9,5 @@ export const DEFAULT_COLORS = [
   "red",
   "pink",
   "purple",
+  "blue",
 ];

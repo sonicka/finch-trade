@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
-import { useAuth } from "../components/AuthProvider";
+import { useAuth } from "../contexts/AuthProvider";
 import { logIn, signUp } from "../api";
 import Alert from "../components/Alert";
 

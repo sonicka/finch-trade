@@ -32,8 +32,9 @@ export const signUp = (req, res) => {
           if (err) {
             return res.status(500).json({ message: "Error creating user" });
           }
+          const id = this.lastID;
           const token = jwt.sign(
-            { email, username, birbName, friendCode },
+            { id, email, username, birbName, friendCode },
             JWT_SECRET,
             { expiresIn: "1h" }
           );
@@ -72,9 +73,11 @@ export const login = (req, res) => {
         }
         const token = jwt.sign(
           {
+            id: user.id,
             email: user.email,
             username: user.username,
-            birbName: user.birbName,
+            birbName: user.birb_name,
+            friendCode: user.friend_code,
           },
           JWT_SECRET,
           { expiresIn: "1h" }

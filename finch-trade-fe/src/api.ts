@@ -1,8 +1,9 @@
-import { SignUpData, LoginCredentials } from "./types";
+import { ItemData, SignUpData, LoginCredentials, ListType } from "./types";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // auth
 export const signUp = async (userData: SignUpData) => {
-  const response = await fetch("http://localhost:5000/api/users/signup", {
+  const response = await fetch(`${BASE_URL}/api/users/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
@@ -14,7 +15,7 @@ export const signUp = async (userData: SignUpData) => {
 };
 
 export const logIn = async (credentials: LoginCredentials) => {
-  const response = await fetch("http://localhost:5000/api/users/login", {
+  const response = await fetch(`${BASE_URL}/api/users/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
@@ -26,10 +27,32 @@ export const logIn = async (credentials: LoginCredentials) => {
 };
 
 // colors
-export const getColors = async () => {
-  const response = await fetch("http://localhost:5000/api/items/colors", {});
+export const fetchColors = async () => {
+  const response = await fetch(`${BASE_URL}/api/items/colors`, {});
   if (!response.ok) {
     throw new Error("Failed to fetch colors");
+  }
+  const data = await response.json();
+  return data;
+};
+
+// items
+export const addItem = async (itemData: ItemData) => {
+  const response = await fetch(`${BASE_URL}/api/items/add`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(itemData),
+  });
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Adding item failed");
+  return data;
+};
+
+export const fetchItems = async (itemType: ListType) => {
+  const response = await fetch(`${BASE_URL}/api/items/${itemType}`, {});
+  if (!response.ok) {
+    throw new Error("Failed to fetch items");
   }
   const data = await response.json();
   return data;
