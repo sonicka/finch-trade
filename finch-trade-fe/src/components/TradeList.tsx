@@ -1,27 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
 import { useColors } from "../contexts/ColorsProvider";
-import { addItem } from "../api";
+import { addItem, fetchItems, removeItem } from "../api";
 import { useAuth } from "../contexts/AuthProvider";
-import { Color } from "../types";
+import { getColorName } from "../utils";
+import { Item as ItemType } from "../types";
 
-interface Item {
-  color: number;
-  name: string;
-  id: number;
-}
-
-// todo
-const dummyItems: Item[] = [{ color: 1, name: "T-shirt", id: 666 }];
-
+// todo wishlist and tradelist can be one component distinguished by a prop
 const TradeList: React.FC = () => {
-  const [items, setItems] = useState<Item[]>(dummyItems);
+  const [items, setItems] = useState<ItemType[]>([]);
   const colors = useColors();
   const { user } = useAuth();
 
-  const getColor = (color: number) =>
-    colors.find((c: Color) => c.id === color)?.color; // todo make it nicer and make reusable
+  const getItems = async () => {
+    try {
+      const response = await fetchItems("tradelist");
+      setItems(response);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
+  };
+
+  useEffect(() => {
+    getItems();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,8 +33,6 @@ const TradeList: React.FC = () => {
     const itemColor = Number(formData.get("itemColor"));
 
     if (itemName && itemColor) {
-      setItems([...items, { name: itemName, color: itemColor, id: 666 }]);
-
       await addItem({
         //id: null,
         name: itemName,
@@ -40,11 +41,12 @@ const TradeList: React.FC = () => {
         listType: "tradelist",
       });
     }
+    await getItems();
   };
 
-  const handleRemove = (itemId: number) => {
-    const newItems = items.filter((item) => item.id !== itemId);
-    setItems(newItems);
+  const handleRemove = async (itemId: number, colorId: number) => {
+    await removeItem(itemId, colorId, "tradelist");
+    await getItems();
   };
 
   return (
@@ -53,8 +55,11 @@ const TradeList: React.FC = () => {
         {items.map((item) => (
           <Item
             key={item.name + item.color}
-            id={item.id}
-            color={{ id: item.color, color: getColor(item.color) ?? "white" }}
+            itemId={item.item_id}
+            color={{
+              id: item.color,
+              color: getColorName(colors, item.color),
+            }}
             text={item.name}
             handleRemove={handleRemove}
           />

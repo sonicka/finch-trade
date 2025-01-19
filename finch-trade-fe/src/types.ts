@@ -13,12 +13,20 @@ export interface LoginCredentials {
 }
 
 // items
+
+export interface Item {
+  user_id: number;
+  item_id: number;
+  color: number;
+  name: string;
+}
+
 export interface Color {
   id: number;
   color: string;
 }
 
-export type ListType = "wishlist" | "tradelist";
+export type ListType = "wishlist" | "tradelist"; // todo make a usable constant out of this
 
 export interface ItemData {
   userId: number;

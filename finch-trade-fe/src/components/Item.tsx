@@ -4,18 +4,27 @@ import { Color } from "../types";
 interface Props {
   color: Color;
   text: string;
-  id: number;
+  itemId: number;
   handleRemove: Function;
 }
 
-const Item: FC<Props> = ({ color, text, id, handleRemove }: Props) => {
+const Item: FC<Props> = ({ color, text, itemId, handleRemove }: Props) => {
   return (
     <div className="flex justify-between p-4 border rounded-lg mb-2">
       <div className="flex gap-4">
-        <div
-          className="w-6 h-6 rounded-full object-cover"
-          style={{ backgroundColor: color.color }}
-        />
+        {color.id === 1 ? (
+          <div className="w-6 h-6 rounded-full object-cover border border-black bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500"></div>
+        ) : (
+          <div
+            className="w-6 h-6 rounded-full object-cover border border-black"
+            style={{
+              backgroundColor:
+                color.id === 1
+                  ? "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)"
+                  : color.color,
+            }}
+          />
+        )}
         <p className={`text-${color}-500 w-auto`}>{text}</p>
       </div>
       <button
@@ -30,7 +39,7 @@ const Item: FC<Props> = ({ color, text, id, handleRemove }: Props) => {
           strokeWidth="1.5"
           stroke="currentColor"
           className="size-5"
-          onClick={() => handleRemove(id)}
+          onClick={() => handleRemove(itemId, color.id)}
         >
           <path
             strokeLinecap="round"

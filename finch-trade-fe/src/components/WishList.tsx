@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
-import { Color } from "../types";
-import { addItem, fetchItems } from "../api";
+import { addItem, fetchItems, removeItem } from "../api";
 import { useColors } from "../contexts/ColorsProvider";
 import { useAuth } from "../contexts/AuthProvider";
-
-interface Item {
-  color: number;
-  name: string;
-  id: number;
-}
+import { getColorName } from "../utils";
+import { Item as ItemType } from "../types";
 
 const WishList: React.FC = () => {
-  const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<ItemType[]>([]);
   const colors = useColors();
   const { user } = useAuth();
-
-  const getColor = (color: number) =>
-    colors.find((c: Color) => c.id === color)?.color; // todo make it nicer and make reusable
 
   const getItems = async () => {
     try {
@@ -51,10 +43,9 @@ const WishList: React.FC = () => {
     await getItems();
   };
 
-  // todo
-  const handleRemove = (itemId: number) => {
-    const newItems = items.filter((item) => item.id !== itemId);
-    setItems(newItems);
+  const handleRemove = async (itemId: number, colorId: number) => {
+    await removeItem(itemId, colorId, "wishlist");
+    await getItems();
   };
 
   return (
@@ -63,8 +54,11 @@ const WishList: React.FC = () => {
         {items.map((item) => (
           <Item
             key={item.name + item.color}
-            id={item.id}
-            color={{ id: item.color, color: getColor(item.color) ?? "white" }}
+            itemId={item.item_id}
+            color={{
+              id: item.color,
+              color: getColorName(colors, item.color),
+            }}
             text={item.name}
             handleRemove={handleRemove}
           />

@@ -60,7 +60,6 @@ export const postItemToDB = (req, res) => {
   }
 };
 
-// todo review
 export const getItemsFromDB = (req, res) => {
   const { type } = req.params;
 
@@ -85,5 +84,27 @@ export const getItemsFromDB = (req, res) => {
       return res.status(500).json({ error: "Failed to retrieve items" });
     }
     res.json(rows);
+  });
+};
+
+export const deleteItemFromDB = (req, res) => {
+  const { itemId, colorId, listType } = req.body;
+
+  if (!itemId || !colorId || !listType) {
+    return res.status(400).json({ message: "Missing required parameters" });
+  }
+
+  const query =
+    "DELETE FROM user_items WHERE item_id = ? AND color_id = ? AND list_type = ?;";
+
+  db.run(query, [itemId, colorId, listType], function (err) {
+    if (err) {
+      console.error("Error deleting item:", err.message);
+    } else if (this.changes === 0) {
+      console.log("No item found with the given ID.");
+    } else {
+      console.log(`Item successfully deleted from ${listType}`);
+      return res.status(200).json({ message: `Item removed from ${listType}` });
+    }
   });
 };

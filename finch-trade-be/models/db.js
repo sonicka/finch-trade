@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { DEFAULT_COLORS } from "../constants.js";
+import { DEFAULT_COLORS, DEFAULT_USER } from "../constants.js";
 
 const dropTablesFlag = process.argv.includes("--drop-tables");
 
@@ -92,19 +92,28 @@ db.serialize(() => {
   )
 `);
 
-  DEFAULT_COLORS.forEach((color) => {
+  if (dropTablesFlag) {
+    DEFAULT_COLORS.forEach((color) => {
+      db.run(
+        `INSERT OR IGNORE INTO colors (color) VALUES (?)`,
+        [color],
+        (err) => {
+          if (err) {
+            console.error("Error inserting color:", err.message);
+          }
+        }
+      );
+    });
     db.run(
-      `INSERT OR IGNORE INTO colors (color) VALUES (?)`,
-      [color],
+      `INSERT OR IGNORE INTO users (id, email, friend_code, username, birb_name, password) VALUES (?, ?, ?, ?, ?, ?)`,
+      DEFAULT_USER,
       (err) => {
         if (err) {
-          console.error("Error inserting color:", err.message);
+          console.error("Error inserting user:", err.message);
         }
       }
     );
-  });
-
-  // todo add default user after dropping tables
+  }
 });
 
 export default db;

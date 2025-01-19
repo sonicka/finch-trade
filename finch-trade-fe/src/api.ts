@@ -50,9 +50,30 @@ export const addItem = async (itemData: ItemData) => {
 };
 
 export const fetchItems = async (itemType: ListType) => {
-  const response = await fetch(`${BASE_URL}/api/items/${itemType}`, {});
+  const response = await fetch(`${BASE_URL}/api/items/${itemType}`);
   if (!response.ok) {
     throw new Error("Failed to fetch items");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const removeItem = async (
+  itemId: number,
+  colorId: number,
+  listType: string
+) => {
+  const response = await fetch(`${BASE_URL}/api/items/remove`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      itemId,
+      colorId,
+      listType,
+    }),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to remove the item");
   }
   const data = await response.json();
   return data;
