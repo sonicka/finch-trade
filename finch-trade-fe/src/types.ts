@@ -15,6 +15,11 @@ export interface LoginCredentials {
 // items
 
 export interface Item {
+  id: number;
+  name: string;
+}
+
+export interface UserItem {
   user_id: number;
   item_id: number;
   color: number;
@@ -26,11 +31,15 @@ export interface Color {
   color: string;
 }
 
-export type ListType = "wishlist" | "tradelist"; // todo make a usable constant out of this
+export enum ListTypeEnum {
+  Wishlist = "wishlist",
+  Tradelist = "tradelist",
+}
+
+export type ListType = `${ListTypeEnum}`;
 
 export interface ItemData {
   userId: number;
-  id?: number | null; // todo
   name: string;
   color: number;
   listType: ListType;

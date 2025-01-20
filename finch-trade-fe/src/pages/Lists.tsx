@@ -1,8 +1,8 @@
 import { FC } from "react";
-import Tabs from "../components/Tabs";
-import WishList from "../components/WishList";
-import TradeList from "../components/TradeList";
 import { useAuth } from "../contexts/AuthProvider";
+import Tabs from "../components/Tabs";
+import List from "../components/List";
+import { ListTypeEnum } from "../types";
 
 const Lists: FC = () => {
   const { user } = useAuth();
@@ -12,8 +12,24 @@ const Lists: FC = () => {
       <div>
         <Tabs
           tabs={[
-            { label: "Wishlist", content: <WishList /> },
-            { label: "Tradelist", content: <TradeList /> },
+            {
+              label: "Wishlist",
+              content: (
+                <List
+                  key={ListTypeEnum.Wishlist}
+                  type={ListTypeEnum.Wishlist}
+                />
+              ),
+            },
+            {
+              label: "Tradelist",
+              content: (
+                <List
+                  key={ListTypeEnum.Tradelist}
+                  type={ListTypeEnum.Tradelist}
+                />
+              ),
+            },
           ]}
         />
       </div>

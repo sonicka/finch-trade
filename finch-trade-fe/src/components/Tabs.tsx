@@ -17,7 +17,7 @@ const Tabs = ({ tabs }: Tabs) => {
       <div className="flex border-b">
         {tabs.map((tab, index) => (
           <button
-            key={index}
+            key={tab.label}
             className={`py-2 px-4 ${width} text-center border-b-2 ${
               activeTab === index
                 ? "border-blue-500 text-blue-500"

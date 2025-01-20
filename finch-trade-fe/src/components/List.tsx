@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
+import { addItem, fetchAllItems, fetchUserItems, removeItem } from "../api";
 import { useColors } from "../contexts/ColorsProvider";
-import { addItem, fetchItems, removeItem } from "../api";
 import { useAuth } from "../contexts/AuthProvider";
 import { getColorName } from "../utils";
-import { Item as ItemType } from "../types";
+import { Item as ItemType, ListType, UserItem } from "../types";
 
-// todo wishlist and tradelist can be one component distinguished by a prop
-const TradeList: React.FC = () => {
-  const [items, setItems] = useState<ItemType[]>([]);
+interface Props {
+  type: ListType;
+}
+
+const List: React.FC<Props> = ({ type }: Props) => {
+  const [items, setItems] = useState<UserItem[]>([]);
+  const [allItems, setAllItems] = useState<ItemType[]>([]);
   const colors = useColors();
   const { user } = useAuth();
 
   const getItems = async () => {
     try {
-      const response = await fetchItems("tradelist");
+      const response = await fetchUserItems(type);
+      const responseAll = await fetchAllItems();
+      setAllItems(responseAll);
       setItems(response);
     } catch (error) {
       console.error("Error fetching items:", error);
@@ -24,7 +30,7 @@ const TradeList: React.FC = () => {
 
   useEffect(() => {
     getItems();
-  }, []);
+  }, [type]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,18 +40,17 @@ const TradeList: React.FC = () => {
 
     if (itemName && itemColor) {
       await addItem({
-        //id: null,
         name: itemName,
         color: itemColor,
         userId: user.id,
-        listType: "tradelist",
+        listType: type,
       });
     }
     await getItems();
   };
 
   const handleRemove = async (itemId: number, colorId: number) => {
-    await removeItem(itemId, colorId, "tradelist");
+    await removeItem(itemId, colorId, type);
     await getItems();
   };
 
@@ -65,9 +70,9 @@ const TradeList: React.FC = () => {
           />
         ))}
       </div>
-      <ItemAdd handleSubmit={handleSubmit} colors={colors} />
+      <ItemAdd handleSubmit={handleSubmit} items={allItems} colors={colors} />
     </>
   );
 };
 
-export default TradeList;
+export default List;

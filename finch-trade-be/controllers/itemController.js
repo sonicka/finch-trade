@@ -60,7 +60,17 @@ export const postItemToDB = (req, res) => {
   }
 };
 
-export const getItemsFromDB = (req, res) => {
+export const getAllItemsFromDB = (req, res) => {
+  db.all("SELECT * FROM items", (err, rows) => {
+    if (err) {
+      console.error("Error fetching items:", err);
+      return res.status(500).json({ error: "Failed to retrieve items" });
+    }
+    res.json(rows);
+  });
+};
+
+export const getUserItemsFromDB = (req, res) => {
   const { type } = req.params;
 
   if (!["wishlist", "tradelist"].includes(type)) {

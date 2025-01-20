@@ -55,16 +55,6 @@ db.serialize(() => {
 `);
 
   db.run(`
-  CREATE TABLE IF NOT EXISTS item_colors (
-    item_id INTEGER,
-    color_id INTEGER,
-    FOREIGN KEY (item_id) REFERENCES items(id),
-    FOREIGN KEY (color_id) REFERENCES colors(id),
-    PRIMARY KEY (item_id, color_id)
-  )
-`);
-
-  db.run(`
   CREATE TABLE IF NOT EXISTS user_items (
     user_id INTEGER,
     item_id INTEGER,

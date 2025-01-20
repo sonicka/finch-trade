@@ -49,10 +49,19 @@ export const addItem = async (itemData: ItemData) => {
   return data;
 };
 
-export const fetchItems = async (itemType: ListType) => {
-  const response = await fetch(`${BASE_URL}/api/items/${itemType}`);
+export const fetchAllItems = async () => {
+  const response = await fetch(`${BASE_URL}/api/items`);
   if (!response.ok) {
     throw new Error("Failed to fetch items");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const fetchUserItems = async (itemType: ListType) => {
+  const response = await fetch(`${BASE_URL}/api/items/${itemType}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch user items");
   }
   const data = await response.json();
   return data;

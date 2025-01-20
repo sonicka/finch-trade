@@ -1,28 +1,77 @@
-import { FC, FormEventHandler } from "react";
-import { Color } from "../types";
+import { FC, FormEventHandler, useState } from "react";
+import { Color, Item } from "../types";
 
 interface Props {
+  items: Item[];
   colors: Color[];
   handleSubmit: FormEventHandler<HTMLFormElement>;
 }
 
-const ItemAdd: FC<Props> = ({ colors, handleSubmit }: Props) => {
+const ItemAdd: FC<Props> = ({ items, colors, handleSubmit }: Props) => {
+  const [filteredOptions, setFilteredOptions] = useState<Item[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const disabled = !selectedColor || !inputValue;
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    if (value) {
+      setFilteredOptions(
+        items.filter((item) =>
+          item.name.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleOptionClick = (item: Item) => {
+    setInputValue(item.name);
+    setShowDropdown(false);
+  };
+
+  const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedColor(e.target.value);
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
       className="flex space-x-4 p-4 border rounded-lg"
+      autoComplete="off"
     >
-      {/* // todo make this autocomplete having the items values*/}
-      <input
-        type="text"
-        name="itemName"
-        placeholder="Item name"
-        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <div className="w-full relative">
+        <input
+          name="itemName"
+          value={inputValue}
+          onChange={handleInputChange}
+          onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+          placeholder="Item name"
+          className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        {showDropdown && filteredOptions.length > 0 && (
+          <ul className="absolute w-full max-h-40 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md z-10">
+            {filteredOptions.map((item: Item) => (
+              <li
+                key={item.id}
+                onClick={() => handleOptionClick(item)}
+                className="p-2 cursor-pointer hover:bg-gray-200"
+              >
+                {item.name}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
       <select
         name="itemColor"
-        className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        defaultValue=""
+        className="w-full max-h-40 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        value={selectedColor}
+        onChange={handleColorChange}
       >
         <option value="" disabled>
           Select color
@@ -34,9 +83,14 @@ const ItemAdd: FC<Props> = ({ colors, handleSubmit }: Props) => {
         ))}
       </select>
       <button
-        className="p-2 bg-green-400 text-white rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+        className={`p-2 text-white rounded-full ${
+          disabled
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-green-400 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+        }`}
         aria-label="Confirm"
         type="submit"
+        disabled={disabled}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

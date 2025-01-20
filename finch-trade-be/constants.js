@@ -10,6 +10,7 @@ export const DEFAULT_COLORS = [
   "pink",
   "purple",
   "blue",
+  "green",
 ];
 
 export const DEFAULT_USER = [
