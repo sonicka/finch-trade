@@ -58,8 +58,11 @@ export const fetchAllItems = async () => {
   return data;
 };
 
-export const fetchUserItems = async (itemType: ListType) => {
-  const response = await fetch(`${BASE_URL}/api/items/${itemType}`);
+export const fetchUserItems = async (itemType: ListType, userId: number) => {
+  const response = await fetch(
+    `${BASE_URL}/api/items/${itemType}?userId=${userId}`,
+    {}
+  );
   if (!response.ok) {
     throw new Error("Failed to fetch user items");
   }

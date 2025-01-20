@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { DEFAULT_COLORS, DEFAULT_USER } from "../constants.js";
+import { DEFAULT_COLORS, DEFAULT_USERS } from "../constants.js";
 
 const dropTablesFlag = process.argv.includes("--drop-tables");
 
@@ -94,15 +94,17 @@ db.serialize(() => {
         }
       );
     });
-    db.run(
-      `INSERT OR IGNORE INTO users (id, email, friend_code, username, birb_name, password) VALUES (?, ?, ?, ?, ?, ?)`,
-      DEFAULT_USER,
-      (err) => {
-        if (err) {
-          console.error("Error inserting user:", err.message);
+    DEFAULT_USERS.forEach((user) => {
+      db.run(
+        `INSERT OR IGNORE INTO users (id, email, friend_code, username, birb_name, password) VALUES (?, ?, ?, ?, ?, ?)`,
+        user,
+        (err) => {
+          if (err) {
+            console.error("Error inserting user:", err.message);
+          }
         }
-      }
-    );
+      );
+    });
   }
 });
 

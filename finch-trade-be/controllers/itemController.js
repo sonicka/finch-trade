@@ -72,6 +72,11 @@ export const getAllItemsFromDB = (req, res) => {
 
 export const getUserItemsFromDB = (req, res) => {
   const { type } = req.params;
+  const { userId } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required" });
+  }
 
   if (!["wishlist", "tradelist"].includes(type)) {
     return res.status(400).json({ message: "Invalid item type" });
@@ -85,10 +90,10 @@ export const getUserItemsFromDB = (req, res) => {
       items.name
     FROM user_items
     JOIN items ON user_items.item_id = items.id
-    WHERE user_items.list_type = ?;
+    WHERE user_items.list_type = ? AND user_items.user_id = ?;
   `;
 
-  db.all(query, [type], (err, rows) => {
+  db.all(query, [type, userId], (err, rows) => {
     if (err) {
       console.error("Error fetching items:", err);
       return res.status(500).json({ error: "Failed to retrieve items" });

@@ -19,7 +19,7 @@ const List: React.FC<Props> = ({ type }: Props) => {
 
   const getItems = async () => {
     try {
-      const response = await fetchUserItems(type);
+      const response = await fetchUserItems(type, user.id);
       const responseAll = await fetchAllItems();
       setAllItems(responseAll);
       setItems(response);
@@ -30,7 +30,7 @@ const List: React.FC<Props> = ({ type }: Props) => {
 
   useEffect(() => {
     getItems();
-  }, [type]);
+  }, [type, user.id]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
