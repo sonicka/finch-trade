@@ -50,7 +50,7 @@ const List: React.FC<Props> = ({ type }: Props) => {
   };
 
   const handleRemove = async (itemId: number, colorId: number) => {
-    await removeItem(itemId, colorId, type);
+    await removeItem(itemId, colorId, type, user?.id);
     await getItems();
   };
 

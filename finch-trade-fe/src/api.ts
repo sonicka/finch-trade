@@ -73,7 +73,8 @@ export const fetchUserItems = async (itemType: ListType, userId: number) => {
 export const removeItem = async (
   itemId: number,
   colorId: number,
-  listType: string
+  listType: string,
+  userId: number
 ) => {
   const response = await fetch(`${BASE_URL}/api/items/remove`, {
     method: "DELETE",
@@ -82,6 +83,7 @@ export const removeItem = async (
       itemId,
       colorId,
       listType,
+      userId,
     }),
   });
   if (!response.ok) {

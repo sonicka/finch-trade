@@ -103,23 +103,25 @@ export const getUserItemsFromDB = (req, res) => {
 };
 
 export const deleteItemFromDB = (req, res) => {
-  const { itemId, colorId, listType } = req.body;
+  const { itemId, colorId, listType, userId } = req.body;
 
-  if (!itemId || !colorId || !listType) {
+  if (!itemId || !colorId || !listType || !userId) {
     return res.status(400).json({ message: "Missing required parameters" });
   }
 
   const query =
-    "DELETE FROM user_items WHERE item_id = ? AND color_id = ? AND list_type = ?;";
+    "DELETE FROM user_items WHERE item_id = ? AND color_id = ? AND list_type = ? AND user_id = ?;";
 
-  db.run(query, [itemId, colorId, listType], function (err) {
+  db.run(query, [itemId, colorId, listType, userId], function (err) {
     if (err) {
       console.error("Error deleting item:", err.message);
-    } else if (this.changes === 0) {
-      console.log("No item found with the given ID.");
-    } else {
-      console.log(`Item successfully deleted from ${listType}`);
-      return res.status(200).json({ message: `Item removed from ${listType}` });
+      return res.status(500).json({ message: "Internal server error" });
     }
+    if (this.changes === 0) {
+      console.log("No such item found.");
+      return res.status(404).json({ message: "Item not found" });
+    }
+    console.log(`Item successfully deleted from ${listType}`);
+    return res.status(200).json({ message: `Item removed from ${listType}` });
   });
 };
