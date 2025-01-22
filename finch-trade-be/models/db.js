@@ -36,7 +36,8 @@ db.serialize(() => {
     friend_code TEXT UNIQUE,
     username TEXT,
     birb_name TEXT,
-    password TEXT
+    password TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
 `);
 
@@ -59,26 +60,30 @@ db.serialize(() => {
     user_id INTEGER,
     item_id INTEGER,
     color_id INTEGER,
-    list_type TEXT,
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    list_type TEXT CHECK(list_type IN ('wishlist', 'tradelist')),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES items(id),
     FOREIGN KEY (color_id) REFERENCES colors(id),
     PRIMARY KEY (user_id, item_id, color_id, list_type)
-  )
-`);
+    )
+    `);
 
   db.run(`
   CREATE TABLE IF NOT EXISTS trades (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id1 INTEGER,
     user_id2 INTEGER,
-    item_color_id1 INTEGER,
-    item_color_id2 INTEGER,
+    item_id1 INTEGER,
+    item_id2 INTEGER,
+    color_id1 INTEGER,
+    color_id2 INTEGER,
     status TEXT,
-    FOREIGN KEY (user_id1) REFERENCES users(id),
-    FOREIGN KEY (user_id2) REFERENCES users(id),
-    FOREIGN KEY (item_color_id1) REFERENCES item_colors(id),
-    FOREIGN KEY (item_color_id2) REFERENCES item_colors(id)
+    FOREIGN KEY (user_id1) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id2) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (item_id1) REFERENCES items(id),
+    FOREIGN KEY (item_id2) REFERENCES items(id),
+    FOREIGN KEY (color_id1) REFERENCES colors(id),
+    FOREIGN KEY (color_id2) REFERENCES colors(id)
   )
 `);
 
