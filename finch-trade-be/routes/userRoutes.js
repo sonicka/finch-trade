@@ -4,5 +4,6 @@ const router = Router();
 
 router.post("/signup", signUp);
 router.post("/login", login);
+// router.post("/logout", logout); // todo
 
 export default router;
