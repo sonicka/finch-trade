@@ -3,18 +3,17 @@ import { useAuth } from "../contexts/AuthProvider";
 
 const UserHeader: FC = () => {
   const { user, logout } = useAuth();
-  const imageUrl = "https://placecats.com/200/200";
   const { birbName, username, friendCode } = user || {};
 
   if (!user) return null;
   return (
     <div className="flex items-center justify-between space-x-4 p-4 mb-4 border rounded-lg shadow-md">
       <div />
-      <div className="flex gap-4 items-center">
+      <div className="flex flex-col gap-4 items-center">
         <img
-          src={imageUrl}
+          src="/finch.png"
           alt={birbName}
-          className="w-16 h-16 rounded-full object-cover"
+          className="w-14 h-14 rounded-full object-cover"
         />
         <span className="text-lg font-semibold text-gray-800">{`${birbName} & ${username} (${friendCode})`}</span>
       </div>
