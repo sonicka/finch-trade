@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useAuth } from "../contexts/AuthProvider";
 
+// todo make fixed at the top and properly center content
 const UserHeader: FC = () => {
   const { user, logout } = useAuth();
   const { birbName, username, friendCode } = user || {};

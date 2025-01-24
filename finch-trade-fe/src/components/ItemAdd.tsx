@@ -67,46 +67,48 @@ const ItemAdd: FC<Props> = ({ items, colors, handleSubmit }: Props) => {
           </ul>
         )}
       </div>
-      <select
-        name="itemColor"
-        className="w-full max-h-40 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        value={selectedColor}
-        onChange={handleColorChange}
-      >
-        <option value="" disabled>
-          Select color
-        </option>
-        {colors.map((color: Color) => (
-          <option key={color.id} value={color.id}>
-            {color.color}
-          </option>
-        ))}
-      </select>
-      <button
-        className={`p-2 text-white rounded-full ${
-          disabled
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-green-400 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-        }`}
-        aria-label="Confirm"
-        type="submit"
-        disabled={disabled}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="size-6"
+      <div className="w-full flex gap-4">
+        <select
+          name="itemColor"
+          className="flex-1 max-h-40 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={selectedColor}
+          onChange={handleColorChange}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m4.5 12.75 6 6 9-13.5"
-          />
-        </svg>
-      </button>
+          <option value="" disabled>
+            Select color
+          </option>
+          {colors.map((color: Color) => (
+            <option key={color.id} value={color.id}>
+              {color.color}
+            </option>
+          ))}
+        </select>
+        <button
+          className={`w-10 h-10 p-2 text-white rounded-full ${
+            disabled
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-green-400 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+          }`}
+          aria-label="Confirm"
+          type="submit"
+          disabled={disabled}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m4.5 12.75 6 6 9-13.5"
+            />
+          </svg>
+        </button>
+      </div>
     </form>
   );
 };

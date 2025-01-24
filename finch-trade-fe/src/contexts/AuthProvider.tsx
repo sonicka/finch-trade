@@ -13,7 +13,6 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }: Props) => {
   const [user, setUser] = useState<JwtPayload | null>(null);
-  console.log("user", user);
 
   // Check if the user is logged in when the app loads
   useEffect(() => {

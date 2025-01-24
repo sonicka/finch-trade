@@ -125,3 +125,15 @@ export const deleteItemFromDB = (req, res) => {
     return res.status(200).json({ message: `Item removed from ${listType}` });
   });
 };
+
+export const getItemByIdFromDB = (req, res) => {
+  const { itemId } = req.params;
+
+  db.all("SELECT * FROM items WHERE id = ?", [itemId], (err, rows) => {
+    if (err) {
+      console.error("Error fetching item:", err);
+      return res.status(500).json({ error: "Failed to retrieve the item" });
+    }
+    res.json(rows);
+  });
+};

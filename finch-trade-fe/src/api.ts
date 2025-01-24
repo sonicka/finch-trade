@@ -26,6 +26,16 @@ export const logIn = async (credentials: LoginCredentials) => {
   return data.token;
 };
 
+// users
+export const fetchUser = async (userId: number) => {
+  const response = await fetch(`${BASE_URL}/api/users/${userId}`, {});
+  if (!response.ok) {
+    throw new Error("Failed to fetch the user");
+  }
+  const data = await response.json();
+  return data;
+};
+
 // colors
 export const fetchColors = async () => {
   const response = await fetch(`${BASE_URL}/api/items/colors`, {});
@@ -88,6 +98,25 @@ export const removeItem = async (
   });
   if (!response.ok) {
     throw new Error("Failed to remove the item");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const fetchItemById = async (itemId: number) => {
+  const response = await fetch(`${BASE_URL}/api/items/item/${itemId}}`, {});
+  if (!response.ok) {
+    throw new Error("Failed to fetch item");
+  }
+  const data = await response.json();
+  return data;
+};
+
+// trades
+export const fetchTrades = async (userId: number) => {
+  const response = await fetch(`${BASE_URL}/api/trades?userId=${userId}`, {});
+  if (!response.ok) {
+    throw new Error("Failed to fetch trades");
   }
   const data = await response.json();
   return data;

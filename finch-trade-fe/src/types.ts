@@ -12,8 +12,14 @@ export interface LoginCredentials {
   password: string;
 }
 
-// items
+// users
+export interface User {
+  username: string;
+  birbName: string;
+  friendCode: string;
+}
 
+// items
 export interface Item {
   id: number;
   name: string;
@@ -43,4 +49,16 @@ export interface ItemData {
   name: string;
   color: number;
   listType: ListType;
+}
+
+export interface TradeItem {
+  userId: number;
+  itemId: number;
+  colorId: number;
+}
+
+export interface Trader {
+  userId: number;
+  wants: TradeItem[];
+  has: TradeItem[];
 }

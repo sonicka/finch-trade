@@ -89,3 +89,30 @@ export const login = (req, res) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 };
+
+export const getUserFromDB = (req, res) => {
+  const { userId } = req.params;
+
+  db.all(
+    "SELECT username, birb_name as birbName, friend_code as friendCode FROM users WHERE id = ?",
+    [userId],
+    (err, rows) => {
+      if (err) {
+        console.error("Error fetching user:", err);
+        return res.status(500).json({ error: "Failed to retrieve the user" });
+      }
+
+      if (rows.length === 1) {
+        res.json(rows[0]);
+      } else if (rows.length === 0) {
+        res.status(404).json({ error: "User not found" });
+      } else {
+        console.warn(`Unexpected multiple users with id ${userId}:`, rows);
+        res.status(500).json({
+          error:
+            "Database inconsistency: multiple users found with the same id",
+        });
+      }
+    }
+  );
+};
