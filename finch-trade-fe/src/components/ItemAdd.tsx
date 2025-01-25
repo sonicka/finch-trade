@@ -1,18 +1,22 @@
 import { FC, FormEventHandler, useState } from "react";
-import { Color, Item } from "../types";
+import { Color, Item, ListType } from "../types";
 
 interface Props {
   items: Item[];
   colors: Color[];
+  type: ListType;
   handleSubmit: FormEventHandler<HTMLFormElement>;
 }
 
-const ItemAdd: FC<Props> = ({ items, colors, handleSubmit }: Props) => {
+const ItemAdd: FC<Props> = ({ items, colors, type, handleSubmit }: Props) => {
   const [filteredOptions, setFilteredOptions] = useState<Item[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [showDropdown, setShowDropdown] = useState(false);
   const disabled = !selectedColor || !inputValue;
+  const filteredColors = colors.filter((color: Color) => {
+    if (type === "wishlist" || color.color !== "any") return color;
+  }); // remove 'any' option from tradelist
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -77,7 +81,7 @@ const ItemAdd: FC<Props> = ({ items, colors, handleSubmit }: Props) => {
           <option value="" disabled>
             Select color
           </option>
-          {colors.map((color: Color) => (
+          {filteredColors.map((color: Color) => (
             <option key={color.id} value={color.id}>
               {color.color}
             </option>

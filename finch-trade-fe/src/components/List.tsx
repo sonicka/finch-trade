@@ -70,7 +70,12 @@ const List: React.FC<Props> = ({ type }: Props) => {
           />
         ))}
       </div>
-      <ItemAdd handleSubmit={handleSubmit} items={allItems} colors={colors} />
+      <ItemAdd
+        handleSubmit={handleSubmit}
+        items={allItems}
+        colors={colors}
+        type={type}
+      />
     </>
   );
 };
