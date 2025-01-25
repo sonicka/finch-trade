@@ -15,7 +15,7 @@ const Tabs = ({ tabs }: Tabs) => {
   return (
     <div className="flex justify-center">
       <div className="w-full md:w-1/2 p-4">
-        <div className="flex border-b">
+        <div className="flex sticky top-32 p-4 bg-white">
           {tabs.map((tab, index) => (
             <button
               key={tab.label}
@@ -29,6 +29,7 @@ const Tabs = ({ tabs }: Tabs) => {
               {tab.label}
             </button>
           ))}
+          <div className="absolute inset-x-4 top-16 h-8 bg-gradient-to-b from-white to-transparent"></div>{" "}
         </div>
         <div className="p-4">{tabs[activeTab].content}</div>
       </div>

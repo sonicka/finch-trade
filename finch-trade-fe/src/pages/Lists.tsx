@@ -9,7 +9,6 @@ const Lists: FC = () => {
 
   if (user)
     return (
-      // todo handle the bottom margin a bit better
       <div className="w-full mb-12">
         <Tabs
           tabs={[

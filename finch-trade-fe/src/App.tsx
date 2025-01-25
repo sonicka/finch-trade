@@ -13,26 +13,28 @@ const App = () => {
     <Providers>
       <Router>
         <UserHeader />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Lists />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/trades"
-            element={
-              <ProtectedRoute>
-                <Trades />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="pt-32">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Lists />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/trades"
+              element={
+                <ProtectedRoute>
+                  <Trades />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </div>
         <BottomButton />
       </Router>
     </Providers>
