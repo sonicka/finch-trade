@@ -57,6 +57,33 @@ async function findTrades(userId, callback) {
     ];
 
     for (const traderId of potentialTraders) {
+      const existingTrade = await new Promise((resolve, reject) => {
+        db.get(
+          `SELECT status, requested_by FROM trades
+           WHERE (user_id1 = ? AND user_id2 = ?)
+           OR (user_id1 = ? AND user_id2 = ?)`,
+          [userId, traderId, traderId, userId],
+          (err, row) => {
+            if (err) return reject(err);
+            if (!row) return resolve(null);
+
+            if (row.status === "pending") {
+              const requestedByArray = row.requested_by
+                ? JSON.parse(row.requested_by)
+                : [];
+              const requestedByMe = requestedByArray.includes(userId);
+
+              return resolve({
+                status: row.status,
+                requestedByMe,
+              });
+            }
+
+            resolve({ status: row.status });
+          }
+        );
+      });
+
       const traderWants = potentialGifts.filter(
         (item) => item.userId === traderId
       );
@@ -86,6 +113,7 @@ async function findTrades(userId, callback) {
         userId: traderId,
         wants: traderWants,
         has: traderOffers,
+        ...existingTrade,
       });
     }
 
@@ -95,3 +123,63 @@ async function findTrades(userId, callback) {
     callback(err);
   }
 }
+
+export const postRequestTrade = (req, res) => {
+  const userId1 = req.query.userId1;
+  const userId2 = req.query.userId2;
+
+  db.get(
+    `SELECT id FROM trades
+     WHERE (user_id1 = ? AND user_id2 = ?)
+        OR (user_id1 = ? AND user_id2 = ?)
+        AND status = 'pending'`,
+    [userId1, userId2, userId2, userId1],
+    (err, row) => {
+      if (err) {
+        console.error("Error checking existing trade:", err.message);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      if (row) {
+        let requestedBy = row.requested_by ? JSON.parse(row.requested_by) : [];
+        if (!requestedBy.includes(userId1)) requestedBy.push(userId1);
+        if (!requestedBy.includes(userId2)) requestedBy.push(userId2);
+
+        const newStatus = requestedBy.length === 2 ? "confirmed" : "pending";
+
+        db.run(
+          "UPDATE trades SET status = ?, requested_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
+          [newStatus, JSON.stringify(requestedBy), row.id],
+          function (err) {
+            if (err) {
+              console.error("Error updating trade:", err.message);
+              return res.status(500).json({ error: "Failed to update trade" });
+            }
+            return res.status(200).json({
+              message: "Trade updated",
+              tradeId: row.id,
+              status: newStatus,
+            });
+          }
+        );
+      } else {
+        db.run(
+          "INSERT INTO trades (user_id1, user_id2, status, requested_by) VALUES (?, ?, ?, ?)",
+          [userId1, userId2, "pending", JSON.stringify([userId1])],
+          function (err) {
+            if (err) {
+              console.error("Error inserting trade:", err.message);
+              return res.status(500).json({ error: "Failed to create trade" });
+            }
+            console.log(`New trade added with ID: ${this.lastID}`);
+            return res.status(201).json({
+              message: "Trade created",
+              tradeId: this.lastID,
+              status: "pending",
+            });
+          }
+        );
+      }
+    }
+  );
+};

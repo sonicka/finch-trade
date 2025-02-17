@@ -19,9 +19,9 @@ if (dropTablesFlag) {
   console.log("Tables dropped");
 
   db.serialize(() => {
-    db.run("DROP TABLE IF EXISTS users");
-    db.run("DROP TABLE IF EXISTS items");
-    db.run("DROP TABLE IF EXISTS user_items");
+    // db.run("DROP TABLE IF EXISTS users");
+    // db.run("DROP TABLE IF EXISTS items");
+    // db.run("DROP TABLE IF EXISTS user_items");
     db.run("DROP TABLE IF EXISTS trades");
   });
 } else {
@@ -73,11 +73,13 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id1 INTEGER,
     user_id2 INTEGER,
+    status TEXT DEFAULT 'new',
+    requested_by TEXT NOT NULL DEFAULT '[]',
+    valid_until TIMESTAMP,
     item_id1 INTEGER,
     item_id2 INTEGER,
     color_id1 INTEGER,
     color_id2 INTEGER,
-    status TEXT,
     FOREIGN KEY (user_id1) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (user_id2) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id1) REFERENCES items(id),

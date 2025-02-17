@@ -61,4 +61,6 @@ export interface Trader {
   userId: number;
   wants: TradeItem[];
   has: TradeItem[];
+  status?: string;
+  requestedByMe?: boolean;
 }

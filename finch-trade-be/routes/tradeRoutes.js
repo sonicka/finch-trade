@@ -1,7 +1,11 @@
 import { Router } from "express";
-import { getTradesFromDB } from "../controllers/tradeController.js";
+import {
+  getTradesFromDB,
+  postRequestTrade,
+} from "../controllers/tradeController.js";
 const router = Router();
 
 router.get("/", getTradesFromDB);
+router.post("/requestTrade", postRequestTrade);
 
 export default router;

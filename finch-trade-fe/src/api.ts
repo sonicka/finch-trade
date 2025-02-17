@@ -121,3 +121,15 @@ export const fetchTrades = async (userId: number) => {
   const data = await response.json();
   return data;
 };
+
+export const requestTrade = async (userId1: number, userId2: number) => {
+  const response = await fetch(
+    `${BASE_URL}/api/trades/requestTrade?userId1=${userId1}&userId2=${userId2}`,
+    { method: "POST", headers: { "Content-Type": "application/json" } }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to request trade");
+  }
+  const data = await response.json();
+  return data;
+};
