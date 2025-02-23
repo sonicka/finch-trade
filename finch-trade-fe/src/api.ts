@@ -122,13 +122,41 @@ export const fetchTrades = async (userId: number) => {
   return data;
 };
 
-export const requestTrade = async (userId1: number, userId2: number) => {
+export const requestTrade = async (
+  userId1: number,
+  userId2: number,
+  chosenItems: {
+    my: { id: number; colorId: number } | null;
+    their: { id: number; colorId: number } | null;
+  }
+) => {
   const response = await fetch(
     `${BASE_URL}/api/trades/requestTrade?userId1=${userId1}&userId2=${userId2}`,
-    { method: "POST", headers: { "Content-Type": "application/json" } }
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ chosenItems }),
+    }
   );
   if (!response.ok) {
     throw new Error("Failed to request trade");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const finishTrade = async (tradeId: number, userId: number) => {
+  const response = await fetch(
+    `${BASE_URL}/api/trades/finishTrade/${tradeId}?userId=${userId}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("Failed to finish trade");
   }
   const data = await response.json();
   return data;

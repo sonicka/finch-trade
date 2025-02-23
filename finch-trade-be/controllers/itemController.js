@@ -11,8 +11,7 @@ export const getColorsFromDB = (req, res) => {
 };
 
 export const postItemToDB = (req, res) => {
-  const { userId, color, id, name, listType } = req.body;
-  let itemId = id;
+  const { userId, color, name, listType } = req.body;
 
   if (!color || !name) {
     return res.status(400).json({ message: "All fields are required" });
@@ -39,18 +38,42 @@ export const postItemToDB = (req, res) => {
     });
 
     function insertUserItem(id) {
-      db.run(
-        "INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)",
-        [userId, id, color, listType],
-        function (err) {
+      db.get(
+        "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ? AND color_id = ?",
+        [userId, id, color],
+        (err, row) => {
           if (err) {
-            console.error("Error saving item:", err);
-            return res.status(500).json({ message: "Error saving item" });
+            console.error("Error checking item:", err);
+            return res.status(500).json({ message: "Error checking item" });
           }
-          return res.status(201).json({
-            message: `Item added to ${listType}`,
-            itemId: itemId,
-          });
+
+          if (row) {
+            if (row.list_type === listType) {
+              return res.status(400).json({
+                message: "This item is already in your list.",
+              });
+            } else {
+              return res.status(400).json({
+                message: `This item is already in your ${row.list_type}.`,
+              });
+            }
+          }
+
+          db.run(
+            "INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)",
+            [userId, id, color, listType],
+            function (insertErr) {
+              if (insertErr) {
+                console.error("Error saving item:", insertErr);
+                return res.status(500).json({ message: "Error saving item" });
+              }
+
+              return res.status(201).json({
+                message: `Item added to ${listType}`,
+                itemId: this.lastID,
+              });
+            }
+          );
         }
       );
     }
@@ -90,7 +113,8 @@ export const getUserItemsFromDB = (req, res) => {
       items.name
     FROM user_items
     JOIN items ON user_items.item_id = items.id
-    WHERE user_items.list_type = ? AND user_items.user_id = ?;
+    WHERE user_items.list_type = ? AND user_items.user_id = ?
+    ORDER BY items.name ASC;
   `;
 
   db.all(query, [type, userId], (err, rows) => {

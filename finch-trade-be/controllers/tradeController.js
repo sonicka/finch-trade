@@ -59,7 +59,7 @@ async function findTrades(userId, callback) {
     for (const traderId of potentialTraders) {
       const existingTrade = await new Promise((resolve, reject) => {
         db.get(
-          `SELECT status, requested_by FROM trades
+          `SELECT * FROM trades
            WHERE (user_id1 = ? AND user_id2 = ?)
            OR (user_id1 = ? AND user_id2 = ?)`,
           [userId, traderId, traderId, userId],
@@ -67,18 +67,28 @@ async function findTrades(userId, callback) {
             if (err) return reject(err);
             if (!row) return resolve(null);
 
-            if (row.status === "pending") {
-              const requestedByArray = row.requested_by
-                ? JSON.parse(row.requested_by)
-                : [];
-              const requestedByMe = requestedByArray.includes(userId);
+            if (row.status === "pending" || row.status === "confirmed") {
+              const requestedByMe =
+                userId.toString() === row.user_id1.toString();
+              const finishedByMe = JSON.parse(row.finished_by).includes(
+                userId.toString()
+              );
 
               return resolve({
+                tradeId: row.id,
                 status: row.status,
                 requestedByMe,
+                finishedByMe,
+                requestedTrade: {
+                  userId1: row.user_id1,
+                  itemId1: row.item_id1,
+                  colorId1: row.color_id1,
+                  userId2: row.user_id2,
+                  itemId2: row.item_id2,
+                  colorId2: row.color_id2,
+                },
               });
             }
-
             resolve({ status: row.status });
           }
         );
@@ -88,9 +98,12 @@ async function findTrades(userId, callback) {
         (item) => item.userId === traderId
       );
 
-      const wishConditions = wishItems
-        .map(() => "(i.item_id = ? AND i.color_id = ?)")
-        .join(" OR ");
+      const wishConditions =
+        wishItems.length > 0
+          ? wishItems
+              .map(() => "(i.item_id = ? AND i.color_id = ?)")
+              .join(" OR ")
+          : "1=0";
       const wishParams = wishItems.flatMap((item) => [
         item.item_id,
         item.color_id,
@@ -113,7 +126,7 @@ async function findTrades(userId, callback) {
         userId: traderId,
         wants: traderWants,
         has: traderOffers,
-        ...existingTrade,
+        ...(existingTrade || {}),
       });
     }
 
@@ -125,8 +138,15 @@ async function findTrades(userId, callback) {
 }
 
 export const postRequestTrade = (req, res) => {
-  const userId1 = req.query.userId1;
-  const userId2 = req.query.userId2;
+  const { userId1, userId2 } = req.query;
+  const { chosenItems } = req.body;
+
+  const items = [
+    chosenItems.my.id,
+    chosenItems.my.colorId,
+    chosenItems.their.id,
+    chosenItems.their.colorId,
+  ];
 
   db.get(
     `SELECT id FROM trades
@@ -148,7 +168,7 @@ export const postRequestTrade = (req, res) => {
         const newStatus = requestedBy.length === 2 ? "confirmed" : "pending";
 
         db.run(
-          "UPDATE trades SET status = ?, requested_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
+          "UPDATE trades SET status = ?, requested_by = ? WHERE id = ?",
           [newStatus, JSON.stringify(requestedBy), row.id],
           function (err) {
             if (err) {
@@ -164,8 +184,8 @@ export const postRequestTrade = (req, res) => {
         );
       } else {
         db.run(
-          "INSERT INTO trades (user_id1, user_id2, status, requested_by) VALUES (?, ?, ?, ?)",
-          [userId1, userId2, "pending", JSON.stringify([userId1])],
+          "INSERT INTO trades (user_id1, user_id2, status, requested_by, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+          [userId1, userId2, "pending", JSON.stringify([userId1]), ...items],
           function (err) {
             if (err) {
               console.error("Error inserting trade:", err.message);
@@ -182,4 +202,96 @@ export const postRequestTrade = (req, res) => {
       }
     }
   );
+};
+
+export const postFinishTrade = (req, res) => {
+  const { tradeId } = req.params;
+  const { userId } = req.query;
+
+  // Flag to track if we have already sent a response
+  let responseSent = false;
+
+  // Helper function to send the response once
+  function sendResponse(status, data) {
+    if (!responseSent) {
+      responseSent = true;
+      return res.status(status).json(data);
+    }
+  }
+
+  db.get(
+    `SELECT * FROM trades
+     WHERE id = ? AND status = 'confirmed'`,
+    [tradeId],
+    (err, row) => {
+      if (err) {
+        console.error("Error checking existing trade:", err.message);
+        return sendResponse(500, { error: "Database error" });
+      }
+
+      if (row) {
+        let finishedBy = row.finished_by ? JSON.parse(row.finished_by) : [];
+        if (!finishedBy.includes(userId)) finishedBy.push(userId);
+
+        const newStatus = finishedBy.length === 2 ? "finished" : row.status;
+
+        db.run(
+          "UPDATE trades SET status = ?, finished_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
+          [newStatus, JSON.stringify(finishedBy), row.id],
+          function (err) {
+            if (err) {
+              console.error("Error updating trade:", err.message);
+              return sendResponse(500, { error: "Failed to update trade" });
+            }
+            return sendResponse(200, {
+              message: "Trade updated",
+              tradeId: row.id,
+              status: newStatus,
+            });
+          }
+        );
+
+        if (finishedBy.length === 2) {
+          (async () => {
+            try {
+              await deleteItem(row.user_id1, row.item_id1, row.color_id1);
+              await deleteItem(row.user_id2, row.item_id2, row.color_id2);
+              await deleteTrade(row.id);
+
+              return sendResponse(200, {
+                message: "Trade and items successfully deleted.",
+              });
+            } catch (err) {
+              console.error("Error during deletion:", err.message);
+              return sendResponse(500, { error: err.message });
+            }
+          })();
+        }
+      }
+    }
+  );
+};
+
+const deleteItem = (userId, itemId, colorId) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      "DELETE FROM user_items WHERE user_id = ? AND item_id = ? AND color_id = ?",
+      [userId, itemId, colorId],
+      function (err) {
+        if (err) return reject(err);
+        if (this.changes === 0) return reject(new Error("Item not found"));
+        resolve();
+      }
+    );
+  });
+};
+
+const deleteTrade = (tradeId) => {
+  return new Promise((resolve, reject) => {
+    db.run("DELETE FROM trades WHERE id = ?", [tradeId], function (err) {
+      if (err) return reject(err);
+      if (this.changes === 0) return reject(new Error("Trade not found"));
+      resolve();
+    });
+  });
 };

@@ -75,6 +75,7 @@ db.serialize(() => {
     user_id2 INTEGER,
     status TEXT DEFAULT 'new',
     requested_by TEXT NOT NULL DEFAULT '[]',
+    finished_by TEXT NOT NULL DEFAULT '[]',
     valid_until TIMESTAMP,
     item_id1 INTEGER,
     item_id2 INTEGER,

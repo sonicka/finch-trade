@@ -58,9 +58,21 @@ export interface TradeItem {
 }
 
 export interface Trader {
+  tradeId: number;
   userId: number;
   wants: TradeItem[];
   has: TradeItem[];
   status?: string;
   requestedByMe?: boolean;
+  finishedByMe?: boolean;
+  requestedTrade?: RequestedTrade;
+}
+
+export interface RequestedTrade {
+  userId1: number;
+  itemId1: number;
+  colorId1: number;
+  userId2: number;
+  itemId2: number;
+  colorId2: number;
 }

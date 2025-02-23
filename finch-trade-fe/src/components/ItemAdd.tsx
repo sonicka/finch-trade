@@ -6,9 +6,16 @@ interface Props {
   colors: Color[];
   type: ListType;
   handleSubmit: FormEventHandler<HTMLFormElement>;
+  clearError: Function;
 }
 
-const ItemAdd: FC<Props> = ({ items, colors, type, handleSubmit }: Props) => {
+const ItemAdd: FC<Props> = ({
+  items,
+  colors,
+  type,
+  handleSubmit,
+  clearError,
+}: Props) => {
   const [filteredOptions, setFilteredOptions] = useState<Item[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
@@ -19,6 +26,7 @@ const ItemAdd: FC<Props> = ({ items, colors, type, handleSubmit }: Props) => {
   }); // remove 'any' option from tradelist
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    clearError();
     const value = e.target.value;
     setInputValue(value);
     if (value) {
@@ -34,11 +42,13 @@ const ItemAdd: FC<Props> = ({ items, colors, type, handleSubmit }: Props) => {
   };
 
   const handleOptionClick = (item: Item) => {
+    clearError();
     setInputValue(item.name);
     setShowDropdown(false);
   };
 
   const handleColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    clearError();
     setSelectedColor(e.target.value);
   };
 

@@ -6,12 +6,16 @@ import { useColors } from "../contexts/ColorsProvider";
 import { useAuth } from "../contexts/AuthProvider";
 import { getColorName } from "../utils";
 import { Item as ItemType, ListType, UserItem } from "../types";
+import Alert from "./Alert";
 
 interface Props {
   type: ListType;
 }
 
+const maxHeight = `calc(100vh - ${128 + 74 + 76 + 64 + 32}px)`;
+
 const List: React.FC<Props> = ({ type }: Props) => {
+  const [error, setError] = useState<string>("");
   const [items, setItems] = useState<UserItem[]>([]);
   const [allItems, setAllItems] = useState<ItemType[]>([]);
   const colors = useColors();
@@ -39,12 +43,17 @@ const List: React.FC<Props> = ({ type }: Props) => {
     const itemColor = Number(formData.get("itemColor"));
 
     if (itemName && itemColor) {
-      await addItem({
-        name: itemName,
-        color: itemColor,
-        userId: user.id,
-        listType: type,
-      });
+      try {
+        setError("");
+        await addItem({
+          name: itemName,
+          color: itemColor,
+          userId: user.id,
+          listType: type,
+        });
+      } catch (e: any) {
+        setError(e?.message);
+      }
     }
     await getItems();
   };
@@ -56,7 +65,23 @@ const List: React.FC<Props> = ({ type }: Props) => {
 
   return (
     <>
-      <div className="pb-4">
+      <div className="pb-3">
+        <div className="sticky top-32 z-10 bg-white">
+          <ItemAdd
+            handleSubmit={handleSubmit}
+            items={allItems}
+            colors={colors}
+            type={type}
+            clearError={() => setError("")}
+          />
+          {error && (
+            <div className="pt-3">
+              <Alert type="error" message={error} />
+            </div>
+          )}
+        </div>
+      </div>
+      <div className="flex-grow pb-4 overflow-y-auto" style={{ maxHeight }}>
         {items.map((item) => (
           <Item
             key={item.name + item.color}
@@ -70,12 +95,6 @@ const List: React.FC<Props> = ({ type }: Props) => {
           />
         ))}
       </div>
-      <ItemAdd
-        handleSubmit={handleSubmit}
-        items={allItems}
-        colors={colors}
-        type={type}
-      />
     </>
   );
 };
