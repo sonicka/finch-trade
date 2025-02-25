@@ -1,3 +1,5 @@
+import { JwtPayload } from "jwt-decode";
+
 // login
 export interface SignUpData {
   email: string;
@@ -13,6 +15,11 @@ export interface LoginCredentials {
 }
 
 // users
+export interface LoggedInUser extends JwtPayload, User {
+  id: number;
+  email: string;
+}
+
 export interface User {
   username: string;
   birbName: string;
@@ -58,6 +65,7 @@ export interface TradeItem {
 }
 
 export interface Trader {
+  // todo
   tradeId: number;
   userId: number;
   wants: TradeItem[];

@@ -1,8 +1,8 @@
-import { JSX, useState } from "react";
+import { ReactNode, useState } from "react";
 
 interface Tab {
   label: string;
-  content: JSX.Element;
+  content: ReactNode;
 }
 interface Tabs {
   tabs: Tab[];

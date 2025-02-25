@@ -1,8 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import ColorCircle from "./ColorCircle";
-import { useColors } from "../contexts/ColorsProvider";
-import { useItems } from "../contexts/ItemsProvider";
-import { fetchUser, finishTrade, removeItem, requestTrade } from "../api";
+import { useColors, useItems } from "../context/DataProvider";
+import { fetchUser, finishTrade, removeItem, requestTrade } from "../api/api";
 import { getItemName } from "../utils";
 import { TradeItem, Trader, User } from "../types";
 import Alert from "./Alert";
@@ -12,6 +11,8 @@ interface Props {
   userId: number;
   refreshTrades: Function;
 }
+
+// todo refactor
 
 const TraderCard: FC<Props> = ({
   traderData,
@@ -80,7 +81,7 @@ const TraderCard: FC<Props> = ({
   useEffect(() => {
     const getUser = async () => {
       try {
-        const response = await fetchUser(traderData.userId);
+        const response = await fetchUser(traderData.userId); // todo custom hook ?
         setTrader(response);
       } catch (error) {
         console.error("Error fetching colors:", error);

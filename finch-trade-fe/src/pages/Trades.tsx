@@ -1,16 +1,17 @@
 import { FC, useCallback, useEffect, useState } from "react";
-import { fetchTrades } from "../api";
-import { useAuth } from "../contexts/AuthProvider";
+import { fetchTrades } from "../api/api";
+import { useUser } from "../context/UserProvider";
 import { Trader } from "../types";
 import TraderCard from "../components/TraderCard";
 
 const Trades: FC = () => {
-  const { user } = useAuth();
+  const user = useUser();
   const [tradeItems, setTradeItems] = useState<Trader[]>();
 
   const getTrades = useCallback(async () => {
+    if (!user) return;
     try {
-      const response = await fetchTrades(user?.id);
+      const response = await fetchTrades(user.id);
       setTradeItems(response);
     } catch (error) {
       console.error("Error fetching trades:", error);
@@ -18,8 +19,10 @@ const Trades: FC = () => {
   }, [user?.id]);
 
   useEffect(() => {
-    if (user?.id) getTrades();
+    getTrades();
   }, [user?.id, getTrades]);
+
+  if (!user) return null;
 
   return (
     <div className="w-full flex justify-center">

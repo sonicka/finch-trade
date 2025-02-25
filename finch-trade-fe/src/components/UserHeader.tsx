@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useAuth } from "../contexts/AuthProvider";
+import { useUserData } from "../context/UserProvider";
 
 const UserHeader: FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useUserData();
   const { birbName, username, friendCode } = user || {};
 
   if (!user) return null;

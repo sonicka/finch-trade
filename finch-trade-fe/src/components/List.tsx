@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
-import { addItem, fetchAllItems, fetchUserItems, removeItem } from "../api";
-import { useColors } from "../contexts/ColorsProvider";
-import { useAuth } from "../contexts/AuthProvider";
+import { addItem, removeItem } from "../api/api";
+import { useColors, useItems } from "../context/DataProvider";
+import { useUser, useUserItems } from "../context/UserProvider";
 import { getColorName } from "../utils";
-import { Item as ItemType, ListType, UserItem } from "../types";
+import { ListType } from "../types";
 import Alert from "./Alert";
 
 interface Props {
@@ -16,25 +16,12 @@ const maxHeight = `calc(100vh - ${128 + 74 + 76 + 64 + 32}px)`;
 
 const List: React.FC<Props> = ({ type }: Props) => {
   const [error, setError] = useState<string>("");
-  const [items, setItems] = useState<UserItem[]>([]);
-  const [allItems, setAllItems] = useState<ItemType[]>([]);
+  const [allItems, getAllItems] = useItems();
+  const [userItems, getUserItems] = useUserItems(type);
   const colors = useColors();
-  const { user } = useAuth();
+  const user = useUser();
 
-  const getItems = async () => {
-    try {
-      const response = await fetchUserItems(type, user.id);
-      const responseAll = await fetchAllItems();
-      setAllItems(responseAll);
-      setItems(response);
-    } catch (error) {
-      console.error("Error fetching items:", error);
-    }
-  };
-
-  useEffect(() => {
-    getItems();
-  }, [type, user.id]);
+  console.log("userItems", userItems);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,25 +29,29 @@ const List: React.FC<Props> = ({ type }: Props) => {
     const itemName = formData.get("itemName") as string;
     const itemColor = Number(formData.get("itemColor"));
 
-    if (itemName && itemColor) {
+    if (itemName && itemColor && user?.id) {
       try {
+        // todo custom hook?
         setError("");
         await addItem({
           name: itemName,
           color: itemColor,
-          userId: user.id,
+          userId: user?.id,
           listType: type,
         });
+        await getUserItems(type);
+        await getAllItems();
       } catch (e: any) {
         setError(e?.message);
       }
     }
-    await getItems();
   };
 
   const handleRemove = async (itemId: number, colorId: number) => {
-    await removeItem(itemId, colorId, type, user?.id);
-    await getItems();
+    if (user) {
+      await removeItem(itemId, colorId, type, user?.id);
+      await getUserItems(type);
+    }
   };
 
   return (
@@ -82,7 +73,7 @@ const List: React.FC<Props> = ({ type }: Props) => {
         </div>
       </div>
       <div className="flex-grow pb-4 overflow-y-auto" style={{ maxHeight }}>
-        {items.map((item) => (
+        {userItems.map((item) => (
           <Item
             key={item.name + item.color}
             itemId={item.item_id}

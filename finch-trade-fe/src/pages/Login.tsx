@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
-import { useAuth } from "../contexts/AuthProvider";
-import { logIn, signUp } from "../api";
+import { useUserData } from "../context/UserProvider";
+import { logIn, signUp } from "../api/api";
 import Alert from "../components/Alert";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { user, login } = useAuth();
+  const { user, login } = useUserData();
+
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");

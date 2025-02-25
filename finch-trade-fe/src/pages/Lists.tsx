@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { useAuth } from "../contexts/AuthProvider";
+import { useUser } from "../context/UserProvider";
 import Tabs from "../components/Tabs";
 import List from "../components/List";
 import { ListTypeEnum } from "../types";
 
 const Lists: FC = () => {
-  const { user } = useAuth();
+  const user = useUser();
 
   if (user)
     return (

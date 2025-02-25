@@ -1,4 +1,13 @@
-import { ItemData, SignUpData, LoginCredentials, ListType } from "./types";
+import {
+  Color,
+  Item,
+  ItemData,
+  ListType,
+  LoginCredentials,
+  SignUpData,
+  User,
+  UserItem,
+} from "../types";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // auth
@@ -27,7 +36,7 @@ export const logIn = async (credentials: LoginCredentials) => {
 };
 
 // users
-export const fetchUser = async (userId: number) => {
+export const fetchUser = async (userId: number): Promise<User> => {
   const response = await fetch(`${BASE_URL}/api/users/${userId}`, {});
   if (!response.ok) {
     throw new Error("Failed to fetch the user");
@@ -37,7 +46,7 @@ export const fetchUser = async (userId: number) => {
 };
 
 // colors
-export const fetchColors = async () => {
+export const fetchColors = async (): Promise<Color[]> => {
   const response = await fetch(`${BASE_URL}/api/items/colors`, {});
   if (!response.ok) {
     throw new Error("Failed to fetch colors");
@@ -59,7 +68,7 @@ export const addItem = async (itemData: ItemData) => {
   return data;
 };
 
-export const fetchAllItems = async () => {
+export const fetchAllItems = async (): Promise<Item[]> => {
   const response = await fetch(`${BASE_URL}/api/items`);
   if (!response.ok) {
     throw new Error("Failed to fetch items");
@@ -68,7 +77,10 @@ export const fetchAllItems = async () => {
   return data;
 };
 
-export const fetchUserItems = async (itemType: ListType, userId: number) => {
+export const fetchUserItems = async (
+  itemType: ListType,
+  userId: number
+): Promise<UserItem[]> => {
   const response = await fetch(
     `${BASE_URL}/api/items/${itemType}?userId=${userId}`,
     {}
@@ -77,7 +89,7 @@ export const fetchUserItems = async (itemType: ListType, userId: number) => {
     throw new Error("Failed to fetch user items");
   }
   const data = await response.json();
-  return data;
+  return data as UserItem[];
 };
 
 export const removeItem = async (
