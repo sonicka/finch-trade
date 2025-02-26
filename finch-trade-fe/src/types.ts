@@ -52,10 +52,10 @@ export enum ListTypeEnum {
 export type ListType = `${ListTypeEnum}`;
 
 export interface ItemData {
-  userId: number;
   name: string;
   color: number;
   listType: ListType;
+  userId: number;
 }
 
 export interface TradeItem {

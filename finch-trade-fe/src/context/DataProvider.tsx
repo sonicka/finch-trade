@@ -5,6 +5,7 @@ import {
   useContext,
   useCallback,
   ReactNode,
+  useMemo,
 } from "react";
 import { Color, Item } from "../types";
 import { fetchAllItems, fetchColors } from "../api/api";
@@ -19,7 +20,7 @@ interface DataContextType {
   getAllItems: () => Promise<void>;
 }
 
-const DataContext = createContext<DataContextType | undefined>(undefined);
+const DataContext = createContext<DataContextType | null>(null);
 
 export const useColors = (): Color[] => {
   const context = useContext(DataContext);
@@ -61,7 +62,12 @@ export const DataProvider = ({ children }: Props) => {
   }, [getColors, getAllItems]);
 
   return (
-    <DataContext.Provider value={{ colors, allItems: items, getAllItems }}>
+    <DataContext.Provider
+      value={useMemo(
+        () => ({ colors, allItems: items, getAllItems }),
+        [colors, items, getAllItems]
+      )}
+    >
       {children}
     </DataContext.Provider>
   );

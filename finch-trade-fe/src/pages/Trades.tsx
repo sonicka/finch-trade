@@ -1,37 +1,27 @@
-import { FC, useCallback, useEffect, useState } from "react";
-import { fetchTrades } from "../api/api";
-import { useUser } from "../context/UserProvider";
+import { FC, useEffect } from "react";
+import { useTrades, useUser, useUserData } from "../context/UserProvider";
 import { Trader } from "../types";
 import TraderCard from "../components/TraderCard";
 
 const Trades: FC = () => {
   const user = useUser();
-  const [tradeItems, setTradeItems] = useState<Trader[]>();
-
-  const getTrades = useCallback(async () => {
-    if (!user) return;
-    try {
-      const response = await fetchTrades(user.id);
-      setTradeItems(response);
-    } catch (error) {
-      console.error("Error fetching trades:", error);
-    }
-  }, [user?.id]);
+  const [trades, refetchTrades] = useTrades();
+  const { listChanged } = useUserData();
 
   useEffect(() => {
-    getTrades();
-  }, [user?.id, getTrades]);
+    if (listChanged) refetchTrades();
+  }, [listChanged]);
 
   if (!user) return null;
 
   return (
     <div className="w-full flex justify-center">
-      {tradeItems?.map((g: Trader) => (
+      {trades?.map((g: Trader) => (
         <TraderCard
           key={g.userId}
           traderData={g}
           userId={user.id}
-          refreshTrades={getTrades}
+          refreshTrades={refetchTrades}
         />
       ))}
     </div>

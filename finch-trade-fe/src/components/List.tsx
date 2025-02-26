@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Item from "./Item";
 import ItemAdd from "./ItemAdd";
-import { addItem, removeItem } from "../api/api";
 import { useColors, useItems } from "../context/DataProvider";
 import { useUser, useUserItems } from "../context/UserProvider";
+import { useManageItem } from "../hooks/items";
 import { getColorName } from "../utils";
 import { ListType } from "../types";
 import Alert from "./Alert";
@@ -15,13 +15,11 @@ interface Props {
 const maxHeight = `calc(100vh - ${128 + 74 + 76 + 64 + 32}px)`;
 
 const List: React.FC<Props> = ({ type }: Props) => {
-  const [error, setError] = useState<string>("");
-  const [allItems, getAllItems] = useItems();
-  const [userItems, getUserItems] = useUserItems(type);
+  const [allItems] = useItems();
+  const [userItems] = useUserItems(type);
+  const { addNewItem, removeItem, error, clearError } = useManageItem();
   const colors = useColors();
   const user = useUser();
-
-  console.log("userItems", userItems);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,28 +28,12 @@ const List: React.FC<Props> = ({ type }: Props) => {
     const itemColor = Number(formData.get("itemColor"));
 
     if (itemName && itemColor && user?.id) {
-      try {
-        // todo custom hook?
-        setError("");
-        await addItem({
-          name: itemName,
-          color: itemColor,
-          userId: user?.id,
-          listType: type,
-        });
-        await getUserItems(type);
-        await getAllItems();
-      } catch (e: any) {
-        setError(e?.message);
-      }
+      await addNewItem(itemName, itemColor, type, user?.id);
     }
   };
 
   const handleRemove = async (itemId: number, colorId: number) => {
-    if (user) {
-      await removeItem(itemId, colorId, type, user?.id);
-      await getUserItems(type);
-    }
+    if (user) await removeItem(itemId, colorId, type, user?.id);
   };
 
   return (
@@ -63,7 +45,7 @@ const List: React.FC<Props> = ({ type }: Props) => {
             items={allItems}
             colors={colors}
             type={type}
-            clearError={() => setError("")}
+            clearError={clearError}
           />
           {error && (
             <div className="pt-3">

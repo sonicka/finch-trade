@@ -4,10 +4,12 @@ import {
   useContext,
   useEffect,
   useReducer,
+  useRef,
 } from "react";
 import { jwtDecode } from "jwt-decode";
 import { ListType, LoggedInUser, Trader, UserItem } from "../types";
 import { fetchTrades, fetchUserItems } from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   children: ReactNode;
@@ -17,6 +19,7 @@ interface UserState {
   user: LoggedInUser | null;
   userItems: { wishlist: UserItem[]; tradelist: UserItem[] };
   trades: Trader[];
+  listChanged: boolean;
   loadingUser: boolean;
   errorUser: string | null;
   loadingUserItems: boolean;
@@ -37,12 +40,14 @@ type Action =
   | { type: "FETCH_USER_ITEMS_ERROR"; payload: string }
   | { type: "FETCH_TRADES_START" }
   | { type: "FETCH_TRADES_SUCCESS"; payload: Trader[] }
-  | { type: "FETCH_TRADES_ERROR"; payload: string };
+  | { type: "FETCH_TRADES_ERROR"; payload: string }
+  | { type: "TOGGLE_LIST_CHANGE"; payload: boolean };
 
 const initialState: UserState = {
   user: null,
   userItems: { wishlist: [], tradelist: [] },
   trades: [],
+  listChanged: false,
   loadingUser: false,
   errorUser: null,
   loadingUserItems: false,
@@ -79,6 +84,8 @@ const userReducer = (state: UserState, action: Action): UserState => {
       return { ...state, loadingTrades: false, trades: action.payload };
     case "FETCH_TRADES_ERROR":
       return { ...state, loadingTrades: false, errorTrades: action.payload };
+    case "TOGGLE_LIST_CHANGE":
+      return { ...state, listChanged: action.payload };
     default:
       return state;
   }
@@ -86,9 +93,10 @@ const userReducer = (state: UserState, action: Action): UserState => {
 
 interface UserContextType extends UserState {
   getUserItems: (type: ListType) => Promise<void>;
-  getTrades: () => void;
+  getTrades: () => Promise<void>;
   login: (token: string) => void;
   logout: () => void;
+  toggleListChange: (value: boolean) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -116,8 +124,16 @@ export const useUserItems = (
   return [context.userItems[type], context.getUserItems];
 };
 
+export const useTrades = (): [Trader[], () => Promise<void>] => {
+  const context = useContext(UserContext);
+  if (!context) throw new Error("useTrades must be used within a UserProvider");
+  return [context.trades, context.getTrades];
+};
+
 export const UserProvider = ({ children }: Props) => {
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(userReducer, initialState);
+  const refetchTradesIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check if the user is logged in when the app loads
   useEffect(() => {
@@ -138,7 +154,7 @@ export const UserProvider = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!state.user?.id) return;
+    if (!state.user || !state.user?.id) return;
 
     const fetchItems = async () => {
       await getUserItems("wishlist");
@@ -148,14 +164,23 @@ export const UserProvider = ({ children }: Props) => {
     fetchItems();
   }, [state.user?.id]);
 
+  const startRefetchInterval = () => {
+    if (refetchTradesIntervalRef.current) {
+      clearTimeout(refetchTradesIntervalRef.current);
+    }
+    refetchTradesIntervalRef.current = setTimeout(() => {
+      getTrades();
+    }, 5 * 60 * 1000); // 5 minutes
+  };
+
   useEffect(() => {
     if (!state.user?.id) return;
-
-    const interval = setInterval(() => {
-      getTrades();
-    }, 300000); // Runs every 5 minutes
-
-    return () => clearInterval(interval);
+    getTrades();
+    return () => {
+      if (refetchTradesIntervalRef.current) {
+        clearTimeout(refetchTradesIntervalRef.current);
+      }
+    };
   }, [state.user?.id]);
 
   const getUserItems = async (type: ListType) => {
@@ -182,6 +207,8 @@ export const UserProvider = ({ children }: Props) => {
     try {
       const response = await fetchTrades(state.user.id);
       dispatch({ type: "FETCH_TRADES_SUCCESS", payload: response });
+      startRefetchInterval();
+      toggleListChange(false);
     } catch (error) {
       console.error("Error fetching trades:", error);
       dispatch({
@@ -189,6 +216,10 @@ export const UserProvider = ({ children }: Props) => {
         payload: "Failed to fetch trades",
       });
     }
+  };
+
+  const toggleListChange = (value: boolean): void => {
+    dispatch({ type: "TOGGLE_LIST_CHANGE", payload: value });
   };
 
   const login = (token: string) => {
@@ -205,7 +236,7 @@ export const UserProvider = ({ children }: Props) => {
     });
     dispatch({ type: "FETCH_TRADES_SUCCESS", payload: [] });
     localStorage.removeItem("authToken");
-    location.href = "/login";
+    navigate("/login");
   };
 
   return (
@@ -216,6 +247,7 @@ export const UserProvider = ({ children }: Props) => {
         logout,
         getUserItems,
         getTrades,
+        toggleListChange,
       }}
     >
       {children}

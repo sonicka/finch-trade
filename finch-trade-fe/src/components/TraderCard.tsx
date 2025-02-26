@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import ColorCircle from "./ColorCircle";
 import { useColors, useItems } from "../context/DataProvider";
-import { fetchUser, finishTrade, removeItem, requestTrade } from "../api/api";
+import { deleteItem, fetchUser, finishTrade, requestTrade } from "../api/api";
 import { getItemName } from "../utils";
 import { TradeItem, Trader, User } from "../types";
 import Alert from "./Alert";
@@ -20,7 +20,7 @@ const TraderCard: FC<Props> = ({
   refreshTrades,
 }: Props) => {
   const colors = useColors();
-  const items = useItems();
+  const [items] = useItems();
   const [trader, setTrader] = useState<User>();
   const [friendCodeShown, setFriendCodeShown] = useState<boolean>(false);
   const giftOnly = traderData.has.length === 0;
@@ -103,7 +103,7 @@ const TraderCard: FC<Props> = ({
   const handleFinishTrade = async () => {
     try {
       if (gifting && chosenItems.my) {
-        await removeItem(
+        await deleteItem(
           chosenItems.my?.id,
           chosenItems.my?.colorId,
           "tradelist",

@@ -92,7 +92,7 @@ export const fetchUserItems = async (
   return data as UserItem[];
 };
 
-export const removeItem = async (
+export const deleteItem = async (
   itemId: number,
   colorId: number,
   listType: string,

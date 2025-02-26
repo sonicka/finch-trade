@@ -9,8 +9,8 @@ import BottomButton from "./components/BottomButton";
 
 const App = () => {
   return (
-    <Providers>
-      <Router>
+    <Router>
+      <Providers>
         <Routes>
           <Route
             path="/"
@@ -32,8 +32,8 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomButton />
-      </Router>
-    </Providers>
+      </Providers>
+    </Router>
   );
 };
 
