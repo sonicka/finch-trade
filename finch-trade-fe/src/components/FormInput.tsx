@@ -16,7 +16,7 @@ const FormInput: FC<Props> = ({
   id,
   setValue,
   required = false,
-}: Props) => {
+}) => {
   return (
     <div>
       <label

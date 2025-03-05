@@ -15,7 +15,7 @@ const ItemAdd: FC<Props> = ({
   type,
   handleSubmit,
   clearError,
-}: Props) => {
+}) => {
   const [filteredOptions, setFilteredOptions] = useState<Item[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");

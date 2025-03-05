@@ -5,7 +5,7 @@ interface Props {
   type?: "error" | "success" | "info";
 }
 
-const Alert: FC<Props> = ({ message, type = "info" }: Props) => {
+const Alert: FC<Props> = ({ message, type = "info" }) => {
   if (type === "error") {
     return (
       <div

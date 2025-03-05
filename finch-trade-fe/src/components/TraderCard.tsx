@@ -1,141 +1,42 @@
 import { FC, useEffect, useState } from "react";
-import ColorCircle from "./ColorCircle";
-import { useColors, useItems } from "../context/DataProvider";
-import { deleteItem, fetchUser, finishTrade, requestTrade } from "../api/api";
-import { getItemName } from "../utils";
-import { TradeItem, Trader, User } from "../types";
-import Alert from "./Alert";
+import { ChosenItem, Trader } from "../types";
+import TradeAlert from "./TradeAlert";
+import TraderGiftingSection from "./TraderGiftingSection";
+import TraderTradingSection from "./TraderTradingSection";
+import { useManageTrade } from "../hooks/trades";
+import TradeButtons from "./TradeButtons";
+import { useUserById } from "../hooks/users";
 
 interface Props {
   traderData: Trader;
   userId: number;
-  refreshTrades: Function;
 }
 
-// todo refactor
+export interface ChosenItems {
+  my: ChosenItem | null;
+  their: ChosenItem | null;
+}
 
-const TraderCard: FC<Props> = ({
-  traderData,
-  userId,
-  refreshTrades,
-}: Props) => {
-  const colors = useColors();
-  const [items] = useItems();
-  const [trader, setTrader] = useState<User>();
+const TraderCard: FC<Props> = ({ traderData, userId }) => {
+  const trader = useUserById(traderData.userId);
+  const { chosenItems, setChosenItems } = useChosenItems(traderData);
+  const { requestTrade, finishTrade } = useManageTrade();
   const [friendCodeShown, setFriendCodeShown] = useState<boolean>(false);
-  const giftOnly = traderData.has.length === 0;
-  const [chosenItems, setChosenItems] = useState<{
-    my: { id: number; colorId: number } | null;
-    their: { id: number; colorId: number } | null;
-  }>({ my: null, their: null });
+  const { gifting, requestedByMe, requestedByThem, tradeAccepted, showAlert } =
+    getTradeStatus(traderData, friendCodeShown);
 
-  const ownedItems =
-    traderData.status === "pending" || traderData.status === "confirmed"
-      ? traderData.has.filter(
-          (i) =>
-            (i.itemId === traderData.requestedTrade?.itemId1 &&
-              i.colorId === traderData.requestedTrade?.colorId1) ||
-            (i.itemId === traderData.requestedTrade?.itemId2 &&
-              i.colorId === traderData.requestedTrade?.colorId2)
-        )
-      : traderData.has;
-  const wantedItems =
-    traderData.status === "pending" || traderData.status === "confirmed"
-      ? traderData.wants.filter(
-          (i) =>
-            (i.itemId === traderData.requestedTrade?.itemId1 &&
-              i.colorId === traderData.requestedTrade?.colorId1) ||
-            (i.itemId === traderData.requestedTrade?.itemId2 &&
-              i.colorId === traderData.requestedTrade?.colorId2)
-        )
-      : traderData.wants;
+  const handleShowFriendCode = () => setFriendCodeShown(true);
 
-  useEffect(() => {
-    if (
-      (traderData.status === "pending" || traderData.status === "confirmed") &&
-      traderData.requestedTrade
-    ) {
-      const { itemId1, itemId2, colorId1, colorId2 } =
-        traderData.requestedTrade;
-      if (traderData.requestedByMe) {
-        setChosenItems({
-          my: { id: itemId1, colorId: colorId1 },
-          their: { id: itemId2, colorId: colorId2 },
-        });
-      } else {
-        setChosenItems({
-          my: { id: itemId2, colorId: colorId2 },
-          their: { id: itemId1, colorId: colorId1 },
-        });
-      }
-    }
-  }, [traderData, userId]);
+  const handleRequestTrade = () =>
+    requestTrade(userId, traderData.userId, chosenItems);
 
-  const requestedByMe = traderData.requestedByMe;
-  const gifting = !!chosenItems.my && !chosenItems.their;
-  const requestedByThem =
-    traderData.status === "pending" && !traderData.requestedByMe;
-  const tradeAccepted = traderData.status === "confirmed";
-  const showAlert = requestedByMe || requestedByThem || tradeAccepted;
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await fetchUser(traderData.userId); // todo custom hook ?
-        setTrader(response);
-      } catch (error) {
-        console.error("Error fetching colors:", error);
-      }
-    };
-
-    if (traderData.userId) getUser();
-  }, [traderData.userId]);
-
-  const handleRequestTrade = async () => {
-    try {
-      await requestTrade(userId, traderData.userId, chosenItems);
-      await refreshTrades();
-    } catch (error) {
-      console.error("Error requesting trade:", error);
-    }
+  const handleFinishTrade = () => {
+    finishTrade(traderData.tradeId, userId, chosenItems);
+    setFriendCodeShown(false);
+    setChosenItems({ my: null, their: null });
   };
 
-  const handleFinishTrade = async () => {
-    try {
-      if (gifting && chosenItems.my) {
-        await deleteItem(
-          chosenItems.my?.id,
-          chosenItems.my?.colorId,
-          "tradelist",
-          userId
-        );
-        setChosenItems({ my: null, their: null });
-      } else {
-        await finishTrade(traderData.tradeId, userId);
-      }
-      setFriendCodeShown(false);
-      setChosenItems({ my: null, their: null });
-      await refreshTrades();
-    } catch (error) {
-      console.error("Error finishing trades:", error);
-    }
-  };
-
-  const getAlertMessage = (): string => {
-    if (traderData.finishedByMe && traderData.status === "confirmed") {
-      return `We're waiting for ${trader?.username} to finish the trade!`;
-    }
-    if (tradeAccepted) {
-      return `Trade confirmed! ${trader?.username}'s friend code: ${trader?.friendCode}. Don't forget to click above button when you send the item!`;
-    }
-    if (requestedByThem) {
-      return `${trader?.username} requested a trade! Once you accept, you'll be able to exchange friend codes and execute the trade!`;
-    }
-    if (requestedByMe) {
-      return `Trade successfully requested! Once ${trader?.username} accepts, you'll see each other's friend codes!`;
-    }
-    return "";
-  };
+  if (!trader) return null;
 
   return (
     <div className="max-w-md rounded-lg overflow-hidden shadow-lg bg-white mb-8 mt-4 pl-10 pr-10">
@@ -145,171 +46,103 @@ const TraderCard: FC<Props> = ({
           <br />
           <b>{`${trader?.birbName} & ${trader?.username}!`}</b>
         </h2>
-        {giftOnly && (
-          <div className="flex flex-col gap-2 justify-center text-gray-600 mt-2">
-            {`${trader?.birbName} has nothing to trade, but would like to have:`}
-            {wantedItems.map((item: TradeItem) => (
-              <div
-                key={item.itemId + item.colorId}
-                className="flex justify-center text-gray-600 mt-2 mb-5"
-              >
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="theirTradeItem"
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                    checked={
-                      chosenItems.my?.id === item.itemId &&
-                      chosenItems.my?.colorId === item.colorId
-                    }
-                    onChange={() =>
-                      setChosenItems({
-                        ...chosenItems,
-                        my: { id: item.itemId, colorId: item.colorId },
-                      })
-                    }
-                  />
-                  <>
-                    <div className="pr-1">
-                      <ColorCircle colors={colors} colorId={item.colorId} />
-                    </div>
-                    {getItemName(items, item.itemId)}
-                  </>
-                </label>
-              </div>
-            ))}
-          </div>
+        {gifting && (
+          <TraderGiftingSection
+            trader={trader}
+            traderData={traderData}
+            chosenItems={chosenItems}
+            setChosenItems={setChosenItems}
+          />
         )}
-        {!giftOnly && (
-          <div className="flex flex-col text-center gap-2 justify-center text-gray-600 mt-2">
-            {`${trader?.birbName} would like to have:`}
-            {wantedItems.map((item: TradeItem) => (
-              <div
-                key={item.itemId + item.colorId}
-                className="flex justify-center text-gray-600 mt-2 mb-5"
-              >
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="myTradeItem"
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                    checked={
-                      chosenItems.my?.id === item.itemId &&
-                      chosenItems.my?.colorId === item.colorId
-                    }
-                    onChange={() =>
-                      setChosenItems({
-                        ...chosenItems,
-                        my: { id: item.itemId, colorId: item.colorId },
-                      })
-                    }
-                    disabled={
-                      traderData.status === "pending" ||
-                      traderData.status === "confirmed"
-                    }
-                  />
-                  <>
-                    <div className="pr-1">
-                      <ColorCircle colors={colors} colorId={item.colorId} />
-                    </div>
-                    {getItemName(items, item.itemId)}
-                  </>
-                </label>
-              </div>
-            ))}
-            {`${trader?.birbName} can give you:`}
-            {ownedItems.map((item: TradeItem) => (
-              <div
-                key={item.itemId + item.colorId}
-                className="flex justify-center text-gray-600 mt-2 mb-5"
-              >
-                <label className="flex items-center space-x-2 cursor-pointer">
-                  <input
-                    type="radio"
-                    name="theirTradeItem"
-                    className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-                    checked={
-                      chosenItems.their?.id === item.itemId &&
-                      chosenItems.their?.colorId === item.colorId
-                    }
-                    onChange={() =>
-                      setChosenItems({
-                        ...chosenItems,
-                        their: { id: item.itemId, colorId: item.colorId },
-                      })
-                    }
-                    disabled={
-                      traderData.status === "pending" ||
-                      traderData.status === "confirmed"
-                    }
-                  />
-                  <>
-                    <div className="pr-1">
-                      <ColorCircle colors={colors} colorId={item.colorId} />
-                    </div>
-                    {getItemName(items, item.itemId)}
-                  </>
-                </label>
-              </div>
-            ))}
-          </div>
+        {!gifting && (
+          <TraderTradingSection
+            trader={trader}
+            traderData={traderData}
+            chosenItems={chosenItems}
+            setChosenItems={setChosenItems}
+          />
         )}
-        <div className="mt-4 flex justify-center items-center">
-          {giftOnly && !friendCodeShown && (
-            <button
-              onClick={() => setFriendCodeShown(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-              disabled={!chosenItems.my?.id && !chosenItems.my?.colorId}
-            >
-              Show friend code
-            </button>
-          )}
-          {!giftOnly && !tradeAccepted && (
-            <button
-              onClick={handleRequestTrade}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-              disabled={requestedByMe || !chosenItems.my || !chosenItems.their}
-            >
-              {requestedByMe
+        <TradeButtons
+          buttons={[
+            {
+              id: "show-friend-code",
+              label: "Show friend code",
+              onClick: handleShowFriendCode,
+              disabled: !chosenItems.my?.id && !chosenItems.my?.colorId,
+              shown: gifting && !friendCodeShown,
+            },
+            {
+              id: "trade-request",
+              label: requestedByMe
                 ? "Trade requested"
                 : requestedByThem
                 ? "Accept trade request"
-                : "Request trade"}
-            </button>
-          )}
-          {tradeAccepted && (
-            <button
-              onClick={handleFinishTrade}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-              disabled={traderData.finishedByMe}
-            >
-              I sent the item!
-            </button>
-          )}
-          {gifting && friendCodeShown && (
-            <button
-              onClick={handleFinishTrade}
-              className="bg-blue-500 text-white px-4 py-2 mb-4 rounded-lg hover:bg-blue-600 disabled:bg-gray-400"
-              disabled={traderData.finishedByMe}
-            >
-              I sent the item!
-            </button>
-          )}
-        </div>
+                : "Request trade",
+              onClick: handleRequestTrade,
+              disabled: requestedByMe || !chosenItems.my || !chosenItems.their,
+              shown: !gifting && !tradeAccepted,
+            },
+            {
+              id: "finish-trade",
+              label: "Finish trade",
+              onClick: handleFinishTrade,
+              disabled: traderData.finishedByMe,
+              shown: tradeAccepted || (gifting && friendCodeShown),
+            },
+          ]}
+        />
         {showAlert && (
-          <div className="pt-3">
-            <Alert type="success" message={getAlertMessage()} />
-          </div>
-        )}
-        {friendCodeShown && (
-          <Alert
-            type="success"
-            message={`${trader?.username}'s friend code: ${trader?.friendCode}. Don't forget to confirm sending the item by clicking the button above.`}
+          <TradeAlert
+            friendCodeShown={friendCodeShown}
+            trader={trader}
+            traderData={traderData}
           />
         )}
       </div>
     </div>
   );
 };
+
+const useChosenItems = (traderData: Trader) => {
+  const [chosenItems, setChosenItems] = useState<ChosenItems>({
+    my: null,
+    their: null,
+  });
+
+  useEffect(() => {
+    if (
+      (traderData.status === "pending" || traderData.status === "confirmed") &&
+      traderData.requestedTrade
+    ) {
+      const { itemId1, itemId2, colorId1, colorId2 } =
+        traderData.requestedTrade;
+      setChosenItems(
+        traderData.requestedByMe
+          ? {
+              my: { id: itemId1, colorId: colorId1 },
+              their: { id: itemId2, colorId: colorId2 },
+            }
+          : {
+              my: { id: itemId2, colorId: colorId2 },
+              their: { id: itemId1, colorId: colorId1 },
+            }
+      );
+    }
+  }, [traderData]);
+
+  return { chosenItems, setChosenItems };
+};
+
+const getTradeStatus = (traderData: Trader, friendCodeShown: boolean) => ({
+  gifting: traderData.has.length === 0,
+  requestedByMe: traderData.requestedByMe,
+  requestedByThem: traderData.status === "pending" && !traderData.requestedByMe,
+  tradeAccepted: traderData.status === "confirmed",
+  showAlert:
+    traderData.requestedByMe ||
+    (traderData.status === "pending" && !traderData.requestedByMe) ||
+    traderData.status === "confirmed" ||
+    friendCodeShown,
+});
 
 export default TraderCard;

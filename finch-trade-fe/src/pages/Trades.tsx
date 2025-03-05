@@ -16,13 +16,8 @@ const Trades: FC = () => {
 
   return (
     <div className="w-full flex justify-center">
-      {trades?.map((g: Trader) => (
-        <TraderCard
-          key={g.userId}
-          traderData={g}
-          userId={user.id}
-          refreshTrades={refetchTrades}
-        />
+      {trades?.map((t: Trader) => (
+        <TraderCard key={t.userId} traderData={t} userId={user.id} />
       ))}
     </div>
   );

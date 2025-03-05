@@ -1,4 +1,5 @@
 import {
+  ChosenItem,
   Color,
   Item,
   ItemData,
@@ -137,10 +138,7 @@ export const fetchTrades = async (userId: number) => {
 export const requestTrade = async (
   userId1: number,
   userId2: number,
-  chosenItems: {
-    my: { id: number; colorId: number } | null;
-    their: { id: number; colorId: number } | null;
-  }
+  chosenItems: { my: ChosenItem | null; their: ChosenItem | null }
 ) => {
   const response = await fetch(
     `${BASE_URL}/api/trades/requestTrade?userId1=${userId1}&userId2=${userId2}`,

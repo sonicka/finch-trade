@@ -7,7 +7,13 @@ import {
   useRef,
 } from "react";
 import { jwtDecode } from "jwt-decode";
-import { ListType, LoggedInUser, Trader, UserItem } from "../types";
+import {
+  ListType,
+  ListTypeEnum,
+  LoggedInUser,
+  Trader,
+  UserItem,
+} from "../types";
 import { fetchTrades, fetchUserItems } from "../api/api";
 import { useNavigate } from "react-router-dom";
 
@@ -92,7 +98,7 @@ const userReducer = (state: UserState, action: Action): UserState => {
 };
 
 interface UserContextType extends UserState {
-  getUserItems: (type: ListType) => Promise<void>;
+  getUserItems: (type?: ListType) => Promise<void>;
   getTrades: () => Promise<void>;
   login: (token: string) => void;
   logout: () => void;
@@ -116,11 +122,12 @@ export const useUser = (): LoggedInUser | null => {
 };
 
 export const useUserItems = (
-  type: ListType
-): [UserItem[], (type: ListType) => Promise<void>] => {
+  type?: ListType
+): [UserItem[] | null, (type?: ListType) => Promise<void>] => {
   const context = useContext(UserContext);
   if (!context)
     throw new Error("useUserItems must be used within a UserProvider");
+  if (!type) return [null, context.getUserItems];
   return [context.userItems[type], context.getUserItems];
 };
 
@@ -183,14 +190,31 @@ export const UserProvider = ({ children }: Props) => {
     };
   }, [state.user?.id]);
 
-  const getUserItems = async (type: ListType) => {
-    if (!state.user?.id) return;
+  const getUserItems = async (type?: ListType) => {
+    if (!state.user || !state.user?.id) return;
     try {
-      const response = await fetchUserItems(type, state.user.id);
-      dispatch({
-        type: "FETCH_USER_ITEMS_SUCCESS",
-        payload: { [type]: response },
-      });
+      if (type) {
+        const response = await fetchUserItems(type, state.user.id);
+        dispatch({
+          type: "FETCH_USER_ITEMS_SUCCESS",
+          payload: { [type]: response },
+        });
+      } else {
+        const listTypes: ListType[] = Object.values(ListTypeEnum);
+        const responses = await Promise.all(
+          listTypes.map((listType) => fetchUserItems(listType, state.user!.id))
+        );
+
+        const payload = listTypes.reduce((acc, listType, index) => {
+          acc[listType] = responses[index];
+          return acc;
+        }, {} as Record<ListType, any>);
+
+        dispatch({
+          type: "FETCH_USER_ITEMS_SUCCESS",
+          payload,
+        });
+      }
     } catch (error) {
       console.error("Error fetching items:", error);
       dispatch({

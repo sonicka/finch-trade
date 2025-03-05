@@ -8,7 +8,7 @@ interface Props {
   handleRemove: Function;
 }
 
-const Item: FC<Props> = ({ color, text, itemId, handleRemove }: Props) => {
+const Item: FC<Props> = ({ color, text, itemId, handleRemove }) => {
   return (
     <div className="flex justify-between p-4 border rounded-lg mb-2">
       <div className="flex gap-4">

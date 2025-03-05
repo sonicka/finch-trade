@@ -58,6 +58,11 @@ export interface ItemData {
   userId: number;
 }
 
+export interface ChosenItem {
+  id: number;
+  colorId: number;
+}
+
 export interface TradeItem {
   userId: number;
   itemId: number;

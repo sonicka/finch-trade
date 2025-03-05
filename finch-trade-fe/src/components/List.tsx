@@ -14,7 +14,7 @@ interface Props {
 
 const maxHeight = `calc(100vh - ${128 + 74 + 76 + 64 + 32}px)`;
 
-const List: React.FC<Props> = ({ type }: Props) => {
+const List: React.FC<Props> = ({ type }) => {
   const [allItems] = useItems();
   const [userItems] = useUserItems(type);
   const { addNewItem, removeItem, error, clearError } = useManageItem();
