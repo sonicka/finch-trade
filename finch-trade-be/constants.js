@@ -13,7 +13,7 @@ export const DEFAULT_COLORS = [
   "green",
 ];
 
-export const DEFAULT_USERS = [
+export const TEST_USERS = [
   [
     1,
     "sonkuss@gmail.com",

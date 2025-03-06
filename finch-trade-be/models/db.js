@@ -1,5 +1,5 @@
 import sqlite3 from "sqlite3";
-import { DEFAULT_COLORS, DEFAULT_USERS } from "../constants.js";
+import { DEFAULT_COLORS, TEST_USERS } from "../constants.js";
 
 const dropTablesFlag = process.argv.includes("--drop-tables");
 
@@ -102,7 +102,7 @@ db.serialize(() => {
         }
       );
     });
-    DEFAULT_USERS.forEach((user) => {
+    TEST_USERS.forEach((user) => {
       db.run(
         `INSERT OR IGNORE INTO users (id, email, friend_code, username, birb_name, password) VALUES (?, ?, ?, ?, ?, ?)`,
         user,

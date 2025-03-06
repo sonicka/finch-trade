@@ -1,4 +1,5 @@
 import db from "../models/db.js";
+import { queryOne, runDB } from "../utils.js";
 
 export const getColorsFromDB = (req, res) => {
   db.all("SELECT * FROM colors", (err, rows) => {
@@ -10,7 +11,7 @@ export const getColorsFromDB = (req, res) => {
   });
 };
 
-export const postItemToDB = (req, res) => {
+export const postItemToDB = async (req, res) => {
   const { userId, color, name, listType } = req.body;
 
   if (!color || !name) {
@@ -18,65 +19,58 @@ export const postItemToDB = (req, res) => {
   }
 
   try {
-    db.get("SELECT * FROM items WHERE name = ?", [name], (err, row) => {
-      if (err) {
-        console.error("Database error:", err);
-        return res.status(500).json({ message: "Database error" });
-      }
+    const existingItem = await queryOne("SELECT * FROM items WHERE name = ?", [
+      name,
+    ]);
 
-      if (row) {
-        insertUserItem(row.id);
-      } else {
-        db.run("INSERT INTO items (name) VALUES (?)", [name], function (err) {
-          if (err) {
-            console.error("Error creating item:", err);
-            return res.status(500).json({ message: "Error creating item" });
-          }
-          insertUserItem(this.lastID);
-        });
-      }
-    });
+    let itemId;
+    if (existingItem) {
+      itemId = existingItem.id;
+    } else {
+      const result = await runDB("INSERT INTO items (name) VALUES (?)", [name]);
+      itemId = result.lastID;
+    }
 
-    function insertUserItem(id) {
-      db.get(
-        "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ? AND color_id = ?",
-        [userId, id, color],
-        (err, row) => {
-          if (err) {
-            console.error("Error checking item:", err);
-            return res.status(500).json({ message: "Error checking item" });
-          }
-
-          if (row) {
-            if (row.list_type === listType) {
-              return res.status(400).json({
-                message: "This item is already in your list.",
-              });
-            } else {
-              return res.status(400).json({
-                message: `This item is already in your ${row.list_type}.`,
-              });
-            }
-          }
-
-          db.run(
-            "INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)",
-            [userId, id, color, listType],
-            function (insertErr) {
-              if (insertErr) {
-                console.error("Error saving item:", insertErr);
-                return res.status(500).json({ message: "Error saving item" });
-              }
-
-              return res.status(201).json({
-                message: `Item added to ${listType}`,
-                itemId: this.lastID,
-              });
-            }
-          );
-        }
+    let existingUserItem;
+    if (color === 1) {
+      existingUserItem = await queryOne(
+        "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ?",
+        [userId, itemId]
+      );
+    } else {
+      existingUserItem = await queryOne(
+        "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ? AND color_id IN (?, 1)",
+        [userId, itemId, color]
       );
     }
+
+    if (existingUserItem) {
+      if (color === 1) {
+        if (existingUserItem.list_type === listType) {
+          return res.status(400).json({
+            message: `If you want this item in any color, please remove specific colors from your list first.`,
+          });
+        } else {
+          return res.status(400).json({
+            message: `You cannot add the item in "any" color to ${listType} if you already have it in the other list.`,
+          });
+        }
+      } else {
+        return res.status(400).json({
+          message: `This item is already in your ${existingUserItem.list_type}.`,
+        });
+      }
+    }
+
+    const insertResult = await runDB(
+      "INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)",
+      [userId, itemId, color, listType]
+    );
+
+    return res.status(201).json({
+      message: `Item added to ${listType}`,
+      itemId: insertResult.lastID,
+    });
   } catch (err) {
     console.error("Unexpected error:", err);
     res.status(500).json({ message: "Something went wrong" });

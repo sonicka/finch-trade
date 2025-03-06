@@ -1,4 +1,5 @@
 import db from "../models/db.js";
+import { queryAll, queryOne } from "../utils.js";
 
 export const getTradesFromDB = (req, res) => {
   const userId = req.query.userId;
@@ -14,113 +15,113 @@ export const getTradesFromDB = (req, res) => {
 
 async function findTrades(userId, callback) {
   try {
-    const wishItems = await new Promise((resolve, reject) => {
-      db.all(
-        `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'wishlist'`,
-        [userId],
-        (err, rows) => (err ? reject(err) : resolve(rows))
-      );
-    });
+    const colors = await queryAll(`SELECT * FROM colors WHERE color != ?`, [
+      "any",
+    ]);
 
-    const tradeItems = await new Promise((resolve, reject) => {
-      db.all(
-        `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'tradelist'`,
-        [userId],
-        (err, rows) => (err ? reject(err) : resolve(rows))
-      );
-    });
+    const wishItems = await queryAll(
+      `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'wishlist'`,
+      [userId]
+    );
+
+    // exchange "any" color for individual colors
+    const updatedWishItems = wishItems.flatMap((wishItem) =>
+      wishItem.color_id === 1
+        ? colors.map((color) => ({ ...wishItem, color_id: color.id }))
+        : wishItem
+    );
+
+    const tradeItems = await queryAll(
+      `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'tradelist'`,
+      [userId]
+    );
 
     const tradeItemsList = tradeItems.flatMap((item) => [
       item.item_id,
       item.color_id,
     ]);
+
     const conditions = tradeItems
-      .map(() => "(i.item_id = ? AND i.color_id = ?)")
+      .map(() => "(i.item_id = ? AND i.color_id IN (?, 1))")
       .join(" OR ");
 
-    const potentialGifts = await new Promise((resolve, reject) => {
-      db.all(
-        `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
-          FROM user_items i
-          JOIN users u ON i.user_id = u.id
-          WHERE i.list_type = 'wishlist'
-          AND (${conditions})`,
-        tradeItemsList,
-        (err, rows) => (err ? reject(err) : resolve(rows))
-      );
-    });
+    const potentialGifts = await queryAll(
+      `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
+         FROM user_items i
+         JOIN users u ON i.user_id = u.id
+         WHERE i.list_type = 'wishlist'
+         AND (${conditions})`,
+      tradeItemsList
+    );
+
+    // exchange "any" color for individual colors
+    const updatedPotentialGifts = potentialGifts.flatMap((gift) =>
+      gift.colorId === 1
+        ? tradeItems
+            .filter((item) => item.item_id === gift.itemId)
+            .map((e) => ({ ...gift, colorId: e.color_id }))
+        : gift
+    );
 
     const giftsAndTrades = [];
-
     const potentialTraders = [
       ...new Set(potentialGifts.map((item) => item.userId)),
     ];
 
     for (const traderId of potentialTraders) {
-      const existingTrade = await new Promise((resolve, reject) => {
-        db.get(
-          `SELECT * FROM trades
-           WHERE (user_id1 = ? AND user_id2 = ?)
-           OR (user_id1 = ? AND user_id2 = ?)`,
-          [userId, traderId, traderId, userId],
-          (err, row) => {
-            if (err) return reject(err);
-            if (!row) return resolve(null);
-
-            if (row.status === "pending" || row.status === "confirmed") {
-              const requestedByMe =
-                userId.toString() === row.user_id1.toString();
-              const finishedByMe = JSON.parse(row.finished_by).includes(
-                userId.toString()
-              );
-
-              return resolve({
-                tradeId: row.id,
-                status: row.status,
-                requestedByMe,
-                finishedByMe,
-                requestedTrade: {
-                  userId1: row.user_id1,
-                  itemId1: row.item_id1,
-                  colorId1: row.color_id1,
-                  userId2: row.user_id2,
-                  itemId2: row.item_id2,
-                  colorId2: row.color_id2,
-                },
-              });
-            }
-            resolve({ status: row.status });
+      const existingTrade = await queryOne(
+        `SELECT * FROM trades WHERE (user_id1 = ? AND user_id2 = ?) OR (user_id1 = ? AND user_id2 = ?)`,
+        [userId, traderId, traderId, userId],
+        (row, resolve) => {
+          if (!row) return resolve(null);
+          if (row.status === "pending" || row.status === "confirmed") {
+            const requestedByMe = userId.toString() === row.user_id1.toString();
+            const finishedByMe = JSON.parse(row.finished_by).includes(
+              userId.toString()
+            );
+            return resolve({
+              tradeId: row.id,
+              status: row.status,
+              requestedByMe,
+              finishedByMe,
+              requestedTrade: {
+                userId1: row.user_id1,
+                itemId1: row.item_id1,
+                colorId1: row.color_id1,
+                userId2: row.user_id2,
+                itemId2: row.item_id2,
+                colorId2: row.color_id2,
+              },
+            });
           }
-        );
-      });
+          resolve({ status: row.status });
+        }
+      );
 
-      const traderWants = potentialGifts.filter(
+      const traderWants = updatedPotentialGifts.filter(
         (item) => item.userId === traderId
       );
 
-      const wishConditions =
-        wishItems.length > 0
-          ? wishItems
-              .map(() => "(i.item_id = ? AND i.color_id = ?)")
-              .join(" OR ")
-          : "1=0";
-      const wishParams = wishItems.flatMap((item) => [
+      const wishConditions = updatedWishItems.length
+        ? updatedWishItems
+            .map(() => "(i.item_id = ? AND i.color_id = ?)")
+            .join(" OR ")
+        : "1=0";
+
+      const wishParams = updatedWishItems.flatMap((item) => [
         item.item_id,
         item.color_id,
       ]);
 
-      const traderOffers = await new Promise((resolve, reject) => {
-        db.all(
-          `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
-            FROM user_items i
-            JOIN users u ON i.user_id = u.id
-            WHERE i.list_type = 'tradelist'
-            AND i.user_id = ?
-            AND (${wishConditions})`,
-          [traderId, ...wishParams],
-          (err, rows) => (err ? reject(err) : resolve(rows))
-        );
-      });
+      const traderOffers = await queryAll(
+        `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
+         FROM user_items i
+         JOIN users u ON i.user_id = u.id
+         WHERE i.list_type = 'tradelist'
+         AND i.user_id = ?
+         AND (${wishConditions})`,
+        [traderId, ...wishParams]
+      );
 
       giftsAndTrades.push({
         userId: traderId,
