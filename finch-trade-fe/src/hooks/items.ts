@@ -7,6 +7,7 @@ import { useItems } from "../context/DataProvider";
 export const useManageItem = () => {
   const { getUserItems, listChanged, toggleListChange } = useUserData();
   const [_, getAllItems] = useItems();
+  const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -32,9 +33,10 @@ export const useManageItem = () => {
     setError(null);
 
     try {
+      let response;
       if (action === "add") {
         if (!payload.name) return;
-        await addItem({
+        response = await addItem({
           name: payload.name,
           color: payload.colorId,
           userId: payload.userId,
@@ -43,13 +45,15 @@ export const useManageItem = () => {
         await getAllItems();
       }
       if (action === "remove") {
-        await deleteItem(
+        response = await deleteItem(
           payload.itemId!,
           payload.colorId,
           payload.type,
           payload.userId
         );
       }
+
+      if (!!response.message) setSuccess(response.message);
 
       await getUserItems(payload.type);
       if (!listChanged) toggleListChange(true);
@@ -74,7 +78,10 @@ export const useManageItem = () => {
     userId: number
   ) => handleItem("remove", { itemId, colorId, type, userId });
 
-  const clearError = () => setError(null);
+  const clearMessage = () => {
+    setSuccess(null);
+    setError(null);
+  };
 
-  return { addNewItem, removeItem, clearError, error, loading };
+  return { addNewItem, removeItem, error, success, clearMessage, loading };
 };

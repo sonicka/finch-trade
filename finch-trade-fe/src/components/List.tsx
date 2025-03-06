@@ -17,7 +17,8 @@ const maxHeight = `calc(100vh - ${128 + 74 + 76 + 64 + 32}px)`;
 const List: React.FC<Props> = ({ type }) => {
   const [allItems] = useItems();
   const [userItems] = useUserItems(type);
-  const { addNewItem, removeItem, error, clearError } = useManageItem();
+  const { addNewItem, removeItem, error, success, clearMessage } =
+    useManageItem();
   const colors = useColors();
   const user = useUser();
 
@@ -45,8 +46,13 @@ const List: React.FC<Props> = ({ type }) => {
             items={allItems}
             colors={colors}
             type={type}
-            clearError={clearError}
+            clearError={clearMessage}
           />
+          {success && (
+            <div className="pt-3">
+              <Alert type="success" message={success} />
+            </div>
+          )}
           {error && (
             <div className="pt-3">
               <Alert type="error" message={error} />
@@ -55,18 +61,20 @@ const List: React.FC<Props> = ({ type }) => {
         </div>
       </div>
       <div className="flex-grow pb-4 overflow-y-auto" style={{ maxHeight }}>
-        {userItems.map((item) => (
-          <Item
-            key={item.name + item.color}
-            itemId={item.item_id}
-            color={{
-              id: item.color,
-              color: getColorName(colors, item.color),
-            }}
-            text={item.name}
-            handleRemove={handleRemove}
-          />
-        ))}
+        <div>
+          {userItems?.map((item) => (
+            <Item
+              key={item.name + item.color}
+              itemId={item.item_id}
+              color={{
+                id: item.color,
+                color: getColorName(colors, item.color),
+              }}
+              text={item.name}
+              handleRemove={handleRemove}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
