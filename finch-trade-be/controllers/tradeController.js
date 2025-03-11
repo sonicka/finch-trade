@@ -205,6 +205,96 @@ export const postRequestTrade = (req, res) => {
   );
 };
 
+export const getPastTradesFromDB = async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    if (!userId) {
+      return res.status(400).json({ error: "Missing userId parameter" });
+    }
+
+    const [pastGifts, pastTrades] = await Promise.all([
+      queryAll(
+        `SELECT * FROM trades_history
+         WHERE user_id1 = ? AND trade_id IS NULL
+         ORDER BY archived_at DESC`,
+        [userId]
+      ),
+      queryAll(
+        `SELECT * FROM trades_history
+         WHERE (user_id1 = ? OR user_id2 = ?) AND trade_id IS NOT NULL
+         ORDER BY archived_at DESC`,
+        [userId, userId]
+      ),
+    ]);
+
+    const formattedGifts = pastGifts.map((row) => ({
+      id: row.id,
+      userId: row.user_id2,
+      itemId: row.item_id1,
+      colorId: row.color_id1,
+      archivedAt: row.archived_at,
+      type: "gift",
+    }));
+
+    const formattedTrades = pastTrades.map((row) => ({
+      id: row.id,
+      status: row.status,
+      tradeId: row.trade_id,
+      userId1: row.user_id1,
+      itemId1: row.item_id1,
+      colorId1: row.color_id1,
+      userId2: row.user_id2,
+      itemId2: row.item_id2,
+      colorId2: row.color_id2,
+      archivedAt: row.archived_at,
+      type: "trade",
+    }));
+
+    const allPastTransactions = [...formattedGifts, ...formattedTrades].sort(
+      (a, b) => new Date(b.archivedAt) - new Date(a.archivedAt)
+    );
+
+    res.status(200).json(allPastTransactions);
+  } catch (error) {
+    console.error("Error fetching past trades:", error);
+    res.status(500).json({ error: "Failed to retrieve past trades" });
+  }
+};
+
+export const postFinishGifting = (req, res) => {
+  const { giftedBy, giftedTo, itemId, colorId } = req.body;
+
+  if (!itemId || !colorId || !giftedTo || !giftedBy) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
+  db.run(
+    "INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)",
+    [giftedBy, giftedTo, itemId, colorId],
+    function (err) {
+      if (err) {
+        console.error("Error archiving gifting:", err.message);
+        return res
+          .status(500)
+          .json({ error: "Failed to archive gifting", err });
+      }
+
+      (async () => {
+        try {
+          await deleteItem(giftedTo, itemId, colorId, true);
+          await deleteItem(giftedBy, itemId, colorId);
+          return res.status(200).json({
+            message: "Gifting archived and item successfully deleted.",
+          });
+        } catch (err) {
+          console.error("Error during closing gifting:", err.message);
+          return res.status(500).json({ error: err.message, err });
+        }
+      })();
+    }
+  );
+};
+
 export const postFinishTrade = (req, res) => {
   const { tradeId } = req.params;
   const { userId } = req.query;
@@ -255,15 +345,18 @@ export const postFinishTrade = (req, res) => {
         if (finishedBy.length === 2) {
           (async () => {
             try {
-              await deleteItem(row.user_id1, row.item_id1, row.color_id1);
-              await deleteItem(row.user_id2, row.item_id2, row.color_id2);
+              await deleteItem(row.user_id1, row.item_id1, row.color_id1, true);
+              await deleteItem(row.user_id2, row.item_id2, row.color_id2, true);
+              await deleteItem(row.user_id1, row.item_id2, row.color_id2, true);
+              await deleteItem(row.user_id2, row.item_id1, row.color_id1, true);
+              await archiveTrade(row);
               await deleteTrade(row.id);
 
               return sendResponse(200, {
-                message: "Trade and items successfully deleted.",
+                message: "Trade archived and items successfully deleted.",
               });
             } catch (err) {
-              console.error("Error during deletion:", err.message);
+              console.error("Error during closing trade:", err.message);
               return sendResponse(500, { error: err.message });
             }
           })();
@@ -273,14 +366,37 @@ export const postFinishTrade = (req, res) => {
   );
 };
 
-const deleteItem = (userId, itemId, colorId) => {
+const deleteItem = (userId, itemId, colorId, any = false) => {
+  let query = any
+    ? "DELETE FROM user_items WHERE user_id = ? AND item_id = ? AND (color_id = ? OR color_id = 1)"
+    : "DELETE FROM user_items WHERE user_id = ? AND item_id = ? AND color_id = ?";
+
+  return new Promise((resolve, reject) => {
+    db.run(query, [userId, itemId, colorId], function (err) {
+      if (err) return reject(err);
+      if (this.changes === 0) return reject(new Error("Item not found"));
+      resolve();
+    });
+  });
+};
+
+const archiveTrade = (row) => {
   return new Promise((resolve, reject) => {
     db.run(
-      "DELETE FROM user_items WHERE user_id = ? AND item_id = ? AND color_id = ?",
-      [userId, itemId, colorId],
+      "INSERT INTO trades_history (trade_id, user_id1, user_id2, status, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        row.id,
+        row.user_id1,
+        row.user_id2,
+        "archived",
+        row.item_id1,
+        row.color_id1,
+        row.item_id2,
+        row.color_id2,
+      ],
       function (err) {
-        if (err) return reject(err);
-        if (this.changes === 0) return reject(new Error("Item not found"));
+        if (err)
+          return reject(new Error("Failed to archive trade: " + err.message));
         resolve();
       }
     );

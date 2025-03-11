@@ -18,3 +18,18 @@ export const filterRequestedItems = (
       (i.itemId === itemId2 && i.colorId === colorId2)
   );
 };
+
+export const formatDate = (date: string | Date) => {
+  let d = date;
+  if (typeof d === "string") d = new Date(date);
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  })
+    .format(d)
+    .replace(/\b(am|pm)\b/, (match) => match.toUpperCase());
+};

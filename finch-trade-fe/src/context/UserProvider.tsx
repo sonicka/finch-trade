@@ -6,16 +6,17 @@ import {
   useReducer,
   useRef,
 } from "react";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { fetchPastTrades, fetchTrades, fetchUserItems } from "../api/api";
 import {
   ListType,
   ListTypeEnum,
   LoggedInUser,
+  PastTrades,
   Trader,
   UserItem,
 } from "../types";
-import { fetchTrades, fetchUserItems } from "../api/api";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   children: ReactNode;
@@ -25,6 +26,7 @@ interface UserState {
   user: LoggedInUser | null;
   userItems: { wishlist: UserItem[]; tradelist: UserItem[] };
   trades: Trader[];
+  pastTrades: PastTrades;
   listChanged: boolean;
   loadingUser: boolean;
   errorUser: string | null;
@@ -32,6 +34,8 @@ interface UserState {
   errorUserItems: string | null;
   loadingTrades: boolean;
   errorTrades: string | null;
+  loadingPastTrades: boolean;
+  errorPastTrades: string | null;
 }
 
 type Action =
@@ -47,12 +51,16 @@ type Action =
   | { type: "FETCH_TRADES_START" }
   | { type: "FETCH_TRADES_SUCCESS"; payload: Trader[] }
   | { type: "FETCH_TRADES_ERROR"; payload: string }
+  | { type: "FETCH_PAST_TRADES_START" }
+  | { type: "FETCH_PAST_TRADES_SUCCESS"; payload: PastTrades }
+  | { type: "FETCH_PAST_TRADES_ERROR"; payload: string }
   | { type: "TOGGLE_LIST_CHANGE"; payload: boolean };
 
 const initialState: UserState = {
   user: null,
   userItems: { wishlist: [], tradelist: [] },
   trades: [],
+  pastTrades: [],
   listChanged: false,
   loadingUser: false,
   errorUser: null,
@@ -60,6 +68,8 @@ const initialState: UserState = {
   errorUserItems: null,
   loadingTrades: false,
   errorTrades: null,
+  loadingPastTrades: false,
+  errorPastTrades: null,
 };
 
 const userReducer = (state: UserState, action: Action): UserState => {
@@ -90,6 +100,16 @@ const userReducer = (state: UserState, action: Action): UserState => {
       return { ...state, loadingTrades: false, trades: action.payload };
     case "FETCH_TRADES_ERROR":
       return { ...state, loadingTrades: false, errorTrades: action.payload };
+    case "FETCH_PAST_TRADES_START":
+      return { ...state, loadingTrades: true, errorPastTrades: null };
+    case "FETCH_PAST_TRADES_SUCCESS":
+      return { ...state, loadingTrades: false, pastTrades: action.payload };
+    case "FETCH_PAST_TRADES_ERROR":
+      return {
+        ...state,
+        loadingTrades: false,
+        errorPastTrades: action.payload,
+      };
     case "TOGGLE_LIST_CHANGE":
       return { ...state, listChanged: action.payload };
     default:
@@ -100,6 +120,7 @@ const userReducer = (state: UserState, action: Action): UserState => {
 interface UserContextType extends UserState {
   getUserItems: (type?: ListType) => Promise<void>;
   getTrades: () => Promise<void>;
+  getPastTrades: () => Promise<void>;
   login: (token: string) => void;
   logout: () => void;
   toggleListChange: (value: boolean) => void;
@@ -131,10 +152,20 @@ export const useUserItems = (
   return [context.userItems[type], context.getUserItems];
 };
 
-export const useTrades = (): [Trader[], () => Promise<void>] => {
+export const useTrades = (): {
+  trades: Trader[];
+  getTrades: () => Promise<void>;
+  pastTrades: PastTrades;
+  getPastTrades: () => Promise<void>;
+} => {
   const context = useContext(UserContext);
   if (!context) throw new Error("useTrades must be used within a UserProvider");
-  return [context.trades, context.getTrades];
+  return {
+    trades: context.trades,
+    getTrades: context.getTrades,
+    pastTrades: context.pastTrades,
+    getPastTrades: context.getPastTrades,
+  };
 };
 
 export const UserProvider = ({ children }: Props) => {
@@ -183,6 +214,7 @@ export const UserProvider = ({ children }: Props) => {
   useEffect(() => {
     if (!state.user?.id) return;
     getTrades();
+    getPastTrades();
     return () => {
       if (refetchTradesIntervalRef.current) {
         clearTimeout(refetchTradesIntervalRef.current);
@@ -242,6 +274,22 @@ export const UserProvider = ({ children }: Props) => {
     }
   };
 
+  const getPastTrades = async () => {
+    if (!state.user?.id) return;
+    dispatch({ type: "FETCH_PAST_TRADES_START" });
+
+    try {
+      const response = await fetchPastTrades(state.user.id);
+      dispatch({ type: "FETCH_PAST_TRADES_SUCCESS", payload: response });
+    } catch (error) {
+      console.error("Error fetching past trades:", error);
+      dispatch({
+        type: "FETCH_PAST_TRADES_ERROR",
+        payload: "Failed to fetch past trades",
+      });
+    }
+  };
+
   const toggleListChange = (value: boolean): void => {
     dispatch({ type: "TOGGLE_LIST_CHANGE", payload: value });
   };
@@ -271,6 +319,7 @@ export const UserProvider = ({ children }: Props) => {
         logout,
         getUserItems,
         getTrades,
+        getPastTrades,
         toggleListChange,
       }}
     >

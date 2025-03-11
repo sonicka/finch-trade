@@ -40,7 +40,7 @@ const TraderTradingSection: FC<Props> = ({
           key={item.itemId + item.colorId}
           className="flex justify-center text-gray-600 mt-2 mb-5"
         >
-          <label className="flex items-center space-x-2 cursor-pointer">
+          <label className="flex items-center space-x-2 cursor-pointer gap-2">
             <input
               type="radio"
               name="myTradeItem"
@@ -57,12 +57,8 @@ const TraderTradingSection: FC<Props> = ({
               }
               disabled={isTradeOngoing}
             />
-            <>
-              <div className="pr-1">
-                <ColorCircle colors={colors} colorId={item.colorId} />
-              </div>
-              {getItemName(items, item.itemId)}
-            </>
+            <ColorCircle colors={colors} colorId={item.colorId} />
+            {getItemName(items, item.itemId)}
           </label>
         </div>
       ))}

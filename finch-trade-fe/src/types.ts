@@ -70,7 +70,6 @@ export interface TradeItem {
 }
 
 export interface Trader {
-  // todo
   tradeId: number;
   userId: number;
   wants: TradeItem[];
@@ -89,3 +88,28 @@ export interface RequestedTrade {
   itemId2: number;
   colorId2: number;
 }
+
+export interface PastGift {
+  id: number;
+  userId: number;
+  itemId: number;
+  colorId: number;
+  archivedAt: string;
+  type: "gift";
+}
+
+export interface PastTrade {
+  id: number;
+  tradeId: number;
+  userId1: number;
+  itemId1: number;
+  colorId1: number;
+  userId2: number;
+  itemId2: number;
+  colorId2: number;
+  archivedAt: string;
+  status: string;
+  type: "trade";
+}
+
+export type PastTrades = (PastGift | PastTrade)[];

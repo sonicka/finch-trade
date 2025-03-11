@@ -1,10 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import { ChosenItem, Trader } from "../types";
-import TradeAlert from "./TradeAlert";
 import TraderGiftingSection from "./TraderGiftingSection";
 import TraderTradingSection from "./TraderTradingSection";
-import { useManageTrade } from "../hooks/trades";
 import TradeButtons from "./TradeButtons";
+import TradeAlert from "./TradeAlert";
+import { useTrades } from "../context/UserProvider";
+import { useManageTrade } from "../hooks/trades";
 import { useUserById } from "../hooks/users";
 
 interface Props {
@@ -20,7 +21,8 @@ export interface ChosenItems {
 const TraderCard: FC<Props> = ({ traderData, userId }) => {
   const trader = useUserById(traderData.userId);
   const { chosenItems, setChosenItems } = useChosenItems(traderData);
-  const { requestTrade, finishTrade } = useManageTrade();
+  const { requestTrade, finishTrade, finishGifting } = useManageTrade();
+  const { getPastTrades } = useTrades();
   const [friendCodeShown, setFriendCodeShown] = useState<boolean>(false);
   const { gifting, requestedByMe, requestedByThem, tradeAccepted, showAlert } =
     getTradeStatus(traderData, friendCodeShown);
@@ -30,10 +32,18 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
   const handleRequestTrade = () =>
     requestTrade(userId, traderData.userId, chosenItems);
 
-  const handleFinishTrade = () => {
-    finishTrade(traderData.tradeId, userId, chosenItems);
+  const handleFinishTrade = async () => {
+    if (gifting && chosenItems.my?.id)
+      await finishGifting(
+        userId,
+        traderData.userId,
+        chosenItems.my?.id,
+        chosenItems.my?.colorId
+      );
+    else await finishTrade(traderData.tradeId, userId, chosenItems);
     setFriendCodeShown(false);
     setChosenItems({ my: null, their: null });
+    await getPastTrades();
   };
 
   if (!trader) return null;

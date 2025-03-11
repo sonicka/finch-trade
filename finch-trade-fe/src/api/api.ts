@@ -135,6 +135,18 @@ export const fetchTrades = async (userId: number) => {
   return data;
 };
 
+export const fetchPastTrades = async (userId: number) => {
+  const response = await fetch(
+    `${BASE_URL}/api/trades/past?userId=${userId}`,
+    {}
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch past trades");
+  }
+  const data = await response.json();
+  return data;
+};
+
 export const requestTrade = async (
   userId1: number,
   userId2: number,
@@ -167,6 +179,24 @@ export const finishTrade = async (tradeId: number, userId: number) => {
   );
   if (!response.ok) {
     throw new Error("Failed to finish trade");
+  }
+  const data = await response.json();
+  return data;
+};
+
+export const finishGifting = async (
+  giftedBy: number,
+  giftedTo: number,
+  itemId: number,
+  colorId: number
+) => {
+  const response = await fetch(`${BASE_URL}/api/trades/finishGifting`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ giftedBy, giftedTo, itemId, colorId }),
+  });
+  if (!response.ok) {
+    throw new Error("Failed to finish gifting");
   }
   const data = await response.json();
   return data;

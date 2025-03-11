@@ -1,20 +1,27 @@
 import { useState } from "react";
-import { deleteItem, finishTrade, requestTrade } from "../api/api";
+import {
+  deleteItem,
+  finishGifting,
+  finishTrade,
+  requestTrade,
+} from "../api/api";
 import { useTrades, useUserItems } from "../context/UserProvider";
 import { ChosenItems } from "../components/TraderCard";
 
 export const useManageTrade = () => {
   const [_, getUserItems] = useUserItems();
-  const [__, refetchTrades] = useTrades();
+  const { getTrades: refetchTrades } = useTrades();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleTrade = async (
-    action: "request" | "finish",
+    action: "request" | "finish-trade" | "finish-gifting",
     payload: {
       userId: number;
       tradeId?: number;
       traderId?: number;
+      itemId?: number;
+      colorId?: number;
       chosenItems?: ChosenItems;
     }
   ) => {
@@ -32,16 +39,26 @@ export const useManageTrade = () => {
           payload.chosenItems
         );
       }
-      if (action === "finish") {
+      if (action === "finish-trade") {
         if (!payload.tradeId && payload.chosenItems && payload.chosenItems.my) {
           await deleteItem(
-            payload.chosenItems.my?.id,
-            payload.chosenItems.my?.colorId,
+            payload.chosenItems.my.id,
+            payload.chosenItems.my.colorId,
             "tradelist",
             payload.userId
           );
         } else {
           await finishTrade(payload.tradeId!, payload.userId);
+        }
+      }
+      if (action === "finish-gifting") {
+        if (!!payload.itemId && !!payload.colorId && !!payload.traderId) {
+          await finishGifting(
+            payload.userId,
+            payload.traderId,
+            payload.itemId!,
+            payload.colorId!
+          );
         }
       }
 
@@ -64,13 +81,21 @@ export const useManageTrade = () => {
     tradeId: number,
     userId: number,
     chosenItems?: ChosenItems
-  ) => handleTrade("finish", { tradeId, userId, chosenItems });
+  ) => handleTrade("finish-trade", { tradeId, userId, chosenItems });
+
+  const handleFinishGifting = (
+    userId: number,
+    traderId: number,
+    itemId: number,
+    colorId: number
+  ) => handleTrade("finish-gifting", { userId, traderId, itemId, colorId });
 
   const clearError = () => setError(null);
 
   return {
     requestTrade: handleRequestTrade,
     finishTrade: handleFinishTrade,
+    finishGifting: handleFinishGifting,
     clearError,
     error,
     loading,
