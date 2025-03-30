@@ -1,27 +1,25 @@
 # Finch Trade App
 
-**Finch Trade** is a fan-made third-party application designed to connect users based on their trade and wishlists. The app matches users and suggests potential trades or gifts by analyzing their manually added items. Once a match is found, users can accept the trade and exchange friend codes to complete the transaction.
+**Finch Trade** is a fan-made application designed to connect [Finch](https://finchcare.com/) users based on their tradelists and wishlists. The app matches users and suggests potential trades or gifts by analyzing their manually added items. Once a match is found, users can accept the trade and exchange friend codes to complete the transaction within the [Finch](https://finchcare.com/) app.
 
 ## Features
 
-- **Account Creation**: Create an account by providing your username, birb name, password, and friend code (which can't be updated currently).
+- **Account Creation**: Create an account by providing your username, birb name, password, and friend code.
 - **Trade and Wishlist**: Add items you want to give away or receive, and the app will find matches with other users.
 - **Trade Matching**: The algorithm analyzes users' lists and suggests potential trades or gifts.
-- **Trade Execution**: Accept a trade and execute it by sharing your friend code with the other user.
+- **Trade Execution**: Accept a trade and execute it within [Finch](https://finchcare.com/) app by using the friend code that's shared with you.
 
 ## Technologies Used
 
 - **Frontend**: React, Tailwind CSS
 - **Backend**: Node.js, Express
 - **Database**: SQLite (For now, will be replaced with a more scalable option in the future)
-- **Others**: GitHub for version control
 
 ## How to Use
 
 1. **Create an Account**:
 
-   - Enter your **username**, **birb name**, **password**, and **friend code** (this data cannot be updated at the moment).
-   - Ensure that your name matches the one in the Finch app.
+   - Enter your **username**, **birb name**, **friend code** (make sure they match your data in [Finch](https://finchcare.com/) app) and **password**. (This data cannot be updated at the moment.)
 
 2. **Add Items**:
 
