@@ -1,10 +1,10 @@
 import { FC, useEffect } from "react";
+import PastGiftCard from "../components/layout/PastGiftCard";
+import PastTradeCard from "../components/layout/PastTradeCard";
+import TraderCard from "../components/layout/TraderCard";
+import Alert from "../components/ui/Alert";
 import { useTrades, useUser, useUserData } from "../context/UserProvider";
 import { PastGift, PastTrade, Trader } from "../types";
-import TraderCard from "../components/TraderCard";
-import PastTradeCard from "../components/PastTradeCard";
-import Alert from "../components/Alert";
-import PastGiftCard from "../components/PastGiftCard";
 
 const Trades: FC = () => {
   const user = useUser();
@@ -18,37 +18,40 @@ const Trades: FC = () => {
   if (!user) return null;
 
   return (
-    <div className="w-full flex flex-col items-center pb-12">
+    <div className="w-full md:w-1/2 m-auto pb-8">
       {!trades.length ? (
         <div className="py-8">
           <Alert type="info" message="No trades available at the moment." />
         </div>
       ) : (
         trades?.map((t: Trader) => (
-          <TraderCard key={t.userId} traderData={t} userId={user.id} />
+          <div className="mx-10 mt-4 mb-8" key={t.tradeId}>
+            <TraderCard key={t.userId} traderData={t} userId={user.id} />
+          </div>
         ))
       )}
       {pastTrades?.length > 0 ? (
         <>
-          <div className="w-full flex flex-col items-center relative">
-            <div className="w-1/2 border-t border-black my-6 relative">
-              <h5 className="text-lg font-semibold bg-white px-2 absolute left-1/2 -translate-x-1/2 -top-4">
+          <div className="w-full flex flex-col items-center mt-10">
+            <div className="w-1/2 border-t border-black mb-6 flex items-center justify-center">
+              <h5 className="text-lg font-semibold bg-beige px-2 -mt-4">
                 Past trades
               </h5>
             </div>
           </div>
-          {pastTrades?.map((p: PastGift | PastTrade) =>
-            p.type === "gift" ? (
-              <PastGiftCard key={p.id} pastTrade={p} traderId={p.userId} />
-            ) : (
-              <PastTradeCard
-                key={p.id}
-                pastTrade={p}
-                user={user}
-                traderId={p.userId1 === user.id ? p.userId2 : p.userId1}
-              />
-            )
-          )}
+          {pastTrades.map((p: PastGift | PastTrade) => (
+            <div className="mx-10 mb-8" key={p.id}>
+              {p.type === "gift" ? (
+                <PastGiftCard pastTrade={p} traderId={p.userId} />
+              ) : (
+                <PastTradeCard
+                  pastTrade={p}
+                  user={user}
+                  traderId={p.userId1 === user.id ? p.userId2 : p.userId1}
+                />
+              )}
+            </div>
+          ))}
         </>
       ) : null}
     </div>

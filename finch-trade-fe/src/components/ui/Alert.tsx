@@ -34,7 +34,7 @@ const Alert: FC<Props> = ({ message, type = "info" }) => {
 
   return (
     <div
-      className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center"
+      className="bg-lightBeige border border-darkBeige text-darkBeige px-4 py-3 rounded text-center"
       role="alert"
     >
       <span className="block sm:inline">{message ? message : ""}</span>

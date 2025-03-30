@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { TradeItem, Trader, User } from "../types";
-import { getItemName } from "../utils";
-import ColorCircle from "./ColorCircle";
+import { getItemName } from "../../utils";
+import ColorCircle from "../ui/ColorCircle";
 import { ChosenItems } from "./TraderCard";
-import { useColors, useItems } from "../context/DataProvider";
+import { useColors, useItems } from "../../context/DataProvider";
+import { TradeItem, Trader, User } from "../../types";
 
 interface Props {
   trader: User;
@@ -24,7 +24,7 @@ const TraderGiftingSection: FC<Props> = ({
   const traderWantedItems = traderData.wants;
 
   return (
-    <div className="flex flex-col gap-2 justify-center text-gray-600 mt-2">
+    <div className="flex flex-col items-center gap-2 justify-center text-gray-600 mt-2">
       {`${trader?.birbName} has nothing to trade, but would like to have:`}
       {traderWantedItems.map((item: TradeItem) => (
         <div

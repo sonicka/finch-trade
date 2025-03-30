@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useUser } from "../context/UserProvider";
-import UserHeader from "./UserHeader";
+import { useUser } from "../../context/UserProvider";
+import Layout from "./Layout";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -14,12 +14,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
 
-  return (
-    <div className="pt-32">
-      <UserHeader />
-      {children}
-    </div>
-  );
+  return <Layout>{children}</Layout>;
 };
 
 export default ProtectedRoute;

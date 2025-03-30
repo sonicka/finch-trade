@@ -3,9 +3,8 @@ import Login from "./pages/Login";
 import Lists from "./pages/Lists";
 import Trades from "./pages/Trades";
 import NotFound from "./pages/404";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { Providers } from "./providers/Providers";
-import BottomButton from "./components/BottomButton";
 
 const App = () => {
   return (
@@ -31,7 +30,6 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        <BottomButton />
       </Providers>
     </Router>
   );

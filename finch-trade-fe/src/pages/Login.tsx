@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FormInput from "../components/FormInput";
-import { useUserData } from "../context/UserProvider";
+import Alert from "../components/ui/Alert";
+import Button from "../components/ui/Button";
+import Card from "../components/ui/Card";
+import FormInput from "../components/ui/FormInput";
 import { logIn, signUp } from "../api/api";
-import Alert from "../components/Alert";
+import { useUserData } from "../context/UserProvider";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -46,11 +48,11 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen bg-gray-100">
-      <div className="flex flex-col gap-10 w-96">
-        <Alert message="Join us on a fan-made Finch trading app! Simply log in, add the items you'd like to trade or receive, and let the app match you with a suitable trader!" />
-        <div className="max-w-sm mx-auto p-2 bg-white shadow-lg rounded-lg">
-          <h1 className="text-2xl font-semibold text-center mt-3 mb-6">
+    <div className="grid place-items-center min-h-screen">
+      <Card>
+        <div className="flex flex-col gap-6 w-96">
+          <Alert message="Join us on a fan-made Finch trading app! Simply log in, add the items you'd like to trade or receive, and let the app match you with a suitable trader!" />
+          <h1 className="text-2xl font-semibold text-center pt-3">
             {isLogin ? "Login" : "Sign Up"}
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -92,25 +94,23 @@ const Login: React.FC = () => {
               id="password"
               required
             />
-            <div className="pt-4 pb-3">
-              <button
-                type="submit"
-                className="w-full py-3 bg-blue-500 text-white font-semibold rounded-md shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-              >
-                {isLogin ? "Log in" : "Sign up"}
-              </button>
+            <div className="py-4 text-center">
+              <Button
+                label={isLogin ? "Log in" : "Sign up"}
+                buttonProps={{ type: "submit" }}
+              />
               {error && (
                 <div className="mt-4">
                   <Alert type="error" message={error} />
                 </div>
               )}
-              <div className="mt-4 w-full text-center">
+              <div className="mt-8 w-full text-center">
                 {isLogin && (
                   <span className="mt-4">
                     Don't have an account yet?{" "}
                     <a
                       onClick={() => setIsLogin(false)}
-                      className="underline text-blue-500 hover:text-blue-700"
+                      className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
                     >
                       Click here to sign in.
                     </a>
@@ -121,7 +121,7 @@ const Login: React.FC = () => {
                     Already have an account?{" "}
                     <a
                       onClick={() => setIsLogin(true)}
-                      className="underline text-blue-500 hover:text-blue-700"
+                      className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
                     >
                       Click here to login.
                     </a>
@@ -131,7 +131,7 @@ const Login: React.FC = () => {
             </div>
           </form>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };

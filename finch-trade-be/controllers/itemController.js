@@ -32,6 +32,7 @@ export const postItemToDB = async (req, res) => {
     }
 
     let existingUserItem;
+    // "any" color
     if (color === 1) {
       existingUserItem = await queryOne(
         "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ?",

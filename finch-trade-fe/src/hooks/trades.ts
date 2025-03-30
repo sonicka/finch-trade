@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChosenItems } from "../components/layout/TraderCard";
 import {
   deleteItem,
   finishGifting,
@@ -6,7 +7,6 @@ import {
   requestTrade,
 } from "../api/api";
 import { useTrades, useUserItems } from "../context/UserProvider";
-import { ChosenItems } from "../components/TraderCard";
 
 export const useManageTrade = () => {
   const [_, getUserItems] = useUserItems();

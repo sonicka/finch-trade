@@ -1,7 +1,7 @@
 import { FC } from "react";
+import Tabs from "../components/ui/Tabs";
+import List from "../components/layout/List";
 import { useUser } from "../context/UserProvider";
-import Tabs from "../components/Tabs";
-import List from "../components/List";
 import { ListTypeEnum } from "../types";
 
 const Lists: FC = () => {
@@ -9,7 +9,7 @@ const Lists: FC = () => {
 
   if (user)
     return (
-      <div className="w-full mb-12">
+      <div className="w-full md:w-1/2 px-6 bg-beige m-auto overflow-hidden h-full">
         <Tabs
           tabs={[
             {

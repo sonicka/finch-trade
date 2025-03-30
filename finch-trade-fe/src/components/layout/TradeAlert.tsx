@@ -1,6 +1,6 @@
 import { FC } from "react";
-import Alert from "./Alert";
-import { Trader, User } from "../types";
+import Alert from "../ui/Alert";
+import { Trader, User } from "../../types";
 
 interface Props {
   friendCodeShown: boolean;

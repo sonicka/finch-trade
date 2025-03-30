@@ -21,7 +21,7 @@ const FormInput: FC<Props> = ({
     <div>
       <label
         htmlFor={id}
-        className="block text-sm font-medium text-gray-700 mb-2"
+        className="block text-sm font-medium text-darkBeige mb-2"
       >
         {label}
       </label>
@@ -31,7 +31,7 @@ const FormInput: FC<Props> = ({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         required={required}
-        className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        className="w-full p-2 text-darkBeige border-2 border-mediumBeige rounded-xl cursor-pointer flex justify-between items-center"
       />
     </div>
   );

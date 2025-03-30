@@ -1,12 +1,13 @@
 import { FC, useEffect, useState } from "react";
-import { ChosenItem, Trader } from "../types";
-import TraderGiftingSection from "./TraderGiftingSection";
 import TraderTradingSection from "./TraderTradingSection";
+import TraderGiftingSection from "./TraderGiftingSection";
 import TradeButtons from "./TradeButtons";
 import TradeAlert from "./TradeAlert";
-import { useTrades } from "../context/UserProvider";
-import { useManageTrade } from "../hooks/trades";
-import { useUserById } from "../hooks/users";
+import Card from "../ui/Card";
+import { useTrades } from "../../context/UserProvider";
+import { useManageTrade } from "../../hooks/trades";
+import { useUserById } from "../../hooks/users";
+import { ChosenItem, Trader } from "../../types";
 
 interface Props {
   traderData: Trader;
@@ -49,8 +50,8 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
   if (!trader) return null;
 
   return (
-    <div className="max-w-md rounded-lg overflow-hidden shadow-lg bg-white mb-8 mt-4 pl-10 pr-10">
-      <div className="p-4 pt-8 pb-8">
+    <Card simple>
+      <div className="py-8 px-4">
         <h2 className="text-xl mb-5 text-center font-semibold text-gray-900">
           You have matched with
           <br />
@@ -109,7 +110,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
           />
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

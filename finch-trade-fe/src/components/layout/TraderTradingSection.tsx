@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { TradeItem, Trader, User } from "../types";
-import { filterRequestedItems, getItemName } from "../utils";
-import ColorCircle from "./ColorCircle";
+import ColorCircle from "../ui/ColorCircle";
 import { ChosenItems } from "./TraderCard";
-import { useColors, useItems } from "../context/DataProvider";
+import { useColors, useItems } from "../../context/DataProvider";
+import { filterRequestedItems, getItemName } from "../../utils";
+import { TradeItem, Trader, User } from "../../types";
 
 interface Props {
   trader: User;

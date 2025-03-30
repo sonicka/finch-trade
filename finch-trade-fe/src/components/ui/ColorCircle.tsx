@@ -1,6 +1,6 @@
 import { FC } from "react";
-import { Color } from "../types";
-import { getColorName } from "../utils";
+import { Color } from "../../types";
+import { getColorName } from "../../utils";
 
 interface Props {
   colors: Color[];
