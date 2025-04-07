@@ -1,5 +1,12 @@
-import db from "../models/db.js";
-import { queryAll, queryOne } from "../utils.js";
+import { queryAll, queryOne, runQuery } from "../utils.js";
+import {
+  archiveTrade,
+  deleteTrade,
+  findTrades,
+  getTradeByUsers,
+  updateTrade,
+} from "../helpers/tradeHelpers.js";
+import { deleteItem } from "../helpers/itemHelpers.js";
 
 export const getTradesFromDB = (req, res) => {
   const userId = req.query.userId;
@@ -13,196 +20,59 @@ export const getTradesFromDB = (req, res) => {
   });
 };
 
-async function findTrades(userId, callback) {
-  try {
-    const colors = await queryAll(`SELECT * FROM colors WHERE color != ?`, [
-      "any",
-    ]);
-
-    const wishItems = await queryAll(
-      `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'wishlist'`,
-      [userId]
-    );
-
-    // exchange "any" color for individual colors
-    const updatedWishItems = wishItems.flatMap((wishItem) =>
-      wishItem.color_id === 1
-        ? colors.map((color) => ({ ...wishItem, color_id: color.id }))
-        : wishItem
-    );
-
-    const tradeItems = await queryAll(
-      `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'tradelist'`,
-      [userId]
-    );
-
-    const tradeItemsList = tradeItems.flatMap((item) => [
-      item.item_id,
-      item.color_id,
-    ]);
-
-    const conditions = tradeItems
-      .map(() => "(i.item_id = ? AND i.color_id IN (?, 1))")
-      .join(" OR ");
-
-    const potentialGifts = await queryAll(
-      `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
-         FROM user_items i
-         JOIN users u ON i.user_id = u.id
-         WHERE i.list_type = 'wishlist'
-         AND (${conditions})`,
-      tradeItemsList
-    );
-
-    // exchange "any" color for individual colors
-    const updatedPotentialGifts = potentialGifts.flatMap((gift) =>
-      gift.colorId === 1
-        ? tradeItems
-            .filter((item) => item.item_id === gift.itemId)
-            .map((e) => ({ ...gift, colorId: e.color_id }))
-        : gift
-    );
-
-    const giftsAndTrades = [];
-    const potentialTraders = [
-      ...new Set(potentialGifts.map((item) => item.userId)),
-    ];
-
-    for (const traderId of potentialTraders) {
-      const existingTrade = await queryOne(
-        `SELECT * FROM trades WHERE (user_id1 = ? AND user_id2 = ?) OR (user_id1 = ? AND user_id2 = ?)`,
-        [userId, traderId, traderId, userId],
-        (row, resolve) => {
-          if (!row) return resolve(null);
-          if (row.status === "pending" || row.status === "confirmed") {
-            const requestedByMe = userId.toString() === row.user_id1.toString();
-            const finishedByMe = JSON.parse(row.finished_by).includes(
-              userId.toString()
-            );
-            return resolve({
-              tradeId: row.id,
-              status: row.status,
-              requestedByMe,
-              finishedByMe,
-              requestedTrade: {
-                userId1: row.user_id1,
-                itemId1: row.item_id1,
-                colorId1: row.color_id1,
-                userId2: row.user_id2,
-                itemId2: row.item_id2,
-                colorId2: row.color_id2,
-              },
-            });
-          }
-          resolve({ status: row.status });
-        }
-      );
-
-      const traderWants = updatedPotentialGifts.filter(
-        (item) => item.userId === traderId
-      );
-
-      const wishConditions = updatedWishItems.length
-        ? updatedWishItems
-            .map(() => "(i.item_id = ? AND i.color_id = ?)")
-            .join(" OR ")
-        : "1=0";
-
-      const wishParams = updatedWishItems.flatMap((item) => [
-        item.item_id,
-        item.color_id,
-      ]);
-
-      const traderOffers = await queryAll(
-        `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
-         FROM user_items i
-         JOIN users u ON i.user_id = u.id
-         WHERE i.list_type = 'tradelist'
-         AND i.user_id = ?
-         AND (${wishConditions})`,
-        [traderId, ...wishParams]
-      );
-
-      giftsAndTrades.push({
-        userId: traderId,
-        wants: traderWants,
-        has: traderOffers,
-        ...(existingTrade || {}),
-      });
-    }
-
-    callback(null, giftsAndTrades);
-  } catch (err) {
-    console.error("Error finding trades:", err);
-    callback(err);
-  }
-}
-
-export const postRequestTrade = (req, res) => {
+export const postRequestTrade = async (req, res) => {
   const { userId1, userId2 } = req.query;
   const { chosenItems } = req.body;
 
-  const items = [
-    chosenItems.my.id,
-    chosenItems.my.colorId,
-    chosenItems.their.id,
-    chosenItems.their.colorId,
-  ];
+  if (!userId1 || !userId2 || !chosenItems?.my || !chosenItems?.their) {
+    return res.status(400).json({ error: "Missing required trade data" });
+  }
 
-  db.get(
-    `SELECT id FROM trades
-     WHERE (user_id1 = ? AND user_id2 = ?)
-        OR (user_id1 = ? AND user_id2 = ?)
-        AND status = 'pending'`,
-    [userId1, userId2, userId2, userId1],
-    (err, row) => {
-      if (err) {
-        console.error("Error checking existing trade:", err.message);
-        return res.status(500).json({ error: "Database error" });
+  try {
+    const existingTrade = await getTradeByUsers(userId1, userId2);
+
+    if (existingTrade) {
+      let requestedBy = existingTrade.requested_by
+        ? JSON.parse(existingTrade.requested_by)
+        : [];
+      if (!requestedBy.includes(userId1)) requestedBy.push(userId1);
+      if (!requestedBy.includes(userId2)) requestedBy.push(userId2);
+
+      const newStatus = requestedBy.length === 2 ? "confirmed" : "pending";
+
+      try {
+        await updateTrade(existingTrade.id, newStatus, requestedBy);
+        return res.status(200).json({
+          message: "Trade updated",
+          tradeId: existingTrade.id,
+          status: newStatus,
+        });
+      } catch (err) {
+        console.error("Error updating trade:", err.message);
+        return res.status(500).json({ error: "Failed to update trade" });
       }
-
-      if (row) {
-        let requestedBy = row.requested_by ? JSON.parse(row.requested_by) : [];
-        if (!requestedBy.includes(userId1)) requestedBy.push(userId1);
-        if (!requestedBy.includes(userId2)) requestedBy.push(userId2);
-
-        const newStatus = requestedBy.length === 2 ? "confirmed" : "pending";
-
-        db.run(
-          "UPDATE trades SET status = ?, requested_by = ? WHERE id = ?",
-          [newStatus, JSON.stringify(requestedBy), row.id],
-          function (err) {
-            if (err) {
-              console.error("Error updating trade:", err.message);
-              return res.status(500).json({ error: "Failed to update trade" });
-            }
-            return res.status(200).json({
-              message: "Trade updated",
-              tradeId: row.id,
-              status: newStatus,
-            });
-          }
+    } else {
+      try {
+        const result = await insertItemTransaction(
+          userId1,
+          userId2,
+          chosenItems
         );
-      } else {
-        db.run(
-          "INSERT INTO trades (user_id1, user_id2, status, requested_by, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-          [userId1, userId2, "pending", JSON.stringify([userId1]), ...items],
-          function (err) {
-            if (err) {
-              console.error("Error inserting trade:", err.message);
-              return res.status(500).json({ error: "Failed to create trade" });
-            }
-            console.log(`New trade added with ID: ${this.lastID}`);
-            return res.status(201).json({
-              message: "Trade created",
-              tradeId: this.lastID,
-              status: "pending",
-            });
-          }
-        );
+        return res.status(201).json({
+          message: "Trade created",
+          tradeId: result.lastID,
+          status: "pending",
+        });
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ error: `Failed to create trade: ${err.message}` });
       }
     }
-  );
+  } catch (err) {
+    console.error("Error processing trade:", err.message);
+    return res.status(500).json({ error: err.message });
+  }
 };
 
 export const getPastTradesFromDB = async (req, res) => {
@@ -261,154 +131,80 @@ export const getPastTradesFromDB = async (req, res) => {
   }
 };
 
-export const postFinishGifting = (req, res) => {
+export const postFinishGifting = async (req, res) => {
   const { giftedBy, giftedTo, itemId, colorId } = req.body;
 
   if (!itemId || !colorId || !giftedTo || !giftedBy) {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  db.run(
-    "INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)",
-    [giftedBy, giftedTo, itemId, colorId],
-    function (err) {
-      if (err) {
-        console.error("Error archiving gifting:", err.message);
-        return res
-          .status(500)
-          .json({ error: "Failed to archive gifting", err });
-      }
+  try {
+    await runQuery(
+      "INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)",
+      [giftedBy, giftedTo, itemId, colorId]
+    );
 
-      (async () => {
-        try {
-          await deleteItem(giftedTo, itemId, colorId, true);
-          await deleteItem(giftedBy, itemId, colorId);
-          return res.status(200).json({
-            message: "Gifting archived and item successfully deleted.",
-          });
-        } catch (err) {
-          console.error("Error during closing gifting:", err.message);
-          return res.status(500).json({ error: err.message, err });
-        }
-      })();
-    }
-  );
+    await deleteItem(giftedTo, itemId, colorId, true);
+    await deleteItem(giftedBy, itemId, colorId);
+
+    return res.status(200).json({
+      message: "Gifting archived and items successfully deleted.",
+    });
+  } catch (err) {
+    console.error("Error finishing gifting:", err.message);
+    return res.status(500).json({
+      error: `Failed to finish gifting: ${err.message}`,
+    });
+  }
 };
 
-export const postFinishTrade = (req, res) => {
+export const postFinishTrade = async (req, res) => {
   const { tradeId } = req.params;
   const { userId } = req.query;
 
-  // Flag to track if we have already sent a response
-  let responseSent = false;
-
-  // Helper function to send the response once
-  function sendResponse(status, data) {
-    if (!responseSent) {
-      responseSent = true;
-      return res.status(status).json(data);
-    }
-  }
-
-  db.get(
-    `SELECT * FROM trades
-     WHERE id = ? AND status = 'confirmed'`,
-    [tradeId],
-    (err, row) => {
-      if (err) {
-        console.error("Error checking existing trade:", err.message);
-        return sendResponse(500, { error: "Database error" });
-      }
-
-      if (row) {
-        let finishedBy = row.finished_by ? JSON.parse(row.finished_by) : [];
-        if (!finishedBy.includes(userId)) finishedBy.push(userId);
-
-        const newStatus = finishedBy.length === 2 ? "finished" : row.status;
-
-        db.run(
-          "UPDATE trades SET status = ?, finished_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
-          [newStatus, JSON.stringify(finishedBy), row.id],
-          function (err) {
-            if (err) {
-              console.error("Error updating trade:", err.message);
-              return sendResponse(500, { error: "Failed to update trade" });
-            }
-            return sendResponse(200, {
-              message: "Trade updated",
-              tradeId: row.id,
-              status: newStatus,
-            });
-          }
-        );
-
-        if (finishedBy.length === 2) {
-          (async () => {
-            try {
-              await deleteItem(row.user_id1, row.item_id1, row.color_id1, true);
-              await deleteItem(row.user_id2, row.item_id2, row.color_id2, true);
-              await deleteItem(row.user_id1, row.item_id2, row.color_id2, true);
-              await deleteItem(row.user_id2, row.item_id1, row.color_id1, true);
-              await archiveTrade(row);
-              await deleteTrade(row.id);
-
-              return sendResponse(200, {
-                message: "Trade archived and items successfully deleted.",
-              });
-            } catch (err) {
-              console.error("Error during closing trade:", err.message);
-              return sendResponse(500, { error: err.message });
-            }
-          })();
-        }
-      }
-    }
-  );
-};
-
-const deleteItem = (userId, itemId, colorId, any = false) => {
-  let query = any
-    ? "DELETE FROM user_items WHERE user_id = ? AND item_id = ? AND (color_id = ? OR color_id = 1)"
-    : "DELETE FROM user_items WHERE user_id = ? AND item_id = ? AND color_id = ?";
-
-  return new Promise((resolve, reject) => {
-    db.run(query, [userId, itemId, colorId], function (err) {
-      if (err) return reject(err);
-      if (this.changes === 0) return reject(new Error("Item not found"));
-      resolve();
-    });
-  });
-};
-
-const archiveTrade = (row) => {
-  return new Promise((resolve, reject) => {
-    db.run(
-      "INSERT INTO trades_history (trade_id, user_id1, user_id2, status, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        row.id,
-        row.user_id1,
-        row.user_id2,
-        "archived",
-        row.item_id1,
-        row.color_id1,
-        row.item_id2,
-        row.color_id2,
-      ],
-      function (err) {
-        if (err)
-          return reject(new Error("Failed to archive trade: " + err.message));
-        resolve();
-      }
+  try {
+    const trade = await queryOne(
+      `SELECT * FROM trades WHERE id = ? AND status = 'confirmed'`,
+      [tradeId]
     );
-  });
-};
 
-const deleteTrade = (tradeId) => {
-  return new Promise((resolve, reject) => {
-    db.run("DELETE FROM trades WHERE id = ?", [tradeId], function (err) {
-      if (err) return reject(err);
-      if (this.changes === 0) return reject(new Error("Trade not found"));
-      resolve();
+    if (!trade) {
+      return res
+        .status(404)
+        .json({ error: "Trade not found or not confirmed" });
+    }
+
+    let finishedBy = trade.finished_by ? JSON.parse(trade.finished_by) : [];
+    if (!finishedBy.includes(userId)) finishedBy.push(userId);
+    const newStatus = finishedBy.length === 2 ? "finished" : trade.status;
+
+    await runQuery(
+      "UPDATE trades SET status = ?, finished_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
+      [newStatus, JSON.stringify(finishedBy), trade.id]
+    );
+
+    if (newStatus === "finished") {
+      await deleteItem(trade.user_id1, trade.item_id1, trade.color_id1, true);
+      await deleteItem(trade.user_id2, trade.item_id2, trade.color_id2, true);
+      await deleteItem(trade.user_id1, trade.item_id2, trade.color_id2, true);
+      await deleteItem(trade.user_id2, trade.item_id1, trade.color_id1, true);
+      await archiveTrade(trade);
+      await deleteTrade(trade.id);
+
+      return res.status(200).json({
+        message: "Trade archived and items successfully deleted.",
+        tradeId: trade.id,
+        status: "archived",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Trade updated",
+      tradeId: trade.id,
+      status: newStatus,
     });
-  });
+  } catch (err) {
+    console.error("Error finishing trade:", err.message);
+    return res.status(500).json({ error: err.message });
+  }
 };

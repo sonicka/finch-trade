@@ -64,7 +64,7 @@ const List: React.FC<Props> = ({ type }) => {
             </div>
           )}
           {userItems?.map((item) => (
-            <div className="mb-3">
+            <div className="mb-3" key={item.item_id + "" + item.color}>
               <Item
                 key={item.name + item.color}
                 itemId={item.item_id}

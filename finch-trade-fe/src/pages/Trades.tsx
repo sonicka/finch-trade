@@ -25,7 +25,7 @@ const Trades: FC = () => {
         </div>
       ) : (
         trades?.map((t: Trader) => (
-          <div className="mx-10 mt-4 mb-8" key={t.tradeId}>
+          <div className="mx-10 mt-4 mb-8" key={t.userId}>
             <TraderCard key={t.userId} traderData={t} userId={user.id} />
           </div>
         ))

@@ -74,6 +74,7 @@ export interface Trader {
   userId: number;
   wants: TradeItem[];
   has: TradeItem[];
+  recentlyTraded: boolean;
   status?: string;
   requestedByMe?: boolean;
   finishedByMe?: boolean;

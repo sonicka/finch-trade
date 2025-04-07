@@ -3,6 +3,7 @@ import TraderTradingSection from "./TraderTradingSection";
 import TraderGiftingSection from "./TraderGiftingSection";
 import TradeButtons from "./TradeButtons";
 import TradeAlert from "./TradeAlert";
+import Alert from "../ui/Alert";
 import Card from "../ui/Card";
 import { useTrades } from "../../context/UserProvider";
 import { useManageTrade } from "../../hooks/trades";
@@ -73,35 +74,40 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
             setChosenItems={setChosenItems}
           />
         )}
-        <TradeButtons
-          buttons={[
-            {
-              id: "show-friend-code",
-              label: "Show friend code",
-              onClick: handleShowFriendCode,
-              disabled: !chosenItems.my?.id && !chosenItems.my?.colorId,
-              shown: gifting && !friendCodeShown,
-            },
-            {
-              id: "trade-request",
-              label: requestedByMe
-                ? "Trade requested"
-                : requestedByThem
-                ? "Accept trade request"
-                : "Request trade",
-              onClick: handleRequestTrade,
-              disabled: requestedByMe || !chosenItems.my || !chosenItems.their,
-              shown: !gifting && !tradeAccepted,
-            },
-            {
-              id: "finish-trade",
-              label: "Finish trade",
-              onClick: handleFinishTrade,
-              disabled: traderData.finishedByMe,
-              shown: tradeAccepted || (gifting && friendCodeShown),
-            },
-          ]}
-        />
+        {traderData.recentlyTraded ? (
+          <Alert message="You’ve already made a trade with this user in the past 24 hours. Come back tomorrow to trade again!" />
+        ) : (
+          <TradeButtons
+            buttons={[
+              {
+                id: "show-friend-code",
+                label: "Show friend code",
+                onClick: handleShowFriendCode,
+                disabled: !chosenItems.my?.id && !chosenItems.my?.colorId,
+                shown: gifting && !friendCodeShown,
+              },
+              {
+                id: "trade-request",
+                label: requestedByMe
+                  ? "Trade requested"
+                  : requestedByThem
+                  ? "Accept trade request"
+                  : "Request trade",
+                onClick: handleRequestTrade,
+                disabled:
+                  requestedByMe || !chosenItems.my || !chosenItems.their,
+                shown: !gifting && !tradeAccepted,
+              },
+              {
+                id: "finish-trade",
+                label: "Finish trade",
+                onClick: handleFinishTrade,
+                disabled: traderData.finishedByMe,
+                shown: tradeAccepted || (gifting && friendCodeShown),
+              },
+            ]}
+          />
+        )}
         {showAlert && (
           <TradeAlert
             friendCodeShown={friendCodeShown}

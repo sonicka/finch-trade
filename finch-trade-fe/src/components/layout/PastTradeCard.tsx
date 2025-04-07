@@ -37,7 +37,7 @@ const PastTradeCard: FC<Props> = ({ pastTrade, user, traderId }) => {
           <ColorCircle colors={colors} colorId={myItem.colorId} />
           <b>{getItemName(items, myItem.itemId)}</b>
         </div>
-        <div>for {`${trader?.birbName}'s`}</div>
+        <div>for {`${trader.username} & ${trader.birbName}'s`}</div>
         <div className="flex items-center justify-center gap-2">
           <ColorCircle colors={colors} colorId={theirItem.colorId} />
           <b>{getItemName(items, theirItem.itemId)}</b>

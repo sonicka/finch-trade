@@ -37,13 +37,13 @@ const TraderTradingSection: FC<Props> = ({
       {`${trader?.birbName} would like to have:`}
       {traderWantedItems.map((item: TradeItem) => (
         <div
-          key={item.itemId + item.colorId}
+          key={item.itemId + "" + item.colorId}
           className="flex justify-center text-gray-600 mt-2 mb-5"
         >
           <label className="flex items-center space-x-2 cursor-pointer gap-2">
             <input
               type="radio"
-              name="myTradeItem"
+              name={`myTradeItem-${trader.friendCode}`}
               className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
               checked={
                 chosenItems.my?.id === item.itemId &&
@@ -65,13 +65,13 @@ const TraderTradingSection: FC<Props> = ({
       {`${trader?.birbName} can give you:`}
       {traderOwnedItems.map((item: TradeItem) => (
         <div
-          key={item.itemId + item.colorId}
+          key={item.itemId + "" + item.colorId}
           className="flex justify-center text-gray-600 mt-2 mb-5"
         >
           <label className="flex items-center space-x-2 cursor-pointer">
             <input
               type="radio"
-              name="theirTradeItem"
+              name={`theirTradeItem-${trader.friendCode}`}
               className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
               checked={
                 chosenItems.their?.id === item.itemId &&

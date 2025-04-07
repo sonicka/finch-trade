@@ -22,8 +22,8 @@ if (dropTablesFlag) {
     // db.run("DROP TABLE IF EXISTS users");
     // db.run("DROP TABLE IF EXISTS items");
     // db.run("DROP TABLE IF EXISTS user_items");
-    db.run("DROP TABLE IF EXISTS trades");
-    db.run("DROP TABLE IF EXISTS trades_history");
+    // db.run("DROP TABLE IF EXISTS trades");
+    // db.run("DROP TABLE IF EXISTS trades_history");
   });
 } else {
   console.log("Skipping table drop");
@@ -62,6 +62,7 @@ db.serialize(() => {
     item_id INTEGER,
     color_id INTEGER,
     list_type TEXT CHECK(list_type IN ('wishlist', 'tradelist')),
+    in_trade_with_user INTEGER NULL,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES items(id),
     FOREIGN KEY (color_id) REFERENCES colors(id),

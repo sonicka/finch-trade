@@ -1,5 +1,5 @@
 import db from "../models/db.js";
-import { queryOne, runDB } from "../utils.js";
+import { queryOne, runQuery } from "../utils.js";
 
 export const getColorsFromDB = (req, res) => {
   db.all("SELECT * FROM colors", (err, rows) => {
@@ -27,7 +27,9 @@ export const postItemToDB = async (req, res) => {
     if (existingItem) {
       itemId = existingItem.id;
     } else {
-      const result = await runDB("INSERT INTO items (name) VALUES (?)", [name]);
+      const result = await runQuery("INSERT INTO items (name) VALUES (?)", [
+        name,
+      ]);
       itemId = result.lastID;
     }
 
@@ -63,7 +65,7 @@ export const postItemToDB = async (req, res) => {
       }
     }
 
-    const insertResult = await runDB(
+    const insertResult = await runQuery(
       "INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)",
       [userId, itemId, color, listType]
     );
