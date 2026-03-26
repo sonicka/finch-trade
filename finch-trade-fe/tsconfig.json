@@ -10,11 +10,11 @@
     "skipLibCheck": true,
     "moduleResolution": "Node",
     "typeRoots": ["./node_modules/@types"],
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist"],
-  "paths": {
-    "react": ["./node_modules/@types/react"]
-  }
+  "exclude": ["node_modules", "dist"]
 }

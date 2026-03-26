@@ -1,9 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  body {
-    @apply bg-beige m-0 p-0 text-black;
-  }
+@theme {
+  /* Define your custom beige color here */
+  --color-lightBeige: #fef8e9;
+  --color-beige: #edddb5;
+  --color-mediumBeige: #a09070;
+  --color-darkBeige: #7c6732;
+  --color-greyBeige: #b7a987;
+  --color-black: #12110f;
+  --color-grey: #cecdcc;
 }
+
+body {
+  @apply bg-beige m-0 p-0 text-black;
+}
+
+@plugin "tailwind-scrollbar";
