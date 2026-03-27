@@ -21,6 +21,7 @@ export interface LoggedInUser extends JwtPayload, User {
 }
 
 export interface User {
+  userId: number;
   username: string;
   birbName: string;
   friendCode: string;

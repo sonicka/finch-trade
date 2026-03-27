@@ -94,7 +94,7 @@ export const getUserFromDB = (req, res) => {
   const { userId } = req.params;
 
   db.all(
-    "SELECT username, birb_name as birbName, friend_code as friendCode FROM users WHERE id = ?",
+    "SELECT id as userId, username, birb_name as birbName, friend_code as friendCode FROM users WHERE id = ?",
     [userId],
     (err, rows) => {
       if (err) {
