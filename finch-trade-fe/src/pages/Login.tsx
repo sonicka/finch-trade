@@ -17,7 +17,19 @@ const Login: React.FC = () => {
   const [birbName, setBirbName] = useState("");
   const [friendCode, setFriendCode] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordAgain, setPasswordAgain] = useState("");
   const [error, setError] = useState("");
+
+  // todo nicer validation
+  const isFormValid = isLogin
+    ? !!email && !!password
+    : !!email &&
+      !!username &&
+      !!birbName &&
+      !!friendCode &&
+      !!password &&
+      !!passwordAgain &&
+      password === passwordAgain;
 
   const clearForm = () => {
     setEmail("");
@@ -78,12 +90,14 @@ const Login: React.FC = () => {
                   value={birbName}
                   setValue={setBirbName}
                   id="birbname"
+                  required
                 />
                 <FormInput
                   label="Friend code"
                   value={friendCode}
                   setValue={setFriendCode}
                   id="friendCode"
+                  required
                 />
               </>
             )}
@@ -91,13 +105,25 @@ const Login: React.FC = () => {
               label="Password"
               value={password}
               setValue={setPassword}
+              type="password"
               id="password"
               required
             />
+            {!isLogin && (
+              <FormInput
+                label="Password again"
+                value={passwordAgain}
+                setValue={setPasswordAgain}
+                type="password"
+                id="passwordAgain"
+                required
+              />
+            )}
             <div className="py-4 text-center">
               <Button
                 label={isLogin ? "Log in" : "Sign up"}
                 buttonProps={{ type: "submit" }}
+                disabled={!isFormValid}
               />
               {error && (
                 <div className="mt-4">
