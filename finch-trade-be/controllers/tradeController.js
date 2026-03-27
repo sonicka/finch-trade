@@ -4,6 +4,7 @@ import {
   deleteTrade,
   findTrades,
   getTradeByUsers,
+  insertItemTransaction,
   updateTrade,
 } from "../helpers/tradeHelpers.js";
 import { deleteItem } from "../helpers/itemHelpers.js";
@@ -56,7 +57,7 @@ export const postRequestTrade = async (req, res) => {
         const result = await insertItemTransaction(
           userId1,
           userId2,
-          chosenItems
+          chosenItems,
         );
         return res.status(201).json({
           message: "Trade created",
@@ -87,13 +88,13 @@ export const getPastTradesFromDB = async (req, res) => {
         `SELECT * FROM trades_history
          WHERE user_id1 = ? AND trade_id IS NULL
          ORDER BY archived_at DESC`,
-        [userId]
+        [userId],
       ),
       queryAll(
         `SELECT * FROM trades_history
          WHERE (user_id1 = ? OR user_id2 = ?) AND trade_id IS NOT NULL
          ORDER BY archived_at DESC`,
-        [userId, userId]
+        [userId, userId],
       ),
     ]);
 
@@ -121,7 +122,7 @@ export const getPastTradesFromDB = async (req, res) => {
     }));
 
     const allPastTransactions = [...formattedGifts, ...formattedTrades].sort(
-      (a, b) => new Date(b.archivedAt) - new Date(a.archivedAt)
+      (a, b) => new Date(b.archivedAt) - new Date(a.archivedAt),
     );
 
     res.status(200).json(allPastTransactions);
@@ -141,7 +142,7 @@ export const postFinishGifting = async (req, res) => {
   try {
     await runQuery(
       "INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)",
-      [giftedBy, giftedTo, itemId, colorId]
+      [giftedBy, giftedTo, itemId, colorId],
     );
 
     await deleteItem(giftedTo, itemId, colorId, true);
@@ -165,7 +166,7 @@ export const postFinishTrade = async (req, res) => {
   try {
     const trade = await queryOne(
       `SELECT * FROM trades WHERE id = ? AND status = 'confirmed'`,
-      [tradeId]
+      [tradeId],
     );
 
     if (!trade) {
@@ -180,7 +181,7 @@ export const postFinishTrade = async (req, res) => {
 
     await runQuery(
       "UPDATE trades SET status = ?, finished_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
-      [newStatus, JSON.stringify(finishedBy), trade.id]
+      [newStatus, JSON.stringify(finishedBy), trade.id],
     );
 
     if (newStatus === "finished") {
