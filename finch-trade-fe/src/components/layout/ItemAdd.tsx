@@ -35,8 +35,8 @@ const ItemAdd: FC<Props> = ({
     if (value) {
       setFilteredOptions(
         items.filter((item) =>
-          item.name.toLowerCase().includes(value.toLowerCase())
-        )
+          item.name.toLowerCase().includes(value.toLowerCase()),
+        ),
       );
     } else {
       setFilteredOptions([]);
@@ -61,6 +61,7 @@ const ItemAdd: FC<Props> = ({
         autoComplete="off"
       >
         <AutocompleteSelect
+          id="itemName"
           options={filteredOptions}
           value={nameValue}
           placeholder="Item name"
@@ -68,8 +69,10 @@ const ItemAdd: FC<Props> = ({
           onChange={handleItemOptionClick}
         />
         <Select
+          id="itemColor"
           options={filteredColors}
           value={selectedColor ?? {}}
+          placeholder="Color"
           onChange={handleColorChange}
           labelFormatter={(color: Color) => color?.color}
           valueFormatter={(color: Color) => color?.id}

@@ -5,8 +5,9 @@ interface Props {
   value: string;
   type?: string;
   id: string;
-  setValue: Function;
+  setValue?: Function;
   required?: boolean;
+  disabled?: boolean;
 }
 
 const FormInput: FC<Props> = ({
@@ -14,8 +15,9 @@ const FormInput: FC<Props> = ({
   value,
   type = "text",
   id,
-  setValue,
+  setValue = () => {},
   required = false,
+  disabled = false,
 }) => {
   return (
     <div>
@@ -31,7 +33,10 @@ const FormInput: FC<Props> = ({
         value={value}
         onChange={(e) => setValue(e.target.value)}
         required={required}
-        className="w-full p-2 text-darkBeige border-2 border-mediumBeige rounded-xl cursor-pointer flex justify-between items-center"
+        disabled={disabled}
+        className={`w-full p-2 border-2 rounded-xl flex justify-between items-center
+                   ${disabled && "text-greyBeige border-greyBeige"}
+                   ${!disabled && "cursor-pointer text-darkBeige border-darkBeige"}`}
       />
     </div>
   );

@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 
 interface Props {
+  id: string;
   options: Object[] | string[];
   value: any;
   placeholder?: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const AutocompleteSelect: FC<Props> = ({
+  id,
   options,
   value,
   placeholder = "Select an option",
@@ -34,14 +36,24 @@ const AutocompleteSelect: FC<Props> = ({
   return (
     <div className="relative inline-block w-full">
       <input
-        name="itemName"
+        name={id}
+        id={id}
         value={value}
         onClick={toggleDropdown}
         onChange={handleInputChange}
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-        placeholder={placeholder}
-        className="w-full p-2 text-darkBeige bg-lightBeige border-2 border-mediumBeige rounded-xl focus:outline-none focus:ring-1 focus:ring-mediumBeige placeholder-greyBeige"
+        placeholder=" "
+        className="peer w-full p-2 text-darkBeige bg-lightBeige border-2 border-mediumBeige rounded-xl
+               focus:outline-none focus:border-darkBeige placeholder-transparent transition-all"
       />
+      <label
+        htmlFor={id}
+        className="absolute left-3 top-2.5 px-1 text-mediumBeige transition-all cursor-text bg-lightBeige
+               peer-focus:-top-2 peer-focus:left-2 peer-focus:text-xs peer-focus:text-darkBeige
+               peer-[:not(:placeholder-shown)]:-top-2 peer-[:not(:placeholder-shown)]:left-2 peer-[:not(:placeholder-shown)]:text-xs"
+      >
+        {placeholder}
+      </label>
 
       {isOpen && options.length > 0 && (
         <ul className="absolute w-full max-h-40 overflow-y-auto text-darkBeige bg-lightBeige border border-gray-300 rounded-lg shadow-sm z-20">

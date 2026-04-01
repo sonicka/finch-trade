@@ -1,6 +1,7 @@
 import { FC, useRef, useState } from "react";
 
 interface Props {
+  id: string;
   options: Object[] | string[];
   value: any;
   placeholder?: string;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const Select: FC<Props> = ({
+  id,
   options,
   value,
   placeholder = "Select an option",
@@ -46,23 +48,39 @@ const Select: FC<Props> = ({
     >
       <input
         type="hidden"
-        name="itemColor"
+        name={id}
         value={
           typeof valueFormatter === "function"
-            ? valueFormatter(value) ?? ""
-            : value ?? ""
+            ? (valueFormatter(value) ?? "")
+            : (value ?? "")
         }
       />
+      <label
+        className={`absolute left-3 px-1 transition-all cursor-pointer bg-lightBeige z-10
+      ${
+        isOpen || !noValue
+          ? "-top-2.5 left-2 text-xs text-darkBeige"
+          : "top-2.5 text-base text-mediumBeige"
+      }`}
+        onClick={toggleDropdown}
+      >
+        {placeholder}
+      </label>
       <div
         onClick={toggleDropdown}
-        className="w-full p-2 text-mediumBeige border-2 border-mediumBeige rounded-xl cursor-pointer flex justify-between items-center"
+        className={`w-full border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all p-2
+                   ${isOpen ? "border-darkBeige" : "border-mediumBeige"}`}
       >
-        <span className={noValue ? "text-greyBeige" : "text-darkBeige"}>
-          {value
-            ? typeof labelFormatter === "function"
-              ? labelFormatter(value) ?? placeholder
-              : value
-            : placeholder}
+        <span className={`${!noValue && "text-darkBeige"}`}>
+          {!noValue ? (
+            typeof labelFormatter === "function" ? (
+              labelFormatter(value)
+            ) : (
+              value
+            )
+          ) : (
+            <>&nbsp;</>
+          )}
         </span>
         <svg
           className={`w-4 h-4 transition-transform ${
