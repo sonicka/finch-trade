@@ -46,6 +46,24 @@ export const fetchUser = async (userId: number): Promise<User> => {
   return data;
 };
 
+export const editUser = async (
+  userId: number,
+  params: { email?: string; password?: string; passwordAgain?: string },
+) => {
+  const response = await fetch(`${BASE_URL}/api/users/${userId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(params),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error ? data.error : `Failed to edit the user`);
+  }
+  return data;
+};
+
 // colors
 export const fetchColors = async (): Promise<Color[]> => {
   const response = await fetch(`${BASE_URL}/api/items/colors`, {});
@@ -80,11 +98,11 @@ export const fetchAllItems = async (): Promise<Item[]> => {
 
 export const fetchUserItems = async (
   itemType: ListType,
-  userId: number
+  userId: number,
 ): Promise<UserItem[]> => {
   const response = await fetch(
     `${BASE_URL}/api/items/${itemType}?userId=${userId}`,
-    {}
+    {},
   );
   if (!response.ok) {
     throw new Error("Failed to fetch user items");
@@ -97,7 +115,7 @@ export const deleteItem = async (
   itemId: number,
   colorId: number,
   listType: string,
-  userId: number
+  userId: number,
 ) => {
   const response = await fetch(`${BASE_URL}/api/items/remove`, {
     method: "DELETE",
@@ -138,7 +156,7 @@ export const fetchTrades = async (userId: number) => {
 export const fetchPastTrades = async (userId: number) => {
   const response = await fetch(
     `${BASE_URL}/api/trades/past?userId=${userId}`,
-    {}
+    {},
   );
   if (!response.ok) {
     throw new Error("Failed to fetch past trades");
@@ -150,7 +168,7 @@ export const fetchPastTrades = async (userId: number) => {
 export const requestTrade = async (
   userId1: number,
   userId2: number,
-  chosenItems: { my: ChosenItem | null; their: ChosenItem | null }
+  chosenItems: { my: ChosenItem | null; their: ChosenItem | null },
 ) => {
   const response = await fetch(
     `${BASE_URL}/api/trades/requestTrade?userId1=${userId1}&userId2=${userId2}`,
@@ -160,7 +178,7 @@ export const requestTrade = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ chosenItems }),
-    }
+    },
   );
   if (!response.ok) {
     throw new Error("Failed to request trade");
@@ -175,7 +193,7 @@ export const finishTrade = async (tradeId: number, userId: number) => {
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-    }
+    },
   );
   if (!response.ok) {
     throw new Error("Failed to finish trade");
@@ -188,7 +206,7 @@ export const finishGifting = async (
   giftedBy: number,
   giftedTo: number,
   itemId: number,
-  colorId: number
+  colorId: number,
 ) => {
   const response = await fetch(`${BASE_URL}/api/trades/finishGifting`, {
     method: "POST",

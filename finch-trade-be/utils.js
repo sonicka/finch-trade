@@ -18,7 +18,7 @@ export const queryAll = (query, params) => {
 export const runQuery = (query, params) => {
   return new Promise((resolve, reject) => {
     db.run(query, params, function (err) {
-      if (err) reject(err);
+      if (err) return reject(err);
       else resolve({ lastID: this.lastID, changes: this.changes });
     });
   });

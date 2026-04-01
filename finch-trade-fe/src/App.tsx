@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
 import Lists from "./pages/Lists";
 import Trades from "./pages/Trades";
+import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 import NotFound from "./pages/404";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import { Providers } from "./providers/Providers";
@@ -24,6 +25,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Trades />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

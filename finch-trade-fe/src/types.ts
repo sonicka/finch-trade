@@ -16,12 +16,11 @@ export interface LoginCredentials {
 
 // users
 export interface LoggedInUser extends JwtPayload, User {
-  id: number;
   email: string;
 }
 
 export interface User {
-  userId: number;
+  id: number;
   username: string;
   birbName: string;
   friendCode: string;

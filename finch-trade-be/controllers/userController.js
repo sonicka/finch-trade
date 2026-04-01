@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import db from "../models/db.js";
 import dotenv from "dotenv";
+import { queryOne, runQuery } from "../utils.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -36,10 +37,10 @@ export const signUp = (req, res) => {
           const token = jwt.sign(
             { id, email, username, birbName, friendCode },
             JWT_SECRET,
-            { expiresIn: "1h" }
+            { expiresIn: "1h" },
           );
           res.status(201).json({ token });
-        }
+        },
       );
     });
   } catch (err) {
@@ -80,10 +81,10 @@ export const login = (req, res) => {
             friendCode: user.friend_code,
           },
           JWT_SECRET,
-          { expiresIn: "1h" }
+          { expiresIn: "1h" },
         );
         res.status(200).json({ token });
-      }
+      },
     );
   } catch (err) {
     res.status(500).json({ message: "Something went wrong" });
@@ -94,7 +95,7 @@ export const getUserFromDB = (req, res) => {
   const { userId } = req.params;
 
   db.all(
-    "SELECT id as userId, username, birb_name as birbName, friend_code as friendCode FROM users WHERE id = ?",
+    "SELECT id, username, birb_name as birbName, friend_code as friendCode FROM users WHERE id = ?", // todo id?
     [userId],
     (err, rows) => {
       if (err) {
@@ -113,6 +114,58 @@ export const getUserFromDB = (req, res) => {
             "Database inconsistency: multiple users found with the same id",
         });
       }
-    }
+    },
   );
+};
+
+export const editUser = async (req, res) => {
+  const { userId } = req.params;
+  const { email, password, passwordAgain } = req.body;
+
+  try {
+    if (password && password !== passwordAgain)
+      return res.status(400).json({ error: "Passwords do not match" });
+
+    const user = await queryOne("SELECT * FROM users WHERE id = ?", [userId]);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    if (email && email !== user.email) {
+      const existing = await queryOne(
+        "SELECT id FROM users WHERE email = ? AND id != ?",
+        [email, userId],
+      );
+      if (existing)
+        return res.status(400).json({ error: "Email already in use." });
+    }
+
+    let newHashedPassword = user.password;
+    let hasChanged = false;
+
+    if (password) {
+      const isSamePassword = await bcrypt.compare(password, user.password);
+      if (!isSamePassword) {
+        newHashedPassword = await bcrypt.hash(password, 10);
+        hasChanged = true;
+      }
+    }
+    if (email && email !== user.email) {
+      hasChanged = true;
+    }
+    if (!hasChanged) {
+      return res.status(200).json({ message: "No changes made." });
+    }
+
+    const newEmail = email || user.email;
+
+    const query = `UPDATE users SET email = ?, password = ? WHERE id = ?`;
+    await runQuery(query, [newEmail, newHashedPassword, userId]);
+    return res.status(200).json({
+      message: "User updated successfully.",
+      updatedId: userId,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
