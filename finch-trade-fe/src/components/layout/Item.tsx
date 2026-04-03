@@ -1,14 +1,14 @@
-import { FC } from "react";
-import Tooltip from "../ui/Tooltip";
-import { Color } from "../../types";
-import Card from "../ui/Card";
-import IconButton from "../ui/IconButton";
+import { FC } from 'react';
+import Tooltip from '../ui/Tooltip';
+import { Color } from '../../types';
+import Card from '../ui/Card';
+import IconButton from '../ui/IconButton';
 
 interface Props {
   color: Color;
   text: string;
   itemId: number;
-  handleRemove: Function;
+  handleRemove: (itemId: number, colorId: number) => Promise<void>;
 }
 
 const Item: FC<Props> = ({ color, text, itemId, handleRemove }) => {
@@ -22,7 +22,7 @@ const Item: FC<Props> = ({ color, text, itemId, handleRemove }) => {
             ) : (
               <div
                 className={`w-6 h-6 rounded-full ${
-                  color.color === "white" ? "border border-darkBeige" : ""
+                  color.color === 'white' ? 'border border-darkBeige' : ''
                 }`}
                 style={{
                   backgroundColor: color.color,
@@ -41,7 +41,7 @@ const Item: FC<Props> = ({ color, text, itemId, handleRemove }) => {
             />
           }
           onClick={() => handleRemove(itemId, color.id)}
-          buttonProps={{ "aria-label": "Remove" }}
+          buttonProps={{ 'aria-label': 'Remove' }}
           className="border-none"
         />
       </div>

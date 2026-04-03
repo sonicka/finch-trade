@@ -1,12 +1,12 @@
-import React from "react";
-import Item from "./Item";
-import ItemAdd from "./ItemAdd";
-import { useColors, useItems } from "../../context/DataProvider";
-import { useUser, useUserItems } from "../../context/UserProvider";
-import { useManageItem } from "../../hooks/items";
-import { getColorName } from "../../utils";
-import { ListType } from "../../types";
-import Alert from "../ui/Alert";
+import React from 'react';
+import Item from './Item';
+import ItemAdd from './ItemAdd';
+import { useColors, useItems } from '../../context/DataProvider';
+import { useUser, useUserItems } from '../../context/UserProvider';
+import { useManageItem } from '../../hooks/items';
+import { getColorName } from '../../utils';
+import { ListType } from '../../types';
+import Alert from '../ui/Alert';
 
 interface Props {
   type: ListType;
@@ -25,14 +25,17 @@ const List: React.FC<Props> = ({ type }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const itemName = formData.get("itemName") as string;
-    const itemColor = Number(formData.get("itemColor"));
+    const itemName = formData.get('itemName') as string;
+    const itemColor = Number(formData.get('itemColor'));
     if (itemName && itemColor && user?.id) {
       await addNewItem(itemName, itemColor, type, user?.id);
     }
   };
 
-  const handleRemove = async (itemId: number, colorId: number) => {
+  const handleRemove = async (
+    itemId: number,
+    colorId: number,
+  ): Promise<void> => {
     if (user) await removeItem(itemId, colorId, type, user?.id);
   };
 
@@ -64,7 +67,7 @@ const List: React.FC<Props> = ({ type }) => {
             </div>
           )}
           {userItems?.map((item) => (
-            <div className="mb-3" key={item.item_id + "" + item.color}>
+            <div className="mb-3" key={item.item_id + '' + item.color}>
               <Item
                 key={item.name + item.color}
                 itemId={item.item_id}

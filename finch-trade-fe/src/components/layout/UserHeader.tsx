@@ -1,8 +1,8 @@
-import { FC } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import Card from "../ui/Card";
-import Button from "../ui/Button";
-import { useUserData } from "../../context/UserProvider";
+import { FC } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Card from '../ui/Card';
+import Button from '../ui/Button';
+import { useUserData } from '../../context/UserProvider';
 
 const UserHeader: FC = () => {
   const location = useLocation();
@@ -28,7 +28,7 @@ const UserHeader: FC = () => {
               label={`${birbName} & ${username}`}
               className="text-lg font-semibold hover:underline cursor-pointer hover:text-medium-beige transition-colors"
               onClick={() =>
-                location.pathname !== "/profile" && navigate("/profile")
+                location.pathname !== '/profile' && navigate('/profile')
               }
             />
           </div>

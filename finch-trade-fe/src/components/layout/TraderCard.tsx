@@ -1,14 +1,14 @@
-import { FC, useEffect, useState } from "react";
-import TraderTradingSection from "./TraderTradingSection";
-import TraderGiftingSection from "./TraderGiftingSection";
-import TradeButtons from "./TradeButtons";
-import TradeAlert from "./TradeAlert";
-import Alert from "../ui/Alert";
-import Card from "../ui/Card";
-import { useTrades } from "../../context/UserProvider";
-import { useManageTrade } from "../../hooks/trades";
-import { useUserById } from "../../hooks/users";
-import { ChosenItem, Trader } from "../../types";
+import { FC, useEffect, useState } from 'react';
+import TraderTradingSection from './TraderTradingSection';
+import TraderGiftingSection from './TraderGiftingSection';
+import TradeButtons from './TradeButtons';
+import TradeAlert from './TradeAlert';
+import Alert from '../ui/Alert';
+import Card from '../ui/Card';
+import { useTrades } from '../../context/UserProvider';
+import { useManageTrade } from '../../hooks/trades';
+import { useUserById } from '../../hooks/users';
+import { ChosenItem, Trader } from '../../types';
 
 interface Props {
   traderData: Trader;
@@ -40,7 +40,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
         userId,
         traderData.userId,
         chosenItems.my?.id,
-        chosenItems.my?.colorId
+        chosenItems.my?.colorId,
       );
     else await finishTrade(traderData.tradeId, userId, chosenItems);
     setFriendCodeShown(false);
@@ -80,27 +80,27 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
           <TradeButtons
             buttons={[
               {
-                id: "show-friend-code",
-                label: "Show friend code",
+                id: 'show-friend-code',
+                label: 'Show friend code',
                 onClick: handleShowFriendCode,
                 disabled: !chosenItems.my?.id && !chosenItems.my?.colorId,
                 shown: gifting && !friendCodeShown,
               },
               {
-                id: "trade-request",
+                id: 'trade-request',
                 label: requestedByMe
-                  ? "Trade requested"
+                  ? 'Trade requested'
                   : requestedByThem
-                  ? "Accept trade request"
-                  : "Request trade",
+                    ? 'Accept trade request'
+                    : 'Request trade',
                 onClick: handleRequestTrade,
                 disabled:
                   requestedByMe || !chosenItems.my || !chosenItems.their,
                 shown: !gifting && !tradeAccepted,
               },
               {
-                id: "finish-trade",
-                label: "Finish trade",
+                id: 'finish-trade',
+                label: 'Finish trade',
                 onClick: handleFinishTrade,
                 disabled: traderData.finishedByMe,
                 shown: tradeAccepted || (gifting && friendCodeShown),
@@ -128,7 +128,7 @@ const useChosenItems = (traderData: Trader) => {
 
   useEffect(() => {
     if (
-      (traderData.status === "pending" || traderData.status === "confirmed") &&
+      (traderData.status === 'pending' || traderData.status === 'confirmed') &&
       traderData.requestedTrade
     ) {
       const { itemId1, itemId2, colorId1, colorId2 } =
@@ -142,7 +142,7 @@ const useChosenItems = (traderData: Trader) => {
           : {
               my: { id: itemId2, colorId: colorId2 },
               their: { id: itemId1, colorId: colorId1 },
-            }
+            },
       );
     }
   }, [traderData]);
@@ -153,12 +153,12 @@ const useChosenItems = (traderData: Trader) => {
 const getTradeStatus = (traderData: Trader, friendCodeShown: boolean) => ({
   gifting: traderData.has.length === 0,
   requestedByMe: traderData.requestedByMe,
-  requestedByThem: traderData.status === "pending" && !traderData.requestedByMe,
-  tradeAccepted: traderData.status === "confirmed",
+  requestedByThem: traderData.status === 'pending' && !traderData.requestedByMe,
+  tradeAccepted: traderData.status === 'confirmed',
   showAlert:
     traderData.requestedByMe ||
-    (traderData.status === "pending" && !traderData.requestedByMe) ||
-    traderData.status === "confirmed" ||
+    (traderData.status === 'pending' && !traderData.requestedByMe) ||
+    traderData.status === 'confirmed' ||
     friendCodeShown,
 });
 

@@ -1,4 +1,4 @@
-import { JwtPayload } from "jwt-decode";
+import { JwtPayload } from 'jwt-decode';
 
 // login
 export interface SignUpData {
@@ -45,8 +45,8 @@ export interface Color {
 }
 
 export enum ListTypeEnum {
-  Wishlist = "wishlist",
-  Tradelist = "tradelist",
+  Wishlist = 'wishlist',
+  Tradelist = 'tradelist',
 }
 
 export type ListType = `${ListTypeEnum}`;
@@ -96,7 +96,7 @@ export interface PastGift {
   itemId: number;
   colorId: number;
   archivedAt: string;
-  type: "gift";
+  type: 'gift';
 }
 
 export interface PastTrade {
@@ -110,7 +110,7 @@ export interface PastTrade {
   colorId2: number;
   archivedAt: string;
   status: string;
-  type: "trade";
+  type: 'trade';
 }
 
 export type PastTrades = (PastGift | PastTrade)[];

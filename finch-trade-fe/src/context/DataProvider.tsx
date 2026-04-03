@@ -6,9 +6,9 @@ import {
   useCallback,
   ReactNode,
   useMemo,
-} from "react";
-import { Color, Item } from "../types";
-import { fetchAllItems, fetchColors } from "../api/api";
+} from 'react';
+import { Color, Item } from '../types';
+import { fetchAllItems, fetchColors } from '../api/api';
 
 interface Props {
   children: ReactNode;
@@ -24,13 +24,13 @@ const DataContext = createContext<DataContextType | null>(null);
 
 export const useColors = (): Color[] => {
   const context = useContext(DataContext);
-  if (!context) throw new Error("useColors must be used within a DataProvider");
+  if (!context) throw new Error('useColors must be used within a DataProvider');
   return context.colors;
 };
 
 export const useItems = (): [Item[], () => Promise<void>] => {
   const context = useContext(DataContext);
-  if (!context) throw new Error("useItems must be used within a DataProvider");
+  if (!context) throw new Error('useItems must be used within a DataProvider');
   return [context.allItems, context.getAllItems];
 };
 
@@ -43,7 +43,7 @@ export const DataProvider = ({ children }: Props) => {
       const response = await fetchColors();
       setColors(response);
     } catch (error) {
-      console.error("Error fetching colors:", error);
+      console.error('Error fetching colors:', error);
     }
   }, []);
 
@@ -52,7 +52,7 @@ export const DataProvider = ({ children }: Props) => {
       const response = await fetchAllItems();
       setItems(response);
     } catch (error) {
-      console.error("Error fetching items:", error);
+      console.error('Error fetching items:', error);
     }
   }, []);
 
@@ -65,7 +65,7 @@ export const DataProvider = ({ children }: Props) => {
     <DataContext.Provider
       value={useMemo(
         () => ({ colors, allItems: items, getAllItems }),
-        [colors, items, getAllItems]
+        [colors, items, getAllItems],
       )}
     >
       {children}

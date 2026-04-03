@@ -1,10 +1,10 @@
-import { FC, useEffect } from "react";
-import PastGiftCard from "../components/layout/PastGiftCard";
-import PastTradeCard from "../components/layout/PastTradeCard";
-import TraderCard from "../components/layout/TraderCard";
-import Alert from "../components/ui/Alert";
-import { useTrades, useUser, useUserData } from "../context/UserProvider";
-import { PastGift, PastTrade, Trader } from "../types";
+import { FC, useEffect } from 'react';
+import PastGiftCard from '../components/layout/PastGiftCard';
+import PastTradeCard from '../components/layout/PastTradeCard';
+import TraderCard from '../components/layout/TraderCard';
+import Alert from '../components/ui/Alert';
+import { useTrades, useUser, useUserData } from '../context/UserProvider';
+import { PastGift, PastTrade, Trader } from '../types';
 
 const Trades: FC = () => {
   const user = useUser();
@@ -41,7 +41,7 @@ const Trades: FC = () => {
           </div>
           {pastTrades.map((p: PastGift | PastTrade) => (
             <div className="mx-10 mb-8" key={p.id}>
-              {p.type === "gift" ? (
+              {p.type === 'gift' ? (
                 <PastGiftCard pastTrade={p} traderId={p.userId} />
               ) : (
                 <PastTradeCard

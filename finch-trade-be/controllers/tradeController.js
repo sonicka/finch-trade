@@ -1,4 +1,4 @@
-import { queryAll, queryOne, runQuery } from "../utils.js";
+import { queryAll, queryOne, runQuery } from '../utils.js';
 import {
   archiveTrade,
   deleteTrade,
@@ -6,15 +6,15 @@ import {
   getTradeByUsers,
   insertItemTransaction,
   updateTrade,
-} from "../helpers/tradeHelpers.js";
-import { deleteItem } from "../helpers/itemHelpers.js";
+} from '../helpers/tradeHelpers.js';
+import { deleteItem } from '../helpers/itemHelpers.js';
 
 export const getTradesFromDB = (req, res) => {
   const userId = req.query.userId;
 
   findTrades(userId, (err, trades) => {
     if (err) {
-      res.status(500).json({ error: "Error finding trades:", err });
+      res.status(500).json({ error: 'Error finding trades:', err });
       return;
     }
     res.json(trades);
@@ -26,7 +26,7 @@ export const postRequestTrade = async (req, res) => {
   const { chosenItems } = req.body;
 
   if (!userId1 || !userId2 || !chosenItems?.my || !chosenItems?.their) {
-    return res.status(400).json({ error: "Missing required trade data" });
+    return res.status(400).json({ error: 'Missing required trade data' });
   }
 
   try {
@@ -39,18 +39,18 @@ export const postRequestTrade = async (req, res) => {
       if (!requestedBy.includes(userId1)) requestedBy.push(userId1);
       if (!requestedBy.includes(userId2)) requestedBy.push(userId2);
 
-      const newStatus = requestedBy.length === 2 ? "confirmed" : "pending";
+      const newStatus = requestedBy.length === 2 ? 'confirmed' : 'pending';
 
       try {
         await updateTrade(existingTrade.id, newStatus, requestedBy);
         return res.status(200).json({
-          message: "Trade updated",
+          message: 'Trade updated',
           tradeId: existingTrade.id,
           status: newStatus,
         });
       } catch (err) {
-        console.error("Error updating trade:", err.message);
-        return res.status(500).json({ error: "Failed to update trade" });
+        console.error('Error updating trade:', err.message);
+        return res.status(500).json({ error: 'Failed to update trade' });
       }
     } else {
       try {
@@ -60,9 +60,9 @@ export const postRequestTrade = async (req, res) => {
           chosenItems,
         );
         return res.status(201).json({
-          message: "Trade created",
+          message: 'Trade created',
           tradeId: result.lastID,
-          status: "pending",
+          status: 'pending',
         });
       } catch (err) {
         return res
@@ -71,7 +71,7 @@ export const postRequestTrade = async (req, res) => {
       }
     }
   } catch (err) {
-    console.error("Error processing trade:", err.message);
+    console.error('Error processing trade:', err.message);
     return res.status(500).json({ error: err.message });
   }
 };
@@ -80,7 +80,7 @@ export const getPastTradesFromDB = async (req, res) => {
   try {
     const userId = req.query.userId;
     if (!userId) {
-      return res.status(400).json({ error: "Missing userId parameter" });
+      return res.status(400).json({ error: 'Missing userId parameter' });
     }
 
     const [pastGifts, pastTrades] = await Promise.all([
@@ -104,7 +104,7 @@ export const getPastTradesFromDB = async (req, res) => {
       itemId: row.item_id1,
       colorId: row.color_id1,
       archivedAt: row.archived_at,
-      type: "gift",
+      type: 'gift',
     }));
 
     const formattedTrades = pastTrades.map((row) => ({
@@ -118,7 +118,7 @@ export const getPastTradesFromDB = async (req, res) => {
       itemId2: row.item_id2,
       colorId2: row.color_id2,
       archivedAt: row.archived_at,
-      type: "trade",
+      type: 'trade',
     }));
 
     const allPastTransactions = [...formattedGifts, ...formattedTrades].sort(
@@ -127,8 +127,8 @@ export const getPastTradesFromDB = async (req, res) => {
 
     res.status(200).json(allPastTransactions);
   } catch (error) {
-    console.error("Error fetching past trades:", error);
-    res.status(500).json({ error: "Failed to retrieve past trades" });
+    console.error('Error fetching past trades:', error);
+    res.status(500).json({ error: 'Failed to retrieve past trades' });
   }
 };
 
@@ -136,12 +136,12 @@ export const postFinishGifting = async (req, res) => {
   const { giftedBy, giftedTo, itemId, colorId } = req.body;
 
   if (!itemId || !colorId || !giftedTo || !giftedBy) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: 'All fields are required' });
   }
 
   try {
     await runQuery(
-      "INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)",
+      'INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)',
       [giftedBy, giftedTo, itemId, colorId],
     );
 
@@ -149,10 +149,10 @@ export const postFinishGifting = async (req, res) => {
     await deleteItem(giftedBy, itemId, colorId);
 
     return res.status(200).json({
-      message: "Gifting archived and items successfully deleted.",
+      message: 'Gifting archived and items successfully deleted.',
     });
   } catch (err) {
-    console.error("Error finishing gifting:", err.message);
+    console.error('Error finishing gifting:', err.message);
     return res.status(500).json({
       error: `Failed to finish gifting: ${err.message}`,
     });
@@ -172,19 +172,19 @@ export const postFinishTrade = async (req, res) => {
     if (!trade) {
       return res
         .status(404)
-        .json({ error: "Trade not found or not confirmed" });
+        .json({ error: 'Trade not found or not confirmed' });
     }
 
     let finishedBy = trade.finished_by ? JSON.parse(trade.finished_by) : [];
     if (!finishedBy.includes(userId)) finishedBy.push(userId);
-    const newStatus = finishedBy.length === 2 ? "finished" : trade.status;
+    const newStatus = finishedBy.length === 2 ? 'finished' : trade.status;
 
     await runQuery(
       "UPDATE trades SET status = ?, finished_by = ?, valid_until = DATETIME('now', '+24 hours') WHERE id = ?",
       [newStatus, JSON.stringify(finishedBy), trade.id],
     );
 
-    if (newStatus === "finished") {
+    if (newStatus === 'finished') {
       await deleteItem(trade.user_id1, trade.item_id1, trade.color_id1, true);
       await deleteItem(trade.user_id2, trade.item_id2, trade.color_id2, true);
       await deleteItem(trade.user_id1, trade.item_id2, trade.color_id2, true);
@@ -193,19 +193,19 @@ export const postFinishTrade = async (req, res) => {
       await deleteTrade(trade.id);
 
       return res.status(200).json({
-        message: "Trade archived and items successfully deleted.",
+        message: 'Trade archived and items successfully deleted.',
         tradeId: trade.id,
-        status: "archived",
+        status: 'archived',
       });
     }
 
     return res.status(200).json({
-      message: "Trade updated",
+      message: 'Trade updated',
       tradeId: trade.id,
       status: newStatus,
     });
   } catch (err) {
-    console.error("Error finishing trade:", err.message);
+    console.error('Error finishing trade:', err.message);
     return res.status(500).json({ error: err.message });
   }
 };

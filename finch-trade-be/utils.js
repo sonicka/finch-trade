@@ -1,4 +1,4 @@
-import db from "./models/db.js";
+import db from './models/db.js';
 
 export const queryOne = (query, params, callback = (result) => result) => {
   return new Promise((resolve, reject) => {

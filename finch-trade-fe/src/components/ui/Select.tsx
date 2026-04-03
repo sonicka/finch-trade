@@ -1,34 +1,34 @@
-import { FC, useRef, useState } from "react";
+import { useRef, useState } from 'react';
 
-interface Props {
+interface Props<T extends { id: number }> {
   id: string;
-  options: Object[] | string[];
-  value: any;
+  options: T[];
+  value: T;
   placeholder?: string;
-  onChange: (value: any) => void;
-  labelFormatter?: (value: any) => string;
-  valueFormatter?: (value: any) => string | number;
+  onChange: (value: T) => void;
+  labelFormatter?: (value: T) => string;
+  valueFormatter?: (value: T) => string;
 }
 
-const Select: FC<Props> = ({
+const Select = <T extends { id: number }>({
   id,
   options,
   value,
-  placeholder = "Select an option",
+  placeholder = 'Select an option',
   onChange,
   labelFormatter,
   valueFormatter,
-}) => {
+}: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
   const noValue =
-    !value || (typeof value === "object" && Object.keys(value).length === 0);
+    !value || (typeof value === 'object' && Object.keys(value).length === 0);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSelect = (selectedValue: string | number | Object) => {
+  const handleSelect = (selectedValue: string | number | object) => {
     onChange(selectedValue);
     setIsOpen(false);
   };
@@ -50,17 +50,17 @@ const Select: FC<Props> = ({
         type="hidden"
         name={id}
         value={
-          typeof valueFormatter === "function"
-            ? (valueFormatter(value) ?? "")
-            : (value ?? "")
+          typeof valueFormatter === 'function'
+            ? (valueFormatter(value) ?? '')
+            : (value ?? '')
         }
       />
       <label
         className={`absolute left-3 px-1 transition-all cursor-pointer bg-lightBeige z-10
       ${
         isOpen || !noValue
-          ? "-top-2.5 left-2 text-xs text-darkBeige"
-          : "top-2.5 text-base text-mediumBeige"
+          ? '-top-2.5 left-2 text-xs text-darkBeige'
+          : 'top-2.5 text-base text-mediumBeige'
       }`}
         onClick={toggleDropdown}
       >
@@ -68,15 +68,15 @@ const Select: FC<Props> = ({
       </label>
       <div
         onClick={toggleDropdown}
-        className={`w-full border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all p-2
-                   ${isOpen ? "border-darkBeige" : "border-mediumBeige"}`}
+        className={`w-full border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all p-2 text-darkBeige
+                   ${isOpen ? 'border-darkBeige' : 'border-mediumBeige'}`}
       >
-        <span className={`${!noValue && "text-darkBeige"}`}>
+        <span className={`${!noValue && 'text-darkBeige'}`}>
           {!noValue ? (
-            typeof labelFormatter === "function" ? (
+            typeof labelFormatter === 'function' ? (
               labelFormatter(value)
             ) : (
-              value
+              <>{value}</>
             )
           ) : (
             <>&nbsp;</>
@@ -84,7 +84,7 @@ const Select: FC<Props> = ({
         </span>
         <svg
           className={`w-4 h-4 transition-transform ${
-            isOpen ? "transform rotate-180" : ""
+            isOpen ? 'transform rotate-180' : ''
           }`}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -101,16 +101,18 @@ const Select: FC<Props> = ({
       </div>
       {isOpen && options.length > 0 && (
         <ul className="absolute w-full max-h-40 overflow-y-auto text-darkBeige bg-lightBeige border border-gray-300 rounded-lg shadow-sm z-20">
-          {options.map((item: any) => {
+          {options.map((item: T) => {
             return (
               <li
                 key={item.id}
                 onMouseDown={() => handleSelect(item)}
                 className="p-2 cursor-pointer hover:bg-gray-200"
               >
-                {typeof labelFormatter === "function"
-                  ? labelFormatter(item)
-                  : item}
+                <>
+                  {typeof labelFormatter === 'function'
+                    ? labelFormatter(item)
+                    : item}
+                </>
               </li>
             );
           })}

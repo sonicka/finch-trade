@@ -1,22 +1,22 @@
-import { FC, useState } from "react";
+import { useState } from 'react';
 
-interface Props {
+interface Props<T extends { id: string | number; name: string }> {
   id: string;
-  options: Object[] | string[];
-  value: any;
+  options: T[];
+  value: string;
   placeholder?: string;
-  onInputChange?: (value: any) => void;
-  onChange: (value: any) => void;
+  onInputChange?: (e: React.ChangeEvent<HTMLInputElement, Element>) => void;
+  onChange: (item: T) => void;
 }
 
-const AutocompleteSelect: FC<Props> = ({
+const AutocompleteSelect = <T extends { id: string | number; name: string }>({
   id,
   options,
   value,
-  placeholder = "Select an option",
+  placeholder = 'Select an option',
   onInputChange,
   onChange,
-}) => {
+}: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -25,10 +25,10 @@ const AutocompleteSelect: FC<Props> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsOpen(true);
-    if (typeof onInputChange === "function") onInputChange(e);
+    if (typeof onInputChange === 'function') onInputChange(e);
   };
 
-  const handleSelect = (selectedValue: string | number | Object) => {
+  const handleSelect = (selectedValue: T) => {
     onChange(selectedValue);
     setIsOpen(false);
   };
@@ -57,7 +57,7 @@ const AutocompleteSelect: FC<Props> = ({
 
       {isOpen && options.length > 0 && (
         <ul className="absolute w-full max-h-40 overflow-y-auto text-darkBeige bg-lightBeige border border-gray-300 rounded-lg shadow-sm z-20">
-          {options.map((item: any) => (
+          {options.map((item: T) => (
             <li
               key={item.id}
               onClick={() => handleSelect(item)}

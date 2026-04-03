@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { editUser, fetchUser } from "../api/api";
-import { User } from "../types";
+import { useState, useEffect } from 'react';
+import { editUser, fetchUser } from '../api/api';
+import { User } from '../types';
 
 // todo caching
 export const useUserById = (userId: number) => {
@@ -12,7 +12,7 @@ export const useUserById = (userId: number) => {
         const response = await fetchUser(userId);
         setUser(response);
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error('Error fetching user:', error);
       }
     };
 
@@ -23,8 +23,8 @@ export const useUserById = (userId: number) => {
 };
 
 export const useEditUser = () => {
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const edit = async (
     userId: number,
@@ -33,15 +33,15 @@ export const useEditUser = () => {
     try {
       const response = await editUser(userId, data);
       setSuccess(response.message);
-      setError("");
+      setError('');
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
-        setSuccess("");
+        setSuccess('');
       } else {
-        setError("Failed to edit the user.");
+        setError('Failed to edit the user.');
       }
-      console.error("Error editing user:", err);
+      console.error('Error editing user:', err);
     }
   };
 

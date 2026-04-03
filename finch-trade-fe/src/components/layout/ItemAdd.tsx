@@ -1,16 +1,16 @@
-import { FC, FormEventHandler, useState } from "react";
-import Select from "../ui/Select";
-import Card from "../ui/Card";
-import AutocompleteSelect from "../ui/AutocompleteSelect";
-import IconButton from "../ui/IconButton";
-import { Item, Color, ListType } from "../../types";
+import { FC, SubmitEventHandler, useState } from 'react';
+import Select from '../ui/Select';
+import Card from '../ui/Card';
+import AutocompleteSelect from '../ui/AutocompleteSelect';
+import IconButton from '../ui/IconButton';
+import { Item, Color, ListType } from '../../types';
 
 interface Props {
   items: Item[];
   colors: Color[];
   type: ListType;
-  handleSubmit: FormEventHandler<HTMLFormElement>;
-  clearError: Function;
+  handleSubmit: SubmitEventHandler<HTMLFormElement>;
+  clearError: () => void;
 }
 
 const ItemAdd: FC<Props> = ({
@@ -21,11 +21,11 @@ const ItemAdd: FC<Props> = ({
   clearError,
 }) => {
   const [filteredOptions, setFilteredOptions] = useState<Item[]>([]);
-  const [nameValue, setNameValue] = useState<string>("");
+  const [nameValue, setNameValue] = useState<string>('');
   const [selectedColor, setSelectedColor] = useState<Color>();
   const disabled = !selectedColor || !nameValue;
   const filteredColors = colors.filter((color: Color) => {
-    if (type === "wishlist" || color.color !== "any") return color;
+    if (type === 'wishlist' || color.color !== 'any') return color;
   }); // remove 'any' option from tradelist
 
   const handleItemInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +86,7 @@ const ItemAdd: FC<Props> = ({
             />
           }
           disabled={disabled}
-          buttonProps={{ "aria-label": "Confirm", type: "submit" }}
+          buttonProps={{ 'aria-label': 'Confirm', type: 'submit' }}
           size="h-10 w-10"
         />
       </form>

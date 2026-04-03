@@ -1,9 +1,9 @@
-import { FC } from "react";
-import ColorCircle from "../ui/ColorCircle";
-import { ChosenItems } from "./TraderCard";
-import { useColors, useItems } from "../../context/DataProvider";
-import { filterRequestedItems, getItemName } from "../../utils";
-import { TradeItem, Trader, User } from "../../types";
+import { FC } from 'react';
+import ColorCircle from '../ui/ColorCircle';
+import { ChosenItems } from './TraderCard';
+import { useColors, useItems } from '../../context/DataProvider';
+import { filterRequestedItems, getItemName } from '../../utils';
+import { TradeItem, Trader, User } from '../../types';
 
 interface Props {
   trader: User;
@@ -22,7 +22,7 @@ const TraderTradingSection: FC<Props> = ({
   const [items] = useItems();
 
   const isTradeOngoing =
-    traderData.status === "pending" || traderData.status === "confirmed";
+    traderData.status === 'pending' || traderData.status === 'confirmed';
 
   const traderWantedItems = isTradeOngoing
     ? filterRequestedItems(traderData.wants, traderData.requestedTrade)
@@ -37,7 +37,7 @@ const TraderTradingSection: FC<Props> = ({
       {`${trader?.birbName} would like to have:`}
       {traderWantedItems.map((item: TradeItem) => (
         <div
-          key={item.itemId + "" + item.colorId}
+          key={item.itemId + '' + item.colorId}
           className="flex justify-center text-gray-600 mt-2 mb-5"
         >
           <label className="flex items-center space-x-2 cursor-pointer gap-2">
@@ -65,7 +65,7 @@ const TraderTradingSection: FC<Props> = ({
       {`${trader?.birbName} can give you:`}
       {traderOwnedItems.map((item: TradeItem) => (
         <div
-          key={item.itemId + "" + item.colorId}
+          key={item.itemId + '' + item.colorId}
           className="flex justify-center text-gray-600 mt-2 mb-5"
         >
           <label className="flex items-center space-x-2 cursor-pointer">

@@ -1,10 +1,10 @@
-import { FC, MouseEventHandler, ReactNode } from "react";
+import { FC, MouseEventHandler, ReactNode } from 'react';
 
 interface Props {
   label: string | ReactNode;
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  buttonProps?: Object;
+  buttonProps?: object;
   className?: string;
 }
 
@@ -21,7 +21,7 @@ const Button: FC<Props> = ({
       className={
         className
           ? className
-          : "text-darkBeige bg-beige border-2 border-b-[4px] border-darkBeige px-3 py-1 rounded-xl hover:border-b-2 hover:mt-0.5 disabled:hover:border-b-[4px] disabled:hover:mt-0 disabled:bg-grey disabled:border-grey disabled:text-lightBeige disabled:cursor-not-allowed"
+          : 'text-darkBeige bg-beige border-2 border-b-[4px] border-darkBeige px-3 py-1 rounded-xl hover:border-b-2 hover:mt-0.5 disabled:hover:border-b-[4px] disabled:hover:mt-0 disabled:bg-grey disabled:border-grey disabled:text-lightBeige disabled:cursor-not-allowed'
       }
       disabled={disabled}
       {...buttonProps}

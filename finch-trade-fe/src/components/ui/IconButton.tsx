@@ -1,10 +1,10 @@
-import { FC, MouseEventHandler, ReactNode } from "react";
+import { FC, MouseEventHandler, ReactNode } from 'react';
 
 interface Props {
   icon: string | ReactNode;
   disabled?: boolean;
   onClick?: MouseEventHandler<HTMLButtonElement>;
-  buttonProps?: Object;
+  buttonProps?: object;
   className?: string;
   size?: string;
 }
@@ -15,7 +15,7 @@ const IconButton: FC<Props> = ({
   onClick,
   buttonProps,
   className,
-  size = "",
+  size = '',
 }) => {
   return (
     <button

@@ -1,6 +1,6 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import Card from "./Card";
-import Button from "./Button";
+import { useLocation, useNavigate } from 'react-router-dom';
+import Card from './Card';
+import Button from './Button';
 
 const BottomButton = () => {
   const location = useLocation();
@@ -8,34 +8,34 @@ const BottomButton = () => {
 
   const buttonText = (() => {
     switch (location.pathname) {
-      case "/":
+      case '/':
         return "Let's trade!";
-      case "/trades":
-        return "Back to my lists";
-      case "/profile":
-        return "Back to trading";
+      case '/trades':
+        return 'Back to my lists';
+      case '/profile':
+        return 'Back to trading';
       default:
-        return "";
+        return '';
     }
   })();
 
   const buttonFn = () => {
     switch (location.pathname) {
-      case "/":
-        return navigate("/trades");
-      case "/trades":
-        return navigate("/");
-      case "/profile":
-        return navigate("/");
+      case '/':
+        return navigate('/trades');
+      case '/trades':
+        return navigate('/');
+      case '/profile':
+        return navigate('/');
       default:
-        return navigate("/");
+        return navigate('/');
     }
   };
 
   if (
-    location.pathname === "/" ||
-    location.pathname === "/trades" ||
-    location.pathname === "/profile"
+    location.pathname === '/' ||
+    location.pathname === '/trades' ||
+    location.pathname === '/profile'
   ) {
     return (
       <div className="mx-2 mb-2">

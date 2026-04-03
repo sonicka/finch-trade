@@ -1,22 +1,22 @@
-import sqlite3 from "sqlite3";
-import { DEFAULT_COLORS, TEST_USERS } from "../constants.js";
+import sqlite3 from 'sqlite3';
+import { DEFAULT_COLORS, TEST_USERS } from '../constants.js';
 
-const dropTablesFlag = process.argv.includes("--drop-tables");
+const dropTablesFlag = process.argv.includes('--drop-tables');
 
 const db = new sqlite3.Database(
-  "./finch-trade.db",
+  './finch-trade.db',
   sqlite3.verbose(),
   (err) => {
     if (err) {
-      console.error("Error opening database:", err);
+      console.error('Error opening database:', err);
     } else {
-      console.log("Database connected");
+      console.log('Database connected');
     }
-  }
+  },
 );
 
 if (dropTablesFlag) {
-  console.log("Tables dropped");
+  console.log('Tables dropped');
 
   db.serialize(() => {
     // db.run("DROP TABLE IF EXISTS users");
@@ -26,7 +26,7 @@ if (dropTablesFlag) {
     // db.run("DROP TABLE IF EXISTS trades_history");
   });
 } else {
-  console.log("Skipping table drop");
+  console.log('Skipping table drop');
 }
 
 db.serialize(() => {
@@ -120,9 +120,9 @@ db.serialize(() => {
         [color],
         (err) => {
           if (err) {
-            console.error("Error inserting color:", err.message);
+            console.error('Error inserting color:', err.message);
           }
-        }
+        },
       );
     });
     TEST_USERS.forEach((user) => {
@@ -131,9 +131,9 @@ db.serialize(() => {
         user,
         (err) => {
           if (err) {
-            console.error("Error inserting user:", err.message);
+            console.error('Error inserting user:', err.message);
           }
-        }
+        },
       );
     });
   }

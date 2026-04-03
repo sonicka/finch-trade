@@ -8,31 +8,31 @@ import {
   SignUpData,
   User,
   UserItem,
-} from "../types";
+} from '../types';
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // auth
 export const signUp = async (userData: SignUpData) => {
   const response = await fetch(`${BASE_URL}/api/users/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
   });
 
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || "Sign-up failed");
+  if (!response.ok) throw new Error(data.message || 'Sign-up failed');
   return data.token;
 };
 
 export const logIn = async (credentials: LoginCredentials) => {
   const response = await fetch(`${BASE_URL}/api/users/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials),
   });
 
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || "Login failed");
+  if (!response.ok) throw new Error(data.message || 'Login failed');
   return data.token;
 };
 
@@ -40,7 +40,7 @@ export const logIn = async (credentials: LoginCredentials) => {
 export const fetchUser = async (userId: number): Promise<User> => {
   const response = await fetch(`${BASE_URL}/api/users/${userId}`, {});
   if (!response.ok) {
-    throw new Error("Failed to fetch the user");
+    throw new Error('Failed to fetch the user');
   }
   const data = await response.json();
   return data;
@@ -51,8 +51,8 @@ export const editUser = async (
   params: { email?: string; password?: string; passwordAgain?: string },
 ) => {
   const response = await fetch(`${BASE_URL}/api/users/${userId}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params),
   });
 
@@ -68,7 +68,7 @@ export const editUser = async (
 export const fetchColors = async (): Promise<Color[]> => {
   const response = await fetch(`${BASE_URL}/api/items/colors`, {});
   if (!response.ok) {
-    throw new Error("Failed to fetch colors");
+    throw new Error('Failed to fetch colors');
   }
   const data = await response.json();
   return data;
@@ -77,20 +77,20 @@ export const fetchColors = async (): Promise<Color[]> => {
 // items
 export const addItem = async (itemData: ItemData) => {
   const response = await fetch(`${BASE_URL}/api/items/add`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(itemData),
   });
 
   const data = await response.json();
-  if (!response.ok) throw new Error(data.message || "Adding item failed");
+  if (!response.ok) throw new Error(data.message || 'Adding item failed');
   return data;
 };
 
 export const fetchAllItems = async (): Promise<Item[]> => {
   const response = await fetch(`${BASE_URL}/api/items`);
   if (!response.ok) {
-    throw new Error("Failed to fetch items");
+    throw new Error('Failed to fetch items');
   }
   const data = await response.json();
   return data;
@@ -105,7 +105,7 @@ export const fetchUserItems = async (
     {},
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch user items");
+    throw new Error('Failed to fetch user items');
   }
   const data = await response.json();
   return data as UserItem[];
@@ -118,8 +118,8 @@ export const deleteItem = async (
   userId: number,
 ) => {
   const response = await fetch(`${BASE_URL}/api/items/remove`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       itemId,
       colorId,
@@ -128,7 +128,7 @@ export const deleteItem = async (
     }),
   });
   if (!response.ok) {
-    throw new Error("Failed to remove the item");
+    throw new Error('Failed to remove the item');
   }
   const data = await response.json();
   return data;
@@ -137,7 +137,7 @@ export const deleteItem = async (
 export const fetchItemById = async (itemId: number) => {
   const response = await fetch(`${BASE_URL}/api/items/item/${itemId}}`, {});
   if (!response.ok) {
-    throw new Error("Failed to fetch item");
+    throw new Error('Failed to fetch item');
   }
   const data = await response.json();
   return data;
@@ -147,7 +147,7 @@ export const fetchItemById = async (itemId: number) => {
 export const fetchTrades = async (userId: number) => {
   const response = await fetch(`${BASE_URL}/api/trades?userId=${userId}`, {});
   if (!response.ok) {
-    throw new Error("Failed to fetch trades");
+    throw new Error('Failed to fetch trades');
   }
   const data = await response.json();
   return data;
@@ -159,7 +159,7 @@ export const fetchPastTrades = async (userId: number) => {
     {},
   );
   if (!response.ok) {
-    throw new Error("Failed to fetch past trades");
+    throw new Error('Failed to fetch past trades');
   }
   const data = await response.json();
   return data;
@@ -173,15 +173,15 @@ export const requestTrade = async (
   const response = await fetch(
     `${BASE_URL}/api/trades/requestTrade?userId1=${userId1}&userId2=${userId2}`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ chosenItems }),
     },
   );
   if (!response.ok) {
-    throw new Error("Failed to request trade");
+    throw new Error('Failed to request trade');
   }
   const data = await response.json();
   return data;
@@ -191,12 +191,12 @@ export const finishTrade = async (tradeId: number, userId: number) => {
   const response = await fetch(
     `${BASE_URL}/api/trades/finishTrade/${tradeId}?userId=${userId}`,
     {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
     },
   );
   if (!response.ok) {
-    throw new Error("Failed to finish trade");
+    throw new Error('Failed to finish trade');
   }
   const data = await response.json();
   return data;
@@ -209,12 +209,12 @@ export const finishGifting = async (
   colorId: number,
 ) => {
   const response = await fetch(`${BASE_URL}/api/trades/finishGifting`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ giftedBy, giftedTo, itemId, colorId }),
   });
   if (!response.ok) {
-    throw new Error("Failed to finish gifting");
+    throw new Error('Failed to finish gifting');
   }
   const data = await response.json();
   return data;

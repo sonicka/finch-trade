@@ -39,3 +39,34 @@ Currently, contributions are needed **only for testing** purposes. If you're int
 ## License
 
 This project is licensed under the **MIT License** – see the [LICENSE](https://opensource.org/licenses/MIT) file for details.
+
+<br />
+<br />
+
+---
+
+<br />
+
+# Project Roadmap
+
+### Current State
+- Basic functionalities already built
+
+### TODO General
+- [ ] Refinement and optimization of core logic
+- [ ] Thorough testing of the logic (possibly writing up some tests)
+- [ ] Setup **ESLint** and **Prettier** properly
+- [ ] Add **Send Feedback** functionality
+- [ ] Make it work publicly (migration to a more robust DB)
+
+### TODO UI / UX
+- [ ] Make **Alert** component disappearing (auto-dismiss)
+- [ ] Build **Modal** component for confirmation actions (delete, etc.)
+- [ ] Make past trades collapsable (**Accordion style**)
+
+### TODO Frontend
+- [ ] Integrate **TanStack Query** to handle requests and caching
+- [ ] Handle **Loading / Error / Success** states properly across all views
+
+### TODO Backend
+- [ ] Tie color options to each item separately (dynamic color sets)

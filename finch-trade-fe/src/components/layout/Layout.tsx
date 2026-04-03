@@ -1,6 +1,6 @@
-import { FC, ReactNode } from "react";
-import UserHeader from "./UserHeader";
-import BottomButton from "../ui/BottomButton";
+import { FC, ReactNode } from 'react';
+import UserHeader from './UserHeader';
+import BottomButton from '../ui/BottomButton';
 
 interface Props {
   children: ReactNode;

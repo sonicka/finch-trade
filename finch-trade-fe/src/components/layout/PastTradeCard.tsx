@@ -1,10 +1,10 @@
-import { FC } from "react";
-import Card from "../ui/Card";
-import ColorCircle from "../ui/ColorCircle";
-import { useColors, useItems } from "../../context/DataProvider";
-import { useUserById } from "../../hooks/users";
-import { formatDate, getItemName } from "../../utils";
-import { LoggedInUser, PastTrade } from "../../types";
+import { FC } from 'react';
+import Card from '../ui/Card';
+import ColorCircle from '../ui/ColorCircle';
+import { useColors, useItems } from '../../context/DataProvider';
+import { useUserById } from '../../hooks/users';
+import { formatDate, getItemName } from '../../utils';
+import { LoggedInUser, PastTrade } from '../../types';
 
 interface Props {
   pastTrade: PastTrade;

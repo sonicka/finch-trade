@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
-import { useUser } from "../../context/UserProvider";
-import Layout from "./Layout";
+import { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
+import { useUser } from '../../context/UserProvider';
+import Layout from './Layout';
 
 interface ProtectedRouteProps {
   children: ReactNode;

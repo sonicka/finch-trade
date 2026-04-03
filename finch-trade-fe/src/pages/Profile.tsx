@@ -1,24 +1,27 @@
-import { useEffect, useState } from "react";
-import { useUserData } from "../context/UserProvider";
-import Card from "../components/ui/Card";
-import FormInput from "../components/ui/FormInput";
-import Button from "../components/ui/Button";
-import Alert from "../components/ui/Alert";
-import { useEditUser } from "../hooks/users";
+import { useEffect, useState } from 'react';
+import { useUserData } from '../context/UserProvider';
+import Card from '../components/ui/Card';
+import FormInput from '../components/ui/FormInput';
+import Button from '../components/ui/Button';
+import Alert from '../components/ui/Alert';
+import { useEditUser } from '../hooks/users';
 
 const Profile = () => {
   const { user } = useUserData();
   const { id, birbName, username, email, friendCode } = user || {};
   const [newEmail, setNewEmail] = useState(email);
-  const [password, setPassword] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
+  const [password, setPassword] = useState('');
+  const [passwordAgain, setPasswordAgain] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const { edit: editUser, error, success } = useEditUser();
   const edited =
     (!!newEmail && newEmail !== email) ||
     (!!password && password === passwordAgain);
 
-  const handleEditField = (set: Function, value: string) => {
+  const handleEditField = (
+    set: React.Dispatch<React.SetStateAction<string | undefined>>,
+    value: string,
+  ) => {
     if (showAlert) setShowAlert(false);
     set(value);
   };
@@ -47,25 +50,25 @@ const Profile = () => {
           <h1 className="text-lg font-semibold">User Details</h1>
           <FormInput
             label="User Name"
-            value={username ?? ""}
+            value={username ?? ''}
             id="username"
             disabled
           />
           <FormInput
             label="Birb Name"
-            value={birbName ?? ""}
+            value={birbName ?? ''}
             id="birbName"
             disabled
           />
           <FormInput
             label="Friend Code"
-            value={friendCode ?? ""}
+            value={friendCode ?? ''}
             id="friendCode"
             disabled
           />
           <FormInput
             label="Email"
-            value={newEmail ?? ""}
+            value={newEmail ?? ''}
             setValue={(value: string) => handleEditField(setNewEmail, value)}
             type="email"
             id="email"
@@ -92,7 +95,7 @@ const Profile = () => {
               label="Save changes"
               disabled={!edited}
               onClick={() => {}}
-              buttonProps={{ "aria-label": "Save", type: "submit" }}
+              buttonProps={{ 'aria-label': 'Save', type: 'submit' }}
             />
           </div>
           {showAlert && (

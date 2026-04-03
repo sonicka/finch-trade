@@ -1,6 +1,6 @@
-import { FC } from "react";
-import { Color } from "../../types";
-import { getColorName } from "../../utils";
+import { FC } from 'react';
+import { Color } from '../../types';
+import { getColorName } from '../../utils';
 
 interface Props {
   colors: Color[];
@@ -19,7 +19,7 @@ const ColorCircle: FC<Props> = ({ colors, colorId }) => {
         style={{
           backgroundColor:
             colorId === 1
-              ? "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)"
+              ? 'linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)'
               : getColorName(colors, colorId),
         }}
       />

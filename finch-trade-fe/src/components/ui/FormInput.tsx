@@ -1,11 +1,11 @@
-import { FC } from "react";
+import { FC } from 'react';
 
 interface Props {
   label: string;
   value: string;
   type?: string;
   id: string;
-  setValue?: Function;
+  setValue?: React.Dispatch<React.SetStateAction<string>>;
   required?: boolean;
   disabled?: boolean;
 }
@@ -13,7 +13,7 @@ interface Props {
 const FormInput: FC<Props> = ({
   label,
   value,
-  type = "text",
+  type = 'text',
   id,
   setValue = () => {},
   required = false,
@@ -35,8 +35,8 @@ const FormInput: FC<Props> = ({
         required={required}
         disabled={disabled}
         className={`w-full p-2 border-2 rounded-xl flex justify-between items-center
-                   ${disabled && "text-greyBeige border-greyBeige"}
-                   ${!disabled && "cursor-pointer text-darkBeige border-darkBeige"}`}
+                   ${disabled && 'text-greyBeige border-greyBeige'}
+                   ${!disabled && 'cursor-pointer text-darkBeige border-darkBeige'}`}
       />
     </div>
   );

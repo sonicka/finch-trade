@@ -1,5 +1,5 @@
-import { ReactNode, useState } from "react";
-import Button from "./Button";
+import { ReactNode, useState } from 'react';
+import Button from './Button';
 
 interface Tab {
   label: string;
@@ -22,8 +22,8 @@ const Tabs = ({ tabs }: Tabs) => {
             label={tab.label}
             className={`py-2 px-4 my-2 mx-6 ${width} text-center rounded-lg border-b-2 border-darkBeige ${
               activeTab === index
-                ? "bg-lightBeige text-darkBeige"
-                : "border-transparent text-lightBeige"
+                ? 'bg-lightBeige text-darkBeige'
+                : 'border-transparent text-lightBeige'
             }`}
             onClick={() => setActiveTab(index)}
           />

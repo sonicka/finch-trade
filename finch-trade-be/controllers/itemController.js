@@ -1,11 +1,11 @@
-import db from "../models/db.js";
-import { queryOne, runQuery } from "../utils.js";
+import db from '../models/db.js';
+import { queryOne, runQuery } from '../utils.js';
 
 export const getColorsFromDB = (req, res) => {
-  db.all("SELECT * FROM colors", (err, rows) => {
+  db.all('SELECT * FROM colors', (err, rows) => {
     if (err) {
-      console.error("Error fetching colors:", err);
-      return res.status(500).json({ error: "Failed to retrieve colors" });
+      console.error('Error fetching colors:', err);
+      return res.status(500).json({ error: 'Failed to retrieve colors' });
     }
     res.json(rows);
   });
@@ -15,11 +15,11 @@ export const postItemToDB = async (req, res) => {
   const { userId, color, name, listType } = req.body;
 
   if (!color || !name) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: 'All fields are required' });
   }
 
   try {
-    const existingItem = await queryOne("SELECT * FROM items WHERE name = ?", [
+    const existingItem = await queryOne('SELECT * FROM items WHERE name = ?', [
       name,
     ]);
 
@@ -27,7 +27,7 @@ export const postItemToDB = async (req, res) => {
     if (existingItem) {
       itemId = existingItem.id;
     } else {
-      const result = await runQuery("INSERT INTO items (name) VALUES (?)", [
+      const result = await runQuery('INSERT INTO items (name) VALUES (?)', [
         name,
       ]);
       itemId = result.lastID;
@@ -37,13 +37,13 @@ export const postItemToDB = async (req, res) => {
     // "any" color
     if (color === 1) {
       existingUserItem = await queryOne(
-        "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ?",
-        [userId, itemId]
+        'SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ?',
+        [userId, itemId],
       );
     } else {
       existingUserItem = await queryOne(
-        "SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ? AND color_id IN (?, 1)",
-        [userId, itemId, color]
+        'SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ? AND color_id IN (?, 1)',
+        [userId, itemId, color],
       );
     }
 
@@ -66,8 +66,8 @@ export const postItemToDB = async (req, res) => {
     }
 
     const insertResult = await runQuery(
-      "INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)",
-      [userId, itemId, color, listType]
+      'INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)',
+      [userId, itemId, color, listType],
     );
 
     return res.status(201).json({
@@ -75,16 +75,16 @@ export const postItemToDB = async (req, res) => {
       itemId: insertResult.lastID,
     });
   } catch (err) {
-    console.error("Unexpected error:", err);
-    res.status(500).json({ message: "Something went wrong" });
+    console.error('Unexpected error:', err);
+    res.status(500).json({ message: 'Something went wrong' });
   }
 };
 
 export const getAllItemsFromDB = (req, res) => {
-  db.all("SELECT * FROM items", (err, rows) => {
+  db.all('SELECT * FROM items', (err, rows) => {
     if (err) {
-      console.error("Error fetching items:", err);
-      return res.status(500).json({ error: "Failed to retrieve items" });
+      console.error('Error fetching items:', err);
+      return res.status(500).json({ error: 'Failed to retrieve items' });
     }
     res.json(rows);
   });
@@ -95,11 +95,11 @@ export const getUserItemsFromDB = (req, res) => {
   const { userId } = req.query;
 
   if (!userId) {
-    return res.status(400).json({ message: "User ID is required" });
+    return res.status(400).json({ message: 'User ID is required' });
   }
 
-  if (!["wishlist", "tradelist"].includes(type)) {
-    return res.status(400).json({ message: "Invalid item type" });
+  if (!['wishlist', 'tradelist'].includes(type)) {
+    return res.status(400).json({ message: 'Invalid item type' });
   }
 
   const query = `
@@ -116,8 +116,8 @@ export const getUserItemsFromDB = (req, res) => {
 
   db.all(query, [type, userId], (err, rows) => {
     if (err) {
-      console.error("Error fetching items:", err);
-      return res.status(500).json({ error: "Failed to retrieve items" });
+      console.error('Error fetching items:', err);
+      return res.status(500).json({ error: 'Failed to retrieve items' });
     }
     res.json(rows);
   });
@@ -127,20 +127,20 @@ export const deleteItemFromDB = (req, res) => {
   const { itemId, colorId, listType, userId } = req.body;
 
   if (!itemId || !colorId || !listType || !userId) {
-    return res.status(400).json({ message: "Missing required parameters" });
+    return res.status(400).json({ message: 'Missing required parameters' });
   }
 
   const query =
-    "DELETE FROM user_items WHERE item_id = ? AND color_id = ? AND list_type = ? AND user_id = ?;";
+    'DELETE FROM user_items WHERE item_id = ? AND color_id = ? AND list_type = ? AND user_id = ?;';
 
   db.run(query, [itemId, colorId, listType, userId], function (err) {
     if (err) {
-      console.error("Error deleting item:", err.message);
-      return res.status(500).json({ message: "Internal server error" });
+      console.error('Error deleting item:', err.message);
+      return res.status(500).json({ message: 'Internal server error' });
     }
     if (this.changes === 0) {
-      console.log("No such item found.");
-      return res.status(404).json({ message: "Item not found" });
+      console.log('No such item found.');
+      return res.status(404).json({ message: 'Item not found' });
     }
     console.log(`Item successfully deleted from ${listType}`);
     return res.status(200).json({ message: `Item removed from ${listType}` });
@@ -150,10 +150,10 @@ export const deleteItemFromDB = (req, res) => {
 export const getItemByIdFromDB = (req, res) => {
   const { itemId } = req.params;
 
-  db.all("SELECT * FROM items WHERE id = ?", [itemId], (err, rows) => {
+  db.all('SELECT * FROM items WHERE id = ?', [itemId], (err, rows) => {
     if (err) {
-      console.error("Error fetching item:", err);
-      return res.status(500).json({ error: "Failed to retrieve the item" });
+      console.error('Error fetching item:', err);
+      return res.status(500).json({ error: 'Failed to retrieve the item' });
     }
     res.json(rows);
   });

@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Alert from "../components/ui/Alert";
-import Button from "../components/ui/Button";
-import Card from "../components/ui/Card";
-import FormInput from "../components/ui/FormInput";
-import { logIn, signUp } from "../api/api";
-import { useUserData } from "../context/UserProvider";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Alert from '../components/ui/Alert';
+import Button from '../components/ui/Button';
+import Card from '../components/ui/Card';
+import FormInput from '../components/ui/FormInput';
+import { logIn, signUp } from '../api/api';
+import { useUserData } from '../context/UserProvider';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const { user, login } = useUserData();
 
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [birbName, setBirbName] = useState("");
-  const [friendCode, setFriendCode] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordAgain, setPasswordAgain] = useState("");
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [birbName, setBirbName] = useState('');
+  const [friendCode, setFriendCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordAgain, setPasswordAgain] = useState('');
+  const [error, setError] = useState('');
 
   // todo nicer validation
   const isFormValid = isLogin
@@ -32,16 +32,16 @@ const Login: React.FC = () => {
       password === passwordAgain;
 
   const clearForm = () => {
-    setEmail("");
-    setUsername("");
-    setBirbName("");
-    setFriendCode("");
-    setPassword("");
-    setError("");
+    setEmail('');
+    setUsername('');
+    setBirbName('');
+    setFriendCode('');
+    setPassword('');
+    setError('');
   };
 
   useEffect(() => {
-    if (user) navigate("/");
+    if (user) navigate('/');
   }, [user]);
 
   useEffect(clearForm, [isLogin]);
@@ -54,8 +54,10 @@ const Login: React.FC = () => {
         : await signUp({ email, username, birbName, friendCode, password });
 
       login(token);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      }
     }
   };
 
@@ -65,7 +67,7 @@ const Login: React.FC = () => {
         <div className="flex flex-col gap-6 w-96">
           <Alert message="Join us on a fan-made Finch trading app! Simply log in, add the items you'd like to trade or receive, and let the app match you with a suitable trader!" />
           <h1 className="text-2xl font-semibold text-center pt-3">
-            {isLogin ? "Login" : "Sign Up"}
+            {isLogin ? 'Login' : 'Sign Up'}
           </h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <FormInput
@@ -121,8 +123,8 @@ const Login: React.FC = () => {
             )}
             <div className="py-4 text-center">
               <Button
-                label={isLogin ? "Log in" : "Sign up"}
-                buttonProps={{ type: "submit" }}
+                label={isLogin ? 'Log in' : 'Sign up'}
+                buttonProps={{ type: 'submit' }}
                 disabled={!isFormValid}
               />
               {error && (
@@ -133,7 +135,7 @@ const Login: React.FC = () => {
               <div className="mt-8 w-full text-center">
                 {isLogin && (
                   <span className="mt-4">
-                    Don't have an account yet?{" "}
+                    Don't have an account yet?{' '}
                     <a
                       onClick={() => setIsLogin(false)}
                       className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
@@ -144,7 +146,7 @@ const Login: React.FC = () => {
                 )}
                 {!isLogin && (
                   <span>
-                    Already have an account?{" "}
+                    Already have an account?{' '}
                     <a
                       onClick={() => setIsLogin(true)}
                       className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"

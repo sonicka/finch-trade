@@ -1,5 +1,5 @@
-import { FC, MouseEventHandler } from "react";
-import Button from "../ui/Button";
+import { FC, MouseEventHandler } from 'react';
+import Button from '../ui/Button';
 
 interface Props {
   buttons: {
@@ -22,7 +22,7 @@ const TradeButtons: FC<Props> = ({ buttons }) => {
             onClick={btn.onClick}
             disabled={btn.disabled}
           />
-        ) : null
+        ) : null,
       )}
     </div>
   );

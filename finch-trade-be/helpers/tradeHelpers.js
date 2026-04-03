@@ -1,5 +1,5 @@
-import db from "../models/db.js";
-import { queryOne, queryAll, runQuery } from "../utils.js";
+import db from '../models/db.js';
+import { queryOne, queryAll, runQuery } from '../utils.js';
 
 export const findTrades = async (userId, callback) => {
   try {
@@ -14,12 +14,12 @@ export const findTrades = async (userId, callback) => {
 
     const inTradeWithUsers = extractUsersFromTrades(
       existingTrades ?? [],
-      userId
+      userId,
     );
     const updatedWishItems = expandAnyColor(wishItems, colors);
     const updatedPotentialGifts = await findPotentialGifts(
       tradeItems,
-      inTradeWithUsers
+      inTradeWithUsers,
     );
 
     const giftsAndTrades = mapExistingTrades(existingTrades, userId);
@@ -30,7 +30,7 @@ export const findTrades = async (userId, callback) => {
 
     for (const traderId of potentialTraders) {
       const traderWants = updatedPotentialGifts.filter(
-        (item) => item.userId === traderId
+        (item) => item.userId === traderId,
       );
       const traderOffers = await findMatchingOffers(traderId, updatedWishItems);
 
@@ -44,18 +44,18 @@ export const findTrades = async (userId, callback) => {
 
     callback(null, giftsAndTrades);
   } catch (err) {
-    console.error("Error finding trades:", err);
+    console.error('Error finding trades:', err);
     callback(err);
   }
 };
 
 // helpers for findTrades
 const getNonAnyColors = () =>
-  queryAll(`SELECT * FROM colors WHERE color != ?`, ["any"]);
+  queryAll(`SELECT * FROM colors WHERE color != ?`, ['any']);
 
 const getRecentlyTradedUsers = (currentUserId) => {
   const twentyFourHoursAgo = new Date(
-    Date.now() - 24 * 60 * 60 * 1000
+    Date.now() - 24 * 60 * 60 * 1000,
   ).toISOString();
   return new Promise((resolve, reject) => {
     db.all(
@@ -75,7 +75,7 @@ const getRecentlyTradedUsers = (currentUserId) => {
         });
 
         resolve([...userIds]);
-      }
+      },
     );
   });
 };
@@ -90,10 +90,10 @@ const getTradeByUser = (userId) => {
         if (!rows || rows.length === 0) return resolve([]);
 
         const processed = rows.map((row) => {
-          if (row.status === "pending" || row.status === "confirmed") {
+          if (row.status === 'pending' || row.status === 'confirmed') {
             const requestedByMe = userId.toString() === row.user_id1.toString();
-            const finishedByMe = JSON.parse(row.finished_by || "[]").includes(
-              userId.toString()
+            const finishedByMe = JSON.parse(row.finished_by || '[]').includes(
+              userId.toString(),
             );
 
             return {
@@ -116,7 +116,7 @@ const getTradeByUser = (userId) => {
         });
 
         resolve(processed);
-      }
+      },
     );
   });
 };
@@ -127,20 +127,20 @@ export const getTradeByUsers = (userId1, userId2) => {
     WHERE ((user_id1 = ? AND user_id2 = ?)
        OR (user_id1 = ? AND user_id2 = ?))
        AND status = 'pending'`,
-    [userId1, userId2, userId2, userId1]
+    [userId1, userId2, userId2, userId1],
   );
 };
 
 const getWishItems = (userId) =>
   queryAll(
     `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'wishlist'`,
-    [userId]
+    [userId],
   );
 
 const getTradeItems = (userId) =>
   queryAll(
     `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'tradelist' AND in_trade_with_user IS NULL`,
-    [userId]
+    [userId],
   );
 
 const extractUsersFromTrades = (trades, userId) =>
@@ -153,7 +153,7 @@ const expandAnyColor = (items, colors) =>
   items.flatMap((item) =>
     item.color_id === 1
       ? colors.map((color) => ({ ...item, color_id: color.id }))
-      : item
+      : item,
   );
 
 const findPotentialGifts = async (tradeItems, inTradeWithUsers) => {
@@ -164,11 +164,11 @@ const findPotentialGifts = async (tradeItems, inTradeWithUsers) => {
     item.color_id,
   ]);
   const conditions = tradeItems
-    .map(() => "(i.item_id = ? AND i.color_id IN (?, 1))")
-    .join(" OR ");
+    .map(() => '(i.item_id = ? AND i.color_id IN (?, 1))')
+    .join(' OR ');
   const exclusionClause = inTradeWithUsers.length
-    ? `AND i.user_id NOT IN (${inTradeWithUsers.map(() => "?").join(", ")})`
-    : "";
+    ? `AND i.user_id NOT IN (${inTradeWithUsers.map(() => '?').join(', ')})`
+    : '';
 
   const params = [...tradeItemsList, ...inTradeWithUsers];
 
@@ -179,7 +179,7 @@ const findPotentialGifts = async (tradeItems, inTradeWithUsers) => {
      AND (${conditions})
      ${exclusionClause}
      AND i.in_trade_with_user IS NULL`,
-    params
+    params,
   );
 
   return potentialGifts.flatMap((gift) =>
@@ -187,7 +187,7 @@ const findPotentialGifts = async (tradeItems, inTradeWithUsers) => {
       ? tradeItems
           .filter((item) => item.item_id === gift.itemId)
           .map((e) => ({ ...gift, colorId: e.color_id }))
-      : gift
+      : gift,
   );
 };
 
@@ -195,8 +195,8 @@ const findMatchingOffers = (userId, wishItems) => {
   if (!wishItems.length) return [];
 
   const conditions = wishItems
-    .map(() => "(i.item_id = ? AND i.color_id = ?)")
-    .join(" OR ");
+    .map(() => '(i.item_id = ? AND i.color_id = ?)')
+    .join(' OR ');
   const values = wishItems.flatMap((item) => [item.item_id, item.color_id]);
 
   return queryAll(
@@ -207,7 +207,7 @@ const findMatchingOffers = (userId, wishItems) => {
      AND i.in_trade_with_user IS NULL
      AND i.user_id = ?
      AND (${conditions})`,
-    [userId, ...values]
+    [userId, ...values],
   );
 };
 
@@ -266,9 +266,9 @@ export const insertItemTransaction = async (userId1, userId2, chosenItems) => {
 
   return new Promise((resolve, reject) => {
     // Start the transaction
-    db.run("BEGIN TRANSACTION;", (err) => {
+    db.run('BEGIN TRANSACTION;', (err) => {
       if (err) {
-        return reject("Failed to start transaction");
+        return reject('Failed to start transaction');
       }
 
       // Update both items in trade
@@ -277,52 +277,52 @@ export const insertItemTransaction = async (userId1, userId2, chosenItems) => {
           myItem.id,
           myItem.colorId,
           myItem.userId,
-          theirItem.userId
+          theirItem.userId,
         ),
         updateInTradeItem(
           theirItem.id,
           theirItem.colorId,
           theirItem.userId,
-          myItem.userId
+          myItem.userId,
         ),
         updateInTradeItem(
           myItem.id,
           myItem.colorId,
           theirItem.userId,
-          myItem.userId
+          myItem.userId,
         ),
         updateInTradeItem(
           theirItem.id,
           theirItem.colorId,
           myItem.userId,
-          theirItem.userId
+          theirItem.userId,
         ),
       ])
         .then(() => {
           // Insert new trade
           runQuery(
-            "INSERT INTO trades (user_id1, user_id2, status, requested_by, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [userId1, userId2, "pending", JSON.stringify([userId1]), ...items]
+            'INSERT INTO trades (user_id1, user_id2, status, requested_by, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [userId1, userId2, 'pending', JSON.stringify([userId1]), ...items],
           )
             .then((result) => {
               // Commit transaction if everything succeeds
-              db.run("COMMIT;", (commitErr) => {
+              db.run('COMMIT;', (commitErr) => {
                 if (commitErr) {
-                  return reject("Failed to commit transaction");
+                  return reject('Failed to commit transaction');
                 }
                 resolve(result);
               });
             })
             .catch((insertErr) => {
               // Rollback transaction on insert failure
-              db.run("ROLLBACK;", () => {
+              db.run('ROLLBACK;', () => {
                 reject(insertErr);
               });
             });
         })
         .catch((updateErr) => {
           // Rollback transaction on update failure
-          db.run("ROLLBACK;", () => {
+          db.run('ROLLBACK;', () => {
             reject(updateErr);
           });
         });
@@ -345,12 +345,12 @@ const updateInTradeItem = (itemId, colorId, userId, inTradeWithUser) => {
           if (this.changes === 0 && fallback) {
             return reject(
               new Error(
-                `Failed to update item: itemId=${itemId}, userId=${userId}`
-              )
+                `Failed to update item: itemId=${itemId}, userId=${userId}`,
+              ),
             );
           }
           resolve();
-        }
+        },
       );
     };
     runUpdate(colorId);
@@ -359,14 +359,14 @@ const updateInTradeItem = (itemId, colorId, userId, inTradeWithUser) => {
 
 export const updateTrade = (tradeId, newStatus, requestedBy) => {
   return runQuery(
-    "UPDATE trades SET status = ?, requested_by = ? WHERE id = ?",
-    [newStatus, JSON.stringify(requestedBy), tradeId]
+    'UPDATE trades SET status = ?, requested_by = ? WHERE id = ?',
+    [newStatus, JSON.stringify(requestedBy), tradeId],
   );
 };
 
 export const deleteTrade = async (tradeId) => {
-  const result = await runQuery("DELETE FROM trades WHERE id = ?", [tradeId]);
-  if (result.changes === 0) throw new Error("Trade not found");
+  const result = await runQuery('DELETE FROM trades WHERE id = ?', [tradeId]);
+  if (result.changes === 0) throw new Error('Trade not found');
   return;
 };
 
@@ -381,7 +381,7 @@ export const archiveTrade = (row) => {
     row.id,
     row.user_id1,
     row.user_id2,
-    "archived",
+    'archived',
     row.item_id1,
     row.color_id1,
     row.item_id2,

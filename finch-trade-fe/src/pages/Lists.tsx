@@ -1,8 +1,8 @@
-import { FC } from "react";
-import Tabs from "../components/ui/Tabs";
-import List from "../components/layout/List";
-import { useUser } from "../context/UserProvider";
-import { ListTypeEnum } from "../types";
+import { FC } from 'react';
+import Tabs from '../components/ui/Tabs';
+import List from '../components/layout/List';
+import { useUser } from '../context/UserProvider';
+import { ListTypeEnum } from '../types';
 
 const Lists: FC = () => {
   const user = useUser();
@@ -13,7 +13,7 @@ const Lists: FC = () => {
         <Tabs
           tabs={[
             {
-              label: "Wishlist",
+              label: 'Wishlist',
               content: (
                 <List
                   key={ListTypeEnum.Wishlist}
@@ -22,7 +22,7 @@ const Lists: FC = () => {
               ),
             },
             {
-              label: "Tradelist",
+              label: 'Tradelist',
               content: (
                 <List
                   key={ListTypeEnum.Tradelist}
