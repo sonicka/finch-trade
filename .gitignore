@@ -19,3 +19,6 @@ build/
 
 # Editor settings
 .vscode/
+
+# Misc
+commands.txt

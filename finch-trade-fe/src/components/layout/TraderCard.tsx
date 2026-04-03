@@ -109,11 +109,13 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
           />
         )}
         {showAlert && (
-          <TradeAlert
-            friendCodeShown={friendCodeShown}
-            trader={trader}
-            traderData={traderData}
-          />
+          <div className="pt-3">
+            <TradeAlert
+              friendCodeShown={friendCodeShown}
+              trader={trader}
+              traderData={traderData}
+            />
+          </div>
         )}
       </div>
     </Card>

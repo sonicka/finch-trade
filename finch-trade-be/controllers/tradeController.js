@@ -86,9 +86,9 @@ export const getPastTradesFromDB = async (req, res) => {
     const [pastGifts, pastTrades] = await Promise.all([
       queryAll(
         `SELECT * FROM trades_history
-         WHERE user_id1 = ? AND trade_id IS NULL
+         WHERE (user_id1 = ? OR user_id2 = ?) AND trade_id IS NULL
          ORDER BY archived_at DESC`,
-        [userId],
+        [userId, userId],
       ),
       queryAll(
         `SELECT * FROM trades_history
@@ -98,14 +98,18 @@ export const getPastTradesFromDB = async (req, res) => {
       ),
     ]);
 
-    const formattedGifts = pastGifts.map((row) => ({
-      id: row.id,
-      userId: row.user_id2,
-      itemId: row.item_id1,
-      colorId: row.color_id1,
-      archivedAt: row.archived_at,
-      type: 'gift',
-    }));
+    const currentUserId = Number(userId);
+    const formattedGifts = pastGifts.map((row) => {
+      const isGiver = row.user_id1 === currentUserId;
+      return {
+        id: row.id,
+        itemId: row.item_id1,
+        colorId: row.color_id1,
+        archivedAt: row.archived_at,
+        type: isGiver ? 'giftGiven' : 'giftReceived',
+        userId: isGiver ? row.user_id2 : row.user_id1,
+      };
+    });
 
     const formattedTrades = pastTrades.map((row) => ({
       id: row.id,

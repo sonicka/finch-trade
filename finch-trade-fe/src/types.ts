@@ -96,7 +96,7 @@ export interface PastGift {
   itemId: number;
   colorId: number;
   archivedAt: string;
-  type: 'gift';
+  type: 'giftGiven' | 'giftReceived';
 }
 
 export interface PastTrade {

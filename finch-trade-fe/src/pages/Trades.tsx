@@ -41,14 +41,14 @@ const Trades: FC = () => {
           </div>
           {pastTrades.map((p: PastGift | PastTrade) => (
             <div className="mx-10 mb-8" key={p.id}>
-              {p.type === 'gift' ? (
-                <PastGiftCard pastTrade={p} traderId={p.userId} />
-              ) : (
+              {p.type === 'trade' ? (
                 <PastTradeCard
                   pastTrade={p}
                   user={user}
                   traderId={p.userId1 === user.id ? p.userId2 : p.userId1}
                 />
+              ) : (
+                <PastGiftCard pastTrade={p} traderId={p.userId} />
               )}
             </div>
           ))}
