@@ -8,7 +8,7 @@
     "noEmitOnError": true,
     "strict": true,
     "skipLibCheck": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "typeRoots": ["./node_modules/@types"],
     "types": ["node"],
     "paths": {

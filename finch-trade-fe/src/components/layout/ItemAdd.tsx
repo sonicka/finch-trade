@@ -71,11 +71,11 @@ const ItemAdd: FC<Props> = ({
         <Select
           id="itemColor"
           options={filteredColors}
-          value={selectedColor ?? {}}
+          value={selectedColor}
           placeholder="Color"
           onChange={handleColorChange}
           labelFormatter={(color: Color) => color?.color}
-          valueFormatter={(color: Color) => color?.id}
+          valueFormatter={(color: Color) => color?.id.toString()}
         />
         <IconButton
           icon={

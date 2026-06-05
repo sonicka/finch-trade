@@ -5,7 +5,7 @@ interface Props {
   value: string;
   type?: string;
   id: string;
-  setValue?: React.Dispatch<React.SetStateAction<string>>;
+  setValue?: (value: string) => void;
   required?: boolean;
   disabled?: boolean;
 }

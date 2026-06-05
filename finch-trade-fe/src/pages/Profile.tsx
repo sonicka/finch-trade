@@ -9,7 +9,7 @@ import { useEditUser } from '../hooks/users';
 const Profile = () => {
   const { user } = useUserData();
   const { id, birbName, username, email, friendCode } = user || {};
-  const [newEmail, setNewEmail] = useState(email);
+  const [newEmail, setNewEmail] = useState(email ?? '');
   const [password, setPassword] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [showAlert, setShowAlert] = useState(false);
@@ -18,17 +18,17 @@ const Profile = () => {
     (!!newEmail && newEmail !== email) ||
     (!!password && password === passwordAgain);
 
-  const handleEditField = (
-    set: React.Dispatch<React.SetStateAction<string | undefined>>,
-    value: string,
+  const handleEditField = <T,>(
+    setter: React.Dispatch<React.SetStateAction<T>>,
+    value: T,
   ) => {
     if (showAlert) setShowAlert(false);
-    set(value);
+    setter(value);
   };
 
   useEffect(() => {
     if (error || success) setShowAlert(true);
-  }, [success, error, setShowAlert]);
+  }, [success, error]);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -36,7 +36,9 @@ const Profile = () => {
       (!!newEmail && newEmail !== email) ||
       (!!password && !!passwordAgain && password === passwordAgain)
     ) {
-      await editUser(id!, { email: newEmail, password, passwordAgain });
+      if (id) {
+        await editUser(id!, { email: newEmail, password, passwordAgain });
+      }
     }
   };
 
@@ -94,7 +96,6 @@ const Profile = () => {
             <Button
               label="Save changes"
               disabled={!edited}
-              onClick={() => {}}
               buttonProps={{ 'aria-label': 'Save', type: 'submit' }}
             />
           </div>

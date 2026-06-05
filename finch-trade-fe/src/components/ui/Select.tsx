@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 interface Props<T extends { id: number }> {
   id: string;
   options: T[];
-  value: T;
+  value?: T;
   placeholder?: string;
   onChange: (value: T) => void;
   labelFormatter?: (value: T) => string;
@@ -28,7 +28,7 @@ const Select = <T extends { id: number }>({
     setIsOpen(!isOpen);
   };
 
-  const handleSelect = (selectedValue: string | number | object) => {
+  const handleSelect = (selectedValue: T) => {
     onChange(selectedValue);
     setIsOpen(false);
   };
@@ -50,9 +50,9 @@ const Select = <T extends { id: number }>({
         type="hidden"
         name={id}
         value={
-          typeof valueFormatter === 'function'
-            ? (valueFormatter(value) ?? '')
-            : (value ?? '')
+          typeof valueFormatter === 'function' && value
+            ? valueFormatter(value)
+            : value?.toString()
         }
       />
       <label
