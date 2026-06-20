@@ -6,12 +6,13 @@ import {
   postFinishTrade,
   postFinishGifting,
 } from '../controllers/tradeController.js';
+import { requireAuth } from '../middleware/auth.js';
 const router = Router();
 
-router.get('/', getTradesFromDB);
-router.get('/past', getPastTradesFromDB);
-router.post('/requestTrade', postRequestTrade);
-router.post('/finishTrade/:tradeId', postFinishTrade);
-router.post('/finishGifting', postFinishGifting);
+router.get('/', requireAuth, getTradesFromDB);
+router.get('/past', requireAuth, getPastTradesFromDB);
+router.post('/requestTrade', requireAuth, postRequestTrade);
+router.post('/finishTrade/:tradeId', requireAuth, postFinishTrade);
+router.post('/finishGifting', requireAuth, postFinishGifting);
 
 export default router;

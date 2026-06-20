@@ -7,13 +7,17 @@ import {
   getUserItemsFromDB,
   postItemToDB,
 } from '../controllers/itemController.js';
+import { requireAuth } from '../middleware/auth.js';
 const router = Router();
 
+// not user-specific data, no auth needed
 router.get('/colors', getColorsFromDB);
-router.post('/add', postItemToDB);
 router.get('/', getAllItemsFromDB);
 router.get('/item/:itemId', getItemByIdFromDB);
-router.get('/:type', getUserItemsFromDB);
-router.delete('/remove', deleteItemFromDB);
+
+// all these mutate or read a specific user's lists - requires auth
+router.post('/add', requireAuth, postItemToDB);
+router.get('/:type', requireAuth, getUserItemsFromDB);
+router.delete('/remove', requireAuth, deleteItemFromDB);
 
 export default router;

@@ -229,7 +229,7 @@ export const UserProvider = ({ children }: Props) => {
     if (!state.user || !state.user?.id) return;
     try {
       if (type) {
-        const response = await fetchUserItems(type, state.user.id);
+        const response = await fetchUserItems(type);
         dispatch({
           type: 'FETCH_USER_ITEMS_SUCCESS',
           payload: { [type]: response },
@@ -237,7 +237,7 @@ export const UserProvider = ({ children }: Props) => {
       } else {
         const listTypes: ListType[] = Object.values(ListTypeEnum);
         const responses = await Promise.all(
-          listTypes.map((listType) => fetchUserItems(listType, state.user!.id)),
+          listTypes.map((listType) => fetchUserItems(listType)),
         );
 
         const payload = listTypes.reduce(
@@ -267,7 +267,7 @@ export const UserProvider = ({ children }: Props) => {
     dispatch({ type: 'FETCH_TRADES_START' });
 
     try {
-      const response = await fetchTrades(state.user.id);
+      const response = await fetchTrades();
       dispatch({ type: 'FETCH_TRADES_SUCCESS', payload: response });
       startRefetchInterval();
       toggleListChange(false);
@@ -285,7 +285,7 @@ export const UserProvider = ({ children }: Props) => {
     dispatch({ type: 'FETCH_PAST_TRADES_START' });
 
     try {
-      const response = await fetchPastTrades(state.user.id);
+      const response = await fetchPastTrades();
       dispatch({ type: 'FETCH_PAST_TRADES_SUCCESS', payload: response });
     } catch (error) {
       console.error('Error fetching past trades:', error);

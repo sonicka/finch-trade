@@ -8,7 +8,7 @@ import Card from '../../shared/components/Card';
 import { useTrades } from '../../shared/context/UserProvider';
 import { useManageTrade, ChosenItems } from '../../shared/hooks/trades';
 import { useUserById } from '../../shared/hooks/users';
-import { ChosenItem, Trader } from '../../shared/types';
+import { Trader } from '../../shared/types';
 
 interface Props {
   traderData: Trader;
@@ -26,8 +26,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
 
   const handleShowFriendCode = () => setFriendCodeShown(true);
 
-  const handleRequestTrade = () =>
-    requestTrade(userId, traderData.userId, chosenItems);
+  const handleRequestTrade = () => requestTrade(traderData.userId, chosenItems);
 
   const handleFinishTrade = async () => {
     if (gifting && chosenItems.my?.id)
@@ -37,7 +36,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
         chosenItems.my?.id,
         chosenItems.my?.colorId,
       );
-    else await finishTrade(traderData.tradeId, userId, chosenItems);
+    else await finishTrade(traderData.tradeId, chosenItems);
     setFriendCodeShown(false);
     setChosenItems({ my: null, their: null });
     await getPastTrades();

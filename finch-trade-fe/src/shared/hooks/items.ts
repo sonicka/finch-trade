@@ -18,14 +18,9 @@ export const useManageItem = () => {
       name?: string;
       colorId: number;
       type: ListType;
-      userId: number;
     },
   ) => {
-    if (
-      !payload.userId ||
-      !payload.colorId ||
-      (action === 'remove' && !payload.itemId)
-    ) {
+    if (!payload.colorId || (action === 'remove' && !payload.itemId)) {
       return;
     }
 
@@ -39,7 +34,6 @@ export const useManageItem = () => {
         response = await addItem({
           name: payload.name,
           color: payload.colorId,
-          userId: payload.userId,
           listType: payload.type,
         });
         await getAllItems();
@@ -49,11 +43,10 @@ export const useManageItem = () => {
           payload.itemId!,
           payload.colorId,
           payload.type,
-          payload.userId,
         );
       }
 
-      if (response.message) setSuccess(response.message);
+      if (response?.message) setSuccess(response.message);
 
       await getUserItems(payload.type);
       if (!listChanged) toggleListChange(true);
@@ -64,19 +57,11 @@ export const useManageItem = () => {
     }
   };
 
-  const addNewItem = (
-    name: string,
-    colorId: number,
-    type: ListType,
-    userId: number,
-  ) => handleItem('add', { name, colorId, userId, type });
+  const addNewItem = (name: string, colorId: number, type: ListType) =>
+    handleItem('add', { name, colorId, type });
 
-  const removeItem = (
-    itemId: number,
-    colorId: number,
-    type: ListType,
-    userId: number,
-  ) => handleItem('remove', { itemId, colorId, type, userId });
+  const removeItem = (itemId: number, colorId: number, type: ListType) =>
+    handleItem('remove', { itemId, colorId, type });
 
   const clearMessage = () => {
     setSuccess(null);

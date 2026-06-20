@@ -10,7 +10,7 @@ import {
 import { deleteItem } from '../helpers/itemHelpers.js';
 
 export const getTradesFromDB = (req, res) => {
-  const userId = req.query.userId;
+  const userId = req.userId;
 
   findTrades(userId, (err, trades) => {
     if (err) {
@@ -22,10 +22,11 @@ export const getTradesFromDB = (req, res) => {
 };
 
 export const postRequestTrade = async (req, res) => {
-  const { userId1, userId2 } = req.query;
+  const userId1 = req.userId;
+  const { userId2 } = req.query;
   const { chosenItems } = req.body;
 
-  if (!userId1 || !userId2 || !chosenItems?.my || !chosenItems?.their) {
+  if (!userId2 || !chosenItems?.my || !chosenItems?.their) {
     return res.status(400).json({ error: 'Missing required trade data' });
   }
 
@@ -36,8 +37,10 @@ export const postRequestTrade = async (req, res) => {
       let requestedBy = existingTrade.requested_by
         ? JSON.parse(existingTrade.requested_by)
         : [];
-      if (!requestedBy.includes(userId1)) requestedBy.push(userId1);
-      if (!requestedBy.includes(userId2)) requestedBy.push(userId2);
+      if (!requestedBy.includes(String(userId1)))
+        requestedBy.push(String(userId1));
+      if (!requestedBy.includes(String(userId2)))
+        requestedBy.push(String(userId2));
 
       const newStatus = requestedBy.length === 2 ? 'confirmed' : 'pending';
 
@@ -78,11 +81,7 @@ export const postRequestTrade = async (req, res) => {
 
 export const getPastTradesFromDB = async (req, res) => {
   try {
-    const userId = req.query.userId;
-    if (!userId) {
-      return res.status(400).json({ error: 'Missing userId parameter' });
-    }
-
+    const userId = req.userId;
     const [pastGifts, pastTrades] = await Promise.all([
       queryAll(
         `SELECT * FROM trades_history
@@ -143,6 +142,12 @@ export const postFinishGifting = async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
+  if (![String(giftedBy), String(giftedTo)].includes(req.userId)) {
+    return res
+      .status(403)
+      .json({ message: 'You are not a party to this gift.' });
+  }
+
   try {
     await runQuery(
       'INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES (?, ?, ?, ?)',
@@ -165,7 +170,7 @@ export const postFinishGifting = async (req, res) => {
 
 export const postFinishTrade = async (req, res) => {
   const { tradeId } = req.params;
-  const { userId } = req.query;
+  const userId = req.userId;
 
   try {
     const trade = await queryOne(
@@ -177,6 +182,12 @@ export const postFinishTrade = async (req, res) => {
       return res
         .status(404)
         .json({ error: 'Trade not found or not confirmed' });
+    }
+
+    if (![String(trade.user_id1), String(trade.user_id2)].includes(userId)) {
+      return res
+        .status(403)
+        .json({ error: 'You are not a party to this trade.' });
     }
 
     let finishedBy = trade.finished_by ? JSON.parse(trade.finished_by) : [];

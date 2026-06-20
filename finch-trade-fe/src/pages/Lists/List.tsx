@@ -2,7 +2,7 @@ import React from 'react';
 import Item from './Item';
 import ItemAdd from './ItemAdd';
 import { useColors, useItems } from '../../shared/context/DataProvider';
-import { useUser, useUserItems } from '../../shared/context/UserProvider';
+import { useUserItems } from '../../shared/context/UserProvider';
 import { useManageItem } from '../../shared/hooks/items';
 import { getColorName } from '../../shared/utils';
 import { ListType } from '../../shared/types';
@@ -20,15 +20,14 @@ const List: React.FC<Props> = ({ type }) => {
   const { addNewItem, removeItem, error, success, clearMessage } =
     useManageItem();
   const colors = useColors();
-  const user = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const itemName = formData.get('itemName') as string;
     const itemColor = Number(formData.get('itemColor'));
-    if (itemName && itemColor && user?.id) {
-      await addNewItem(itemName, itemColor, type, user?.id);
+    if (itemName && itemColor) {
+      await addNewItem(itemName, itemColor, type);
     }
   };
 
@@ -36,7 +35,7 @@ const List: React.FC<Props> = ({ type }) => {
     itemId: number,
     colorId: number,
   ): Promise<void> => {
-    if (user) await removeItem(itemId, colorId, type, user?.id);
+    await removeItem(itemId, colorId, type);
   };
 
   return (

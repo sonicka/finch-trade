@@ -12,7 +12,8 @@ export const getColorsFromDB = (req, res) => {
 };
 
 export const postItemToDB = async (req, res) => {
-  const { userId, color, name, listType } = req.body;
+  const userId = req.userId;
+  const { color, name, listType } = req.body;
 
   if (!color || !name) {
     return res.status(400).json({ message: 'All fields are required' });
@@ -92,11 +93,7 @@ export const getAllItemsFromDB = (req, res) => {
 
 export const getUserItemsFromDB = (req, res) => {
   const { type } = req.params;
-  const { userId } = req.query;
-
-  if (!userId) {
-    return res.status(400).json({ message: 'User ID is required' });
-  }
+  const userId = req.userId;
 
   if (!['wishlist', 'tradelist'].includes(type)) {
     return res.status(400).json({ message: 'Invalid item type' });
@@ -124,9 +121,10 @@ export const getUserItemsFromDB = (req, res) => {
 };
 
 export const deleteItemFromDB = (req, res) => {
-  const { itemId, colorId, listType, userId } = req.body;
+  const userId = req.userId;
+  const { itemId, colorId, listType } = req.body;
 
-  if (!itemId || !colorId || !listType || !userId) {
+  if (!itemId || !colorId || !listType) {
     return res.status(400).json({ message: 'Missing required parameters' });
   }
 

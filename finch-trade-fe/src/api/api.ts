@@ -5,201 +5,113 @@ import {
   ItemData,
   ListType,
   LoginCredentials,
+  PastTrades,
   SignUpData,
+  Trader,
   User,
   UserItem,
-} from '../types';
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+} from '../shared/types';
+import { apiFetch } from './apiFetch';
 
 // auth
 export const signUp = async (userData: SignUpData) => {
-  const response = await fetch(`${BASE_URL}/api/users/signup`, {
+  const data = await apiFetch('/api/users/signup', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(userData),
   });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Sign-up failed');
-  return data.token;
+  return (data as { token: string }).token;
 };
 
 export const logIn = async (credentials: LoginCredentials) => {
-  const response = await fetch(`${BASE_URL}/api/users/login`, {
+  const data = await apiFetch('/api/users/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials),
   });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Login failed');
-  return data.token;
+  return (data as { token: string }).token;
 };
 
 // users
 export const fetchUser = async (userId: number): Promise<User> => {
-  const response = await fetch(`${BASE_URL}/api/users/${userId}`, {});
-  if (!response.ok) {
-    throw new Error('Failed to fetch the user');
-  }
-  const data = await response.json();
-  return data;
+  return (await apiFetch(`/api/users/${userId}`)) as User;
 };
 
 export const editUser = async (
   userId: number,
   params: { email?: string; password?: string; passwordAgain?: string },
-) => {
-  const response = await fetch(`${BASE_URL}/api/users/${userId}`, {
+): Promise<{ message: string }> => {
+  return (await apiFetch(`/api/users/${userId}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(params),
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.error ? data.error : `Failed to edit the user`);
-  }
-  return data;
+  })) as { message: string };
 };
 
 // colors
 export const fetchColors = async (): Promise<Color[]> => {
-  const response = await fetch(`${BASE_URL}/api/items/colors`, {});
-  if (!response.ok) {
-    throw new Error('Failed to fetch colors');
-  }
-  const data = await response.json();
-  return data;
+  return (await apiFetch('/api/items/colors')) as Color[];
 };
 
 // items
-export const addItem = async (itemData: ItemData) => {
-  const response = await fetch(`${BASE_URL}/api/items/add`, {
+export const addItem = async (
+  itemData: Omit<ItemData, 'userId'>,
+): Promise<{ message: string; itemId: number }> => {
+  return (await apiFetch('/api/items/add', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(itemData),
-  });
-
-  const data = await response.json();
-  if (!response.ok) throw new Error(data.message || 'Adding item failed');
-  return data;
+  })) as { message: string; itemId: number };
 };
 
 export const fetchAllItems = async (): Promise<Item[]> => {
-  const response = await fetch(`${BASE_URL}/api/items`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch items');
-  }
-  const data = await response.json();
-  return data;
+  return (await apiFetch('/api/items')) as Item[];
 };
 
+// userId is now implicit (taken from the auth token server-side), so it's
+// no longer a parameter here.
 export const fetchUserItems = async (
   itemType: ListType,
-  userId: number,
 ): Promise<UserItem[]> => {
-  const response = await fetch(
-    `${BASE_URL}/api/items/${itemType}?userId=${userId}`,
-    {},
-  );
-  if (!response.ok) {
-    throw new Error('Failed to fetch user items');
-  }
-  const data = await response.json();
-  return data as UserItem[];
+  return (await apiFetch(`/api/items/${itemType}`)) as UserItem[];
 };
 
 export const deleteItem = async (
   itemId: number,
   colorId: number,
   listType: string,
-  userId: number,
-) => {
-  const response = await fetch(`${BASE_URL}/api/items/remove`, {
+): Promise<{ message: string }> => {
+  return (await apiFetch('/api/items/remove', {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      itemId,
-      colorId,
-      listType,
-      userId,
-    }),
-  });
-  if (!response.ok) {
-    throw new Error('Failed to remove the item');
-  }
-  const data = await response.json();
-  return data;
+    body: JSON.stringify({ itemId, colorId, listType }),
+  })) as { message: string };
 };
 
 export const fetchItemById = async (itemId: number) => {
-  const response = await fetch(`${BASE_URL}/api/items/item/${itemId}}`, {});
-  if (!response.ok) {
-    throw new Error('Failed to fetch item');
-  }
-  const data = await response.json();
-  return data;
+  return apiFetch(`/api/items/item/${itemId}`);
 };
 
 // trades
-export const fetchTrades = async (userId: number) => {
-  const response = await fetch(`${BASE_URL}/api/trades?userId=${userId}`, {});
-  if (!response.ok) {
-    throw new Error('Failed to fetch trades');
-  }
-  const data = await response.json();
-  return data;
+// userId is implicit from the token now.
+export const fetchTrades = async (): Promise<Trader[]> => {
+  return (await apiFetch('/api/trades')) as Trader[];
 };
 
-export const fetchPastTrades = async (userId: number) => {
-  const response = await fetch(
-    `${BASE_URL}/api/trades/past?userId=${userId}`,
-    {},
-  );
-  if (!response.ok) {
-    throw new Error('Failed to fetch past trades');
-  }
-  const data = await response.json();
-  return data;
+export const fetchPastTrades = async (): Promise<PastTrades> => {
+  return (await apiFetch('/api/trades/past')) as PastTrades;
 };
 
+// userId1 ("me") is implicit from the token; userId2 is the other party.
 export const requestTrade = async (
-  userId1: number,
   userId2: number,
   chosenItems: { my: ChosenItem | null; their: ChosenItem | null },
 ) => {
-  const response = await fetch(
-    `${BASE_URL}/api/trades/requestTrade?userId1=${userId1}&userId2=${userId2}`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ chosenItems }),
-    },
-  );
-  if (!response.ok) {
-    throw new Error('Failed to request trade');
-  }
-  const data = await response.json();
-  return data;
+  return apiFetch(`/api/trades/requestTrade?userId2=${userId2}`, {
+    method: 'POST',
+    body: JSON.stringify({ chosenItems }),
+  });
 };
 
-export const finishTrade = async (tradeId: number, userId: number) => {
-  const response = await fetch(
-    `${BASE_URL}/api/trades/finishTrade/${tradeId}?userId=${userId}`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-    },
-  );
-  if (!response.ok) {
-    throw new Error('Failed to finish trade');
-  }
-  const data = await response.json();
-  return data;
+export const finishTrade = async (tradeId: number) => {
+  return apiFetch(`/api/trades/finishTrade/${tradeId}`, {
+    method: 'POST',
+  });
 };
 
 export const finishGifting = async (
@@ -208,14 +120,8 @@ export const finishGifting = async (
   itemId: number,
   colorId: number,
 ) => {
-  const response = await fetch(`${BASE_URL}/api/trades/finishGifting`, {
+  return apiFetch('/api/trades/finishGifting', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ giftedBy, giftedTo, itemId, colorId }),
   });
-  if (!response.ok) {
-    throw new Error('Failed to finish gifting');
-  }
-  const data = await response.json();
-  return data;
 };

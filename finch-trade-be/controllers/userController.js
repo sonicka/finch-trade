@@ -122,6 +122,12 @@ export const editUser = async (req, res) => {
   const { userId } = req.params;
   const { email, password, passwordAgain } = req.body;
 
+  if (userId !== req.userId) {
+    return res
+      .status(403)
+      .json({ error: 'You can only edit your own account.' });
+  }
+
   try {
     if (password && password !== passwordAgain)
       return res.status(400).json({ error: 'Passwords do not match' });
