@@ -1,5 +1,5 @@
 import sqlite3 from 'sqlite3';
-import { DEFAULT_COLORS, TEST_USERS } from '../constants.js';
+import { DEFAULT_COLORS, TEST_USERS } from '../config/constants.js';
 
 const dropTablesFlag = process.argv.includes('--drop-tables');
 
