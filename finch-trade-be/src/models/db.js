@@ -4,7 +4,7 @@ import { DEFAULT_COLORS, TEST_USERS } from '../config/constants.js';
 const dropTablesFlag = process.argv.includes('--drop-tables');
 
 const db = new sqlite3.Database(
-  './src/db/finch-trade.db',
+  './finch-trade.db',
   sqlite3.verbose(),
   (err) => {
     if (err) {
