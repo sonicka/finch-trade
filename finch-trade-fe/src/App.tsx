@@ -3,8 +3,8 @@ import Lists from './pages/Lists';
 import Trades from './pages/Trades';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
-import NotFound from './pages/404';
-import ProtectedRoute from './components/layout/ProtectedRoute';
+import NotFound from './pages/NotFound';
+import ProtectedRoute from './shared/components/ProtectedRoute';
 import { Providers } from './providers/Providers';
 
 const App = () => {
