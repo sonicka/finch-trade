@@ -136,23 +136,23 @@ const Login: React.FC = () => {
                 {isLogin && (
                   <span className="mt-4">
                     Don't have an account yet?{' '}
-                    <a
+                    <button
                       onClick={() => setIsLogin(false)}
                       className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
                     >
                       Click here to sign in.
-                    </a>
+                    </button>
                   </span>
                 )}
                 {!isLogin && (
                   <span>
                     Already have an account?{' '}
-                    <a
+                    <button
                       onClick={() => setIsLogin(true)}
                       className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
                     >
                       Click here to login.
-                    </a>
+                    </button>
                   </span>
                 )}
               </div>
