@@ -5,7 +5,7 @@ import {
   login,
   editUser,
 } from '../controllers/userController.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth } from '../../middleware/auth.js';
 const router = Router();
 
 router.post('/signup', signUp);

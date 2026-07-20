@@ -24,6 +24,13 @@ export const apiFetch = async (path: string, options: RequestInit = {}) => {
     // some endpoints may not return a JSON body
   }
 
+  // Handle expired/invalid token
+  if (response.status === 401 && token) {
+    localStorage.removeItem('authToken');
+    window.location.href = '/login';
+    return;
+  }
+
   if (!response.ok) {
     const message =
       (data as { message?: string; error?: string })?.message ??

@@ -6,7 +6,7 @@ import {
   postFinishTrade,
   postFinishGifting,
 } from '../controllers/tradeController.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth } from '../../middleware/auth.js';
 const router = Router();
 
 router.get('/', requireAuth, getTradesFromDB);

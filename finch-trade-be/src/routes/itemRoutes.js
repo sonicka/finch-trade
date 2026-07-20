@@ -7,7 +7,7 @@ import {
   getUserItemsFromDB,
   postItemToDB,
 } from '../controllers/itemController.js';
-import { requireAuth } from '../middleware/auth.js';
+import { requireAuth } from '../../middleware/auth.js';
 const router = Router();
 
 // not user-specific data, no auth needed
