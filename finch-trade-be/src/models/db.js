@@ -1,29 +1,35 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
 import sqlite3 from 'sqlite3';
 import { DEFAULT_COLORS, TEST_USERS } from '../config/constants.js';
 
+sqlite3.verbose();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dbPath = path.resolve(__dirname, '../../db/finch-trade.db');
+
 const dropTablesFlag = process.argv.includes('--drop-tables');
 
-const db = new sqlite3.Database(
-  './db/finch-trade.db',
-  sqlite3.verbose(),
-  (err) => {
-    if (err) {
-      console.error('Error opening database:', err);
-    } else {
-      console.log('Database connected');
-    }
-  },
-);
+const db = new sqlite3.Database(dbPath, (err) => {
+  if (err) {
+    console.error('Error opening database:', err);
+  } else {
+    console.log(`Database connected: ${dbPath}`);
+  }
+});
 
 if (dropTablesFlag) {
   console.log('Tables dropped');
 
   db.serialize(() => {
-    // db.run("DROP TABLE IF EXISTS users");
-    // db.run("DROP TABLE IF EXISTS items");
-    // db.run("DROP TABLE IF EXISTS user_items");
-    // db.run("DROP TABLE IF EXISTS trades");
-    // db.run("DROP TABLE IF EXISTS trades_history");
+    db.run('DROP TABLE IF EXISTS users');
+    db.run('DROP TABLE IF EXISTS items');
+    db.run('DROP TABLE IF EXISTS user_items');
+    db.run('DROP TABLE IF EXISTS colors');
+    db.run('DROP TABLE IF EXISTS trades');
+    db.run('DROP TABLE IF EXISTS trades_history');
   });
 } else {
   console.log('Skipping table drop');
