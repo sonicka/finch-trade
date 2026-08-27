@@ -14,36 +14,31 @@ export const getColorsFromDB = (req, res) => {
 export const postItemToDB = async (req, res) => {
   const userId = req.userId;
   const { color, name, listType } = req.body;
+  const normalizedName = typeof name === 'string' ? name.trim() : '';
 
-  if (!color || !name) {
+  if (!color || !normalizedName) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
   try {
-    const existingItem = await queryOne('SELECT * FROM items WHERE name = ?', [
-      name,
-    ]);
-
-    let itemId;
-    if (existingItem) {
-      itemId = existingItem.id;
-    } else {
-      const result = await runQuery('INSERT INTO items (name) VALUES (?)', [
-        name,
-      ]);
-      itemId = result.lastID;
-    }
+    const result = await runQuery(
+      `INSERT INTO items (name) VALUES ($1)
+       ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
+       RETURNING id`,
+      [normalizedName],
+    );
+    const itemId = result.lastID;
 
     let existingUserItem;
     // "any" color
     if (color === 1) {
       existingUserItem = await queryOne(
-        'SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ?',
+        'SELECT list_type FROM user_items WHERE user_id = $1 AND item_id = $2',
         [userId, itemId],
       );
     } else {
       existingUserItem = await queryOne(
-        'SELECT list_type FROM user_items WHERE user_id = ? AND item_id = ? AND color_id IN (?, 1)',
+        'SELECT list_type FROM user_items WHERE user_id = $1 AND item_id = $2 AND color_id IN ($3, 1)',
         [userId, itemId, color],
       );
     }
@@ -67,7 +62,7 @@ export const postItemToDB = async (req, res) => {
     }
 
     const insertResult = await runQuery(
-      'INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES (?, ?, ?, ?)',
+      'INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES ($1, $2, $3, $4)',
       [userId, itemId, color, listType],
     );
 
@@ -77,7 +72,7 @@ export const postItemToDB = async (req, res) => {
     });
   } catch (err) {
     console.error('Unexpected error:', err);
-    res.status(500).json({ message: 'Something went wrong' });
+    res.status(500).json({ message: `Something went wrong: ${err.message}` });
   }
 };
 
@@ -107,7 +102,7 @@ export const getUserItemsFromDB = (req, res) => {
       items.name
     FROM user_items
     JOIN items ON user_items.item_id = items.id
-    WHERE user_items.list_type = ? AND user_items.user_id = ?
+    WHERE user_items.list_type = $1 AND user_items.user_id = $2
     ORDER BY items.name ASC;
   `;
 
@@ -129,7 +124,7 @@ export const deleteItemFromDB = (req, res) => {
   }
 
   const query =
-    'DELETE FROM user_items WHERE item_id = ? AND color_id = ? AND list_type = ? AND user_id = ?;';
+    'DELETE FROM user_items WHERE item_id = $1 AND color_id = $2 AND list_type = $3 AND user_id = $4;';
 
   db.run(query, [itemId, colorId, listType, userId], function (err) {
     if (err) {
@@ -148,7 +143,7 @@ export const deleteItemFromDB = (req, res) => {
 export const getItemByIdFromDB = (req, res) => {
   const { itemId } = req.params;
 
-  db.all('SELECT * FROM items WHERE id = ?', [itemId], (err, rows) => {
+  db.all('SELECT * FROM items WHERE id = $1', [itemId], (err, rows) => {
     if (err) {
       console.error('Error fetching item:', err);
       return res.status(500).json({ error: 'Failed to retrieve the item' });

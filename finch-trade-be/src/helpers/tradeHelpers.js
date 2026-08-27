@@ -17,8 +17,9 @@ export const findTrades = async (userId, callback) => {
       userId,
     );
     const updatedWishItems = expandAnyColor(wishItems, colors);
+    const updatedTradeItems = expandAnyColor(tradeItems, colors);
     const updatedPotentialGifts = await findPotentialGifts(
-      tradeItems,
+      updatedTradeItems,
       inTradeWithUsers,
     );
 
@@ -51,7 +52,7 @@ export const findTrades = async (userId, callback) => {
 
 // helpers for findTrades
 const getNonAnyColors = () =>
-  queryAll(`SELECT * FROM colors WHERE color != ?`, ['any']);
+  queryAll(`SELECT * FROM colors WHERE color != $1`, ['any']);
 
 const getRecentlyTradedUsers = (currentUserId) => {
   const twentyFourHoursAgo = new Date(
@@ -60,7 +61,7 @@ const getRecentlyTradedUsers = (currentUserId) => {
   return new Promise((resolve, reject) => {
     db.all(
       `SELECT user_id1, user_id2 FROM trades_history
-       WHERE archived_at >= ? AND (user_id1 = ? OR user_id2 = ?)`,
+        WHERE archived_at >= $1 AND (user_id1 = $2 OR user_id2 = $3)`,
       [twentyFourHoursAgo, currentUserId, currentUserId],
       (err, rows) => {
         if (err) return reject(err);
@@ -83,7 +84,7 @@ const getRecentlyTradedUsers = (currentUserId) => {
 const getTradeByUser = (userId) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT * FROM trades WHERE user_id1 = ? OR user_id2 = ?`,
+      `SELECT * FROM trades WHERE user_id1 = $1 OR user_id2 = $2`,
       [userId, userId],
       (err, rows) => {
         if (err) return reject(err);
@@ -119,25 +120,27 @@ const getTradeByUser = (userId) => {
   });
 };
 
-export const getTradeByUsers = (userId1, userId2) => {
+export const getTradeByUsers = (userId1, userId2, executor) => {
   return queryOne(
     `SELECT * FROM trades
-    WHERE ((user_id1 = ? AND user_id2 = ?)
-       OR (user_id1 = ? AND user_id2 = ?))
+     WHERE ((user_id1 = $1 AND user_id2 = $2)
+       OR (user_id1 = $3 AND user_id2 = $4))
        AND status = 'pending'`,
     [userId1, userId2, userId2, userId1],
+    (row) => row,
+    executor,
   );
 };
 
 const getWishItems = (userId) =>
   queryAll(
-    `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'wishlist'`,
+    `SELECT item_id, color_id FROM user_items WHERE user_id = $1 AND list_type = 'wishlist'`,
     [userId],
   );
 
 const getTradeItems = (userId) =>
   queryAll(
-    `SELECT item_id, color_id FROM user_items WHERE user_id = ? AND list_type = 'tradelist' AND in_trade_with_user IS NULL`,
+    `SELECT item_id, color_id FROM user_items WHERE user_id = $1 AND list_type = 'tradelist' AND in_trade_with_user IS NULL`,
     [userId],
   );
 
@@ -167,16 +170,19 @@ const findPotentialGifts = async (tradeItems, inTradeWithUsers) => {
     item.color_id,
   ]);
   const conditions = tradeItems
-    .map(() => '(i.item_id = ? AND i.color_id IN (?, 1))')
+    .map(
+      (_, index) =>
+        `(i.item_id = $${index * 2 + 1} AND i.color_id IN ($${index * 2 + 2}, 1))`,
+    )
     .join(' OR ');
   const exclusionClause = inTradeWithUsers.length
-    ? `AND i.user_id NOT IN (${inTradeWithUsers.map(() => '?').join(', ')})`
+    ? `AND i.user_id NOT IN (${inTradeWithUsers.map((_, index) => `$${tradeItemsList.length + index + 1}`).join(', ')})`
     : '';
 
   const params = [...tradeItemsList, ...inTradeWithUsers];
 
   const potentialGifts = await queryAll(
-    `SELECT i.user_id AS userId, i.item_id AS itemId, i.color_id AS colorId, i.in_trade_with_user
+    `SELECT i.user_id AS "userId", i.item_id AS "itemId", i.color_id AS "colorId", i.in_trade_with_user
      FROM user_items i
      WHERE i.list_type = 'wishlist'
      AND (${conditions})
@@ -198,17 +204,20 @@ const findMatchingOffers = (userId, wishItems) => {
   if (!wishItems.length) return [];
 
   const conditions = wishItems
-    .map(() => '(i.item_id = ? AND i.color_id = ?)')
+    .map(
+      (_, index) =>
+        `(i.item_id = $${index * 2 + 2} AND i.color_id = $${index * 2 + 3})`,
+    )
     .join(' OR ');
   const values = wishItems.flatMap((item) => [item.item_id, item.color_id]);
 
   return queryAll(
-    `SELECT u.id AS userId, i.item_id AS itemId, i.color_id AS colorId
+    `SELECT u.id AS "userId", i.item_id AS "itemId", i.color_id AS "colorId"
      FROM user_items i
      JOIN users u ON i.user_id = u.id
      WHERE i.list_type = 'tradelist'
      AND i.in_trade_with_user IS NULL
-     AND i.user_id = ?
+    AND i.user_id = $1
      AND (${conditions})`,
     [userId, ...values],
   );
@@ -250,7 +259,12 @@ const mapExistingTrades = (trades, currentUserId) =>
       };
     });
 
-export const insertItemTransaction = async (userId1, userId2, chosenItems) => {
+export const insertItemTransaction = async (
+  userId1,
+  userId2,
+  chosenItems,
+  executor,
+) => {
   const items = [
     chosenItems.my.id,
     chosenItems.my.colorId,
@@ -268,117 +282,81 @@ export const insertItemTransaction = async (userId1, userId2, chosenItems) => {
     userId: Number(userId2),
   };
 
-  return new Promise((resolve, reject) => {
-    // Start the transaction
-    db.run('BEGIN TRANSACTION;', (err) => {
-      if (err) {
-        return reject('Failed to start transaction');
-      }
+  const insertTransaction = async (client) => {
+    const itemUpdates = [
+      [myItem.id, myItem.colorId, myItem.userId, theirItem.userId],
+      [theirItem.id, theirItem.colorId, theirItem.userId, myItem.userId],
+      [myItem.id, myItem.colorId, theirItem.userId, myItem.userId],
+      [theirItem.id, theirItem.colorId, myItem.userId, theirItem.userId],
+    ];
 
-      // Update both items in trade
-      Promise.all([
-        updateInTradeItem(
-          myItem.id,
-          myItem.colorId,
-          myItem.userId,
-          theirItem.userId,
-        ),
-        updateInTradeItem(
-          theirItem.id,
-          theirItem.colorId,
-          theirItem.userId,
-          myItem.userId,
-        ),
-        updateInTradeItem(
-          myItem.id,
-          myItem.colorId,
-          theirItem.userId,
-          myItem.userId,
-        ),
-        updateInTradeItem(
-          theirItem.id,
-          theirItem.colorId,
-          myItem.userId,
-          theirItem.userId,
-        ),
-      ])
-        .then(() => {
-          // Insert new trade
-          runQuery(
-            'INSERT INTO trades (user_id1, user_id2, status, requested_by, item_id1, color_id1, item_id2, color_id2) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [userId1, userId2, 'pending', JSON.stringify([userId1]), ...items],
-          )
-            .then((result) => {
-              // Commit transaction if everything succeeds
-              db.run('COMMIT;', (commitErr) => {
-                if (commitErr) {
-                  return reject('Failed to commit transaction');
-                }
-                resolve(result);
-              });
-            })
-            .catch((insertErr) => {
-              // Rollback transaction on insert failure
-              db.run('ROLLBACK;', () => {
-                reject(insertErr);
-              });
-            });
-        })
-        .catch((updateErr) => {
-          // Rollback transaction on update failure
-          db.run('ROLLBACK;', () => {
-            reject(updateErr);
-          });
-        });
-    });
-  });
+    for (const [itemId, colorId, userId, inTradeWithUser] of itemUpdates) {
+      await updateInTradeItem(itemId, colorId, userId, inTradeWithUser, client);
+    }
+
+    return runQuery(
+      'INSERT INTO trades (user_id1, user_id2, status, requested_by, item_id1, color_id1, item_id2, color_id2) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id',
+      [userId1, userId2, 'pending', JSON.stringify([userId1]), ...items],
+      client,
+    );
+  };
+
+  return executor
+    ? insertTransaction(executor)
+    : db.transaction(insertTransaction);
 };
 
-const updateInTradeItem = (itemId, colorId, userId, inTradeWithUser) => {
-  return new Promise((resolve, reject) => {
-    const runUpdate = (colorIdToUse, fallback = false) => {
-      db.run(
-        `UPDATE user_items SET in_trade_with_user = ? WHERE item_id = ? AND user_id = ? AND color_id = ?`,
-        [inTradeWithUser, itemId, userId, colorIdToUse],
-        function (err) {
-          if (err) return reject(err);
-          if (this.changes === 0 && !fallback) {
-            // try again using colorId = 1 (any) if no exact match is found
-            return runUpdate(1, true);
-          }
-          if (this.changes === 0 && fallback) {
-            return reject(
-              new Error(
-                `Failed to update item: itemId=${itemId}, userId=${userId}`,
-              ),
-            );
-          }
-          resolve();
-        },
-      );
-    };
-    runUpdate(colorId);
-  });
+const updateInTradeItem = async (
+  itemId,
+  colorId,
+  userId,
+  inTradeWithUser,
+  client,
+) => {
+  let result = await runQuery(
+    `UPDATE user_items SET in_trade_with_user = $1 WHERE item_id = $2 AND user_id = $3 AND color_id = $4`,
+    [inTradeWithUser, itemId, userId, colorId],
+    client,
+  );
+
+  if (result.changes === 0) {
+    result = await runQuery(
+      `UPDATE user_items SET in_trade_with_user = $1 WHERE item_id = $2 AND user_id = $3 AND color_id = 1`,
+      [inTradeWithUser, itemId, userId],
+      client,
+    );
+  }
+
+  if (result.changes === 0) {
+    throw new Error(
+      `Failed to update item: itemId=${itemId}, userId=${userId}`,
+    );
+  }
 };
 
-export const updateTrade = (tradeId, newStatus, requestedBy) => {
+export const updateTrade = (tradeId, newStatus, requestedBy, executor) => {
   return runQuery(
-    'UPDATE trades SET status = ?, requested_by = ? WHERE id = ?',
+    'UPDATE trades SET status = $1, requested_by = $2 WHERE id = $3',
     [newStatus, JSON.stringify(requestedBy), tradeId],
+    executor,
   );
 };
 
-export const deleteTrade = async (tradeId) => {
-  const result = await runQuery('DELETE FROM trades WHERE id = ?', [tradeId]);
+export const deleteTrade = async (tradeId, executor) => {
+  const result = await runQuery(
+    'DELETE FROM trades WHERE id = $1',
+    [tradeId],
+    executor,
+  );
   if (result.changes === 0) throw new Error('Trade not found');
   return;
 };
 
-export const archiveTrade = (row) => {
+export const archiveTrade = (row, executor) => {
   const query = `
     INSERT INTO trades_history
     (trade_id, user_id1, user_id2, status, item_id1, color_id1, item_id2, color_id2)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
   `;
 
   const params = [
@@ -392,5 +370,5 @@ export const archiveTrade = (row) => {
     row.color_id2,
   ];
 
-  return runQuery(query, params);
+  return runQuery(query, params, executor);
 };

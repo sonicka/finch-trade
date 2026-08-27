@@ -15,34 +15,38 @@ export const signUp = (req, res) => {
   }
 
   try {
-    db.get('SELECT * FROM users WHERE email = ?', [email], async (err, row) => {
-      if (err) {
-        return res.status(500).json({ message: 'Database error' });
-      }
+    db.get(
+      'SELECT * FROM users WHERE email = $1',
+      [email],
+      async (err, row) => {
+        if (err) {
+          return res.status(500).json({ message: 'Database error' });
+        }
 
-      if (row) {
-        return res.status(400).json({ message: 'Email already taken' });
-      }
+        if (row) {
+          return res.status(400).json({ message: 'Email already taken' });
+        }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-      db.run(
-        'INSERT INTO users (email, username, birb_name, friend_code, password) VALUES (?, ?, ?, ?, ?)',
-        [email, username, birbName, friendCode, hashedPassword],
-        function (err) {
-          if (err) {
-            return res.status(500).json({ message: 'Error creating user' });
-          }
-          const id = this.lastID;
-          const token = jwt.sign(
-            { id, email, username, birbName, friendCode },
-            JWT_SECRET,
-            { expiresIn: '1h' },
-          );
-          res.status(201).json({ token });
-        },
-      );
-    });
+        db.run(
+          'INSERT INTO users (email, username, birb_name, friend_code, password) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+          [email, username, birbName, friendCode, hashedPassword],
+          function (err) {
+            if (err) {
+              return res.status(500).json({ message: 'Error creating user' });
+            }
+            const id = this.lastID;
+            const token = jwt.sign(
+              { id, email, username, birbName, friendCode },
+              JWT_SECRET,
+              { expiresIn: '1h' },
+            );
+            res.status(201).json({ token });
+          },
+        );
+      },
+    );
   } catch {
     res.status(500).json({ message: 'Something went wrong' });
   }
@@ -57,7 +61,7 @@ export const login = (req, res) => {
 
   try {
     db.get(
-      'SELECT * FROM users WHERE email = ?',
+      'SELECT * FROM users WHERE email = $1',
       [email],
       async (err, user) => {
         if (err) {
@@ -95,7 +99,7 @@ export const getUserFromDB = (req, res) => {
   const { userId } = req.params;
 
   db.all(
-    'SELECT id, username, birb_name as birbName, friend_code as friendCode FROM users WHERE id = ?', // todo id?
+    'SELECT id, username, birb_name AS "birbName", friend_code AS "friendCode" FROM users WHERE id = $1',
     [userId],
     (err, rows) => {
       if (err) {
@@ -132,14 +136,14 @@ export const editUser = async (req, res) => {
     if (password && password !== passwordAgain)
       return res.status(400).json({ error: 'Passwords do not match' });
 
-    const user = await queryOne('SELECT * FROM users WHERE id = ?', [userId]);
+    const user = await queryOne('SELECT * FROM users WHERE id = $1', [userId]);
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
 
     if (email && email !== user.email) {
       const existing = await queryOne(
-        'SELECT id FROM users WHERE email = ? AND id != ?',
+        'SELECT id FROM users WHERE email = $1 AND id != $2',
         [email, userId],
       );
       if (existing)
@@ -165,7 +169,7 @@ export const editUser = async (req, res) => {
 
     const newEmail = email || user.email;
 
-    const query = `UPDATE users SET email = ?, password = ? WHERE id = ?`;
+    const query = `UPDATE users SET email = $1, password = $2 WHERE id = $3`;
     await runQuery(query, [newEmail, newHashedPassword, userId]);
     return res.status(200).json({
       message: 'User updated successfully.',

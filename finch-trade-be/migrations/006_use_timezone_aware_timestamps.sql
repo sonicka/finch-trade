@@ -1,0 +1,11 @@
+ALTER TABLE users
+  ALTER COLUMN created_at TYPE TIMESTAMPTZ
+  USING created_at AT TIME ZONE 'UTC';
+
+ALTER TABLE trades
+  ALTER COLUMN valid_until TYPE TIMESTAMPTZ
+  USING valid_until AT TIME ZONE 'UTC';
+
+ALTER TABLE trades_history
+  ALTER COLUMN archived_at TYPE TIMESTAMPTZ
+  USING archived_at AT TIME ZONE 'UTC';
