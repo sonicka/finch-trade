@@ -2,7 +2,6 @@ import { FC, useEffect } from 'react';
 import PastGiftCard from './PastGiftCard';
 import PastTradeCard from './PastTradeCard';
 import TraderCard from './TraderCard';
-import Alert from '../../shared/components/Alert';
 import {
   useTrades,
   useUser,
@@ -24,9 +23,9 @@ const Trades: FC = () => {
   return (
     <div className="w-full md:w-1/2 m-auto pb-8">
       {!trades.length ? (
-        <div className="py-8">
-          <Alert type="info" message="No trades available at the moment." />
-        </div>
+        <p className="text-center pt-12 pb-4">
+          No trades available at the moment.
+        </p>
       ) : (
         trades?.map((t: Trader) => (
           <div className="mx-10 mt-4 mb-8" key={t.userId}>

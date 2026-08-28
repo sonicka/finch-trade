@@ -4,10 +4,15 @@ import { ListType } from '../types';
 import { useUserData } from '../context/UserProvider';
 import { useItems } from '../context/DataProvider';
 
+export interface ItemSuccessMessage {
+  id: number;
+  message: string;
+}
+
 export const useManageItem = () => {
   const { getUserItems, listChanged, toggleListChange } = useUserData();
   const [, getAllItems] = useItems();
-  const [success, setSuccess] = useState<string | null>(null);
+  const [successes, setSuccesses] = useState<ItemSuccessMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -46,7 +51,12 @@ export const useManageItem = () => {
         );
       }
 
-      if (response?.message) setSuccess(response.message);
+      if (response?.message) {
+        setSuccesses((current) => [
+          ...current,
+          { id: Date.now() + Math.random(), message: response.message },
+        ]);
+      }
 
       await getUserItems(payload.type);
       if (!listChanged) toggleListChange(true);
@@ -64,9 +74,16 @@ export const useManageItem = () => {
     handleItem('remove', { itemId, colorId, type });
 
   const clearMessage = () => {
-    setSuccess(null);
+    setSuccesses([]);
     setError(null);
   };
 
-  return { addNewItem, removeItem, error, success, clearMessage, loading };
+  return {
+    addNewItem,
+    removeItem,
+    error,
+    successes,
+    clearMessage,
+    loading,
+  };
 };

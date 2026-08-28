@@ -16,6 +16,7 @@ import {
   PastTrades,
   Trader,
   UserItem,
+  UserItems,
 } from '../types';
 
 interface Props {
@@ -24,7 +25,7 @@ interface Props {
 
 interface UserState {
   user: LoggedInUser | null;
-  userItems: { wishlist: UserItem[]; tradelist: UserItem[] };
+  userItems: UserItems;
   trades: Trader[];
   pastTrades: PastTrades;
   listChanged: boolean;

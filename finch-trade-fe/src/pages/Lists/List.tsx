@@ -3,6 +3,7 @@ import Item from './Item';
 import ItemAdd from './ItemAdd';
 import { useColors, useItems } from '../../shared/context/DataProvider';
 import { useUserItems } from '../../shared/context/UserProvider';
+import { useUserData } from '../../shared/context/UserProvider';
 import { useManageItem } from '../../shared/hooks/items';
 import { getColorName } from '../../shared/utils';
 import { ListType } from '../../shared/types';
@@ -17,11 +18,12 @@ const maxHeight = `calc(100vh - ${147 + 66 + 99 + 93 + 32}px)`;
 const List: React.FC<Props> = ({ type }) => {
   const [allItems] = useItems();
   const [userItems] = useUserItems(type);
-  const { addNewItem, removeItem, error, success, clearMessage } =
+  const { userItems: allUserItems } = useUserData();
+  const { addNewItem, removeItem, error, successes, clearMessage } =
     useManageItem();
   const colors = useColors();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const itemName = formData.get('itemName') as string;
@@ -45,6 +47,7 @@ const List: React.FC<Props> = ({ type }) => {
           handleSubmit={handleSubmit}
           items={allItems}
           colors={colors}
+          userItems={allUserItems}
           type={type}
           clearError={clearMessage}
         />
@@ -55,16 +58,10 @@ const List: React.FC<Props> = ({ type }) => {
       >
         <div className="pt-6">
           <div className="absolute -mt-6 -pt-8 w-full inset-x-0 h-6 bg-gradient-to-b from-beige via-transparent to-transparent to-80% z-10" />
-          {success && (
-            <div className="pb-6">
-              <Alert type="success" message={success} />
-            </div>
-          )}
-          {error && (
-            <div className="pb-6">
-              <Alert type="error" message={error} />
-            </div>
-          )}
+          {successes.map(({ id, message }) => (
+            <Alert key={id} type="success" message={message} autoHide />
+          ))}
+          {error && <Alert type="error" message={error} />}
           {userItems?.map((item) => (
             <div className="mb-3" key={item.item_id + '' + item.color}>
               <Item

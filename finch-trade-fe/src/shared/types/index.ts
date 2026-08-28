@@ -39,6 +39,11 @@ export interface UserItem {
   name: string;
 }
 
+export interface UserItems {
+  wishlist: UserItem[];
+  tradelist: UserItem[];
+}
+
 export interface Color {
   id: number;
   color: string;

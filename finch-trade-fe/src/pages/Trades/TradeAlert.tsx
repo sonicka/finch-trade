@@ -28,11 +28,7 @@ const TradeAlert: FC<Props> = ({ friendCodeShown, trader, traderData }) => {
     return '';
   };
 
-  return (
-    <div className="pt-4">
-      <Alert type="success" message={getAlertMessage()} />
-    </div>
-  );
+  return <Alert type="success" message={getAlertMessage()} />;
 };
 
 export default TradeAlert;

@@ -32,6 +32,7 @@ const Profile = () => {
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setShowAlert(false);
     if (
       (!!newEmail && newEmail !== email) ||
       (!!password && !!passwordAgain && password === passwordAgain)

@@ -40,6 +40,10 @@ const Login: React.FC = () => {
     setError('');
   };
 
+  const clearError = () => {
+    setError('');
+  };
+
   useEffect(() => {
     if (user) navigate('/');
   }, [user]);
@@ -48,6 +52,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    clearError();
     try {
       const token = isLogin
         ? await logIn({ email, password })
@@ -62,10 +67,16 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="grid place-items-center min-h-screen">
+    <div className="flex flex-col items-center justify-center gap-10 min-h-screen">
+      <Card>
+        <p className="text-center">
+          Join us on a fan-made Finch trading app! Simply log in, add the items
+          you'd like to trade or receive, and let the app match you with a
+          suitable trader!
+        </p>
+      </Card>
       <Card>
         <div className="flex flex-col gap-6 w-96">
-          <Alert message="Join us on a fan-made Finch trading app! Simply log in, add the items you'd like to trade or receive, and let the app match you with a suitable trader!" />
           <h1 className="text-2xl font-semibold text-center pt-3">
             {isLogin ? 'Login' : 'Sign Up'}
           </h1>
@@ -73,7 +84,10 @@ const Login: React.FC = () => {
             <FormInput
               label="Email"
               value={email}
-              setValue={setEmail}
+              setValue={(value) => {
+                clearError();
+                setEmail(value);
+              }}
               type="email"
               id="email"
               required
@@ -83,21 +97,30 @@ const Login: React.FC = () => {
                 <FormInput
                   label="User name"
                   value={username}
-                  setValue={setUsername}
+                  setValue={(value) => {
+                    clearError();
+                    setUsername(value);
+                  }}
                   id="username"
                   required
                 />
                 <FormInput
                   label="Birb name"
                   value={birbName}
-                  setValue={setBirbName}
+                  setValue={(value) => {
+                    clearError();
+                    setBirbName(value);
+                  }}
                   id="birbname"
                   required
                 />
                 <FormInput
                   label="Friend code"
                   value={friendCode}
-                  setValue={setFriendCode}
+                  setValue={(value) => {
+                    clearError();
+                    setFriendCode(value);
+                  }}
                   id="friendCode"
                   required
                 />
@@ -106,7 +129,10 @@ const Login: React.FC = () => {
             <FormInput
               label="Password"
               value={password}
-              setValue={setPassword}
+              setValue={(value) => {
+                clearError();
+                setPassword(value);
+              }}
               type="password"
               id="password"
               required
@@ -115,7 +141,10 @@ const Login: React.FC = () => {
               <FormInput
                 label="Password again"
                 value={passwordAgain}
-                setValue={setPasswordAgain}
+                setValue={(value) => {
+                  clearError();
+                  setPasswordAgain(value);
+                }}
                 type="password"
                 id="passwordAgain"
                 required
@@ -127,17 +156,16 @@ const Login: React.FC = () => {
                 buttonProps={{ type: 'submit' }}
                 disabled={!isFormValid}
               />
-              {error && (
-                <div className="mt-4">
-                  <Alert type="error" message={error} />
-                </div>
-              )}
+              {error && <Alert type="error" message={error} />}
               <div className="mt-8 w-full text-center">
                 {isLogin && (
                   <span className="mt-4">
                     Don't have an account yet?{' '}
                     <button
-                      onClick={() => setIsLogin(false)}
+                      onClick={() => {
+                        clearError();
+                        setIsLogin(false);
+                      }}
                       className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
                     >
                       Click here to sign in.
@@ -148,7 +176,10 @@ const Login: React.FC = () => {
                   <span>
                     Already have an account?{' '}
                     <button
-                      onClick={() => setIsLogin(true)}
+                      onClick={() => {
+                        clearError();
+                        setIsLogin(true);
+                      }}
                       className="underline text-darkBeige hover:text-mediumBeige cursor-pointer"
                     >
                       Click here to login.
