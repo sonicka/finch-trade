@@ -1,5 +1,6 @@
 import pg from 'pg';
 import 'dotenv/config';
+import { runTransaction } from './transaction.js';
 
 const { Pool } = pg;
 const connectionString = process.env.DATABASE_URL?.replace(
@@ -59,25 +60,8 @@ const db = {
       )
       .catch((error) => callback?.call({}, error));
   },
-  async transaction(callback) {
-    await ready;
-    const client = await pool.connect();
-
-    try {
-      await client.query('BEGIN');
-      const result = await callback(client);
-      await client.query('COMMIT');
-      return result;
-    } catch (error) {
-      try {
-        await client.query('ROLLBACK');
-      } catch {
-        // Preserve the original transaction error.
-      }
-      throw error;
-    } finally {
-      client.release();
-    }
+  transaction(callback) {
+    return runTransaction(pool, callback, ready);
   },
   waitUntilReady() {
     return ready;
