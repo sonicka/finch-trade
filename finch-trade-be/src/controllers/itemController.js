@@ -77,7 +77,7 @@ export const postItemToDB = async (req, res) => {
 };
 
 export const getAllItemsFromDB = (req, res) => {
-  db.all('SELECT * FROM items', (err, rows) => {
+  db.all('SELECT * FROM items ORDER BY LOWER(name), id', (err, rows) => {
     if (err) {
       console.error('Error fetching items:', err);
       return res.status(500).json({ error: 'Failed to retrieve items' });
