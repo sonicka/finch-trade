@@ -35,7 +35,7 @@ export interface Item {
 export interface UserItem {
   user_id: number;
   item_id: number;
-  color: number;
+  color_id: number;
   name: string;
 }
 

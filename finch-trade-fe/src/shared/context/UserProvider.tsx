@@ -181,12 +181,19 @@ export const UserProvider = ({ children }: Props) => {
       try {
         dispatch({ type: 'FETCH_USER_START' });
         const decoded = jwtDecode<LoggedInUser>(token);
+
+        // Validate that all required fields are present
+        if (!decoded.id || !decoded.email || !decoded.username) {
+          throw new Error('Invalid token payload: missing required fields');
+        }
+
         dispatch({ type: 'FETCH_USER_SUCCESS', payload: decoded });
       } catch (error) {
-        console.error('Token decoding failed:', error);
+        console.error('Token validation failed:', error);
+        localStorage.removeItem('authToken');
         dispatch({
           type: 'FETCH_USER_ERROR',
-          payload: 'Failed to decode token',
+          payload: 'Failed to validate token',
         });
       }
     }

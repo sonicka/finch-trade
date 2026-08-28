@@ -26,10 +26,15 @@ const ItemAdd: FC<Props> = ({
   const [nameValue, setNameValue] = useState<string>('');
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [selectedColor, setSelectedColor] = useState<Color>();
-  const disabled = !selectedColor || !nameValue;
+
+  const isValidItemName = (name: string): boolean => {
+    return name.trim().length > 0 && name.trim().length <= 40;
+  };
+
+  const disabled = !selectedColor || !nameValue || !isValidItemName(nameValue);
   const itemsWithAnyColor = new Set(
     [...userItems.wishlist, ...userItems.tradelist]
-      .filter((item) => item.color === 1)
+      .filter((item) => item.color_id === 1)
       .map((item) => item.item_id),
   );
   const availableItems = (options: Item[]) =>
@@ -37,7 +42,7 @@ const ItemAdd: FC<Props> = ({
   const usedColorIds = new Set(
     [...userItems.wishlist, ...userItems.tradelist]
       .filter((item) => item.item_id === selectedItem?.id)
-      .map((item) => item.color),
+      .map((item) => item.color_id),
   );
   const filteredColors = colors.filter(
     (color: Color) =>
@@ -48,10 +53,13 @@ const ItemAdd: FC<Props> = ({
   const handleItemInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearError();
     const value = e.target.value;
+    // Prevent input that exceeds max length
+    if (value.length > 40) return;
+
     setNameValue(value);
     setSelectedItem(undefined);
     setSelectedColor(undefined);
-    if (value) {
+    if (value.trim()) {
       setFilteredOptions(
         items.filter((item) =>
           item.name.toLowerCase().includes(value.toLowerCase()),
@@ -77,7 +85,7 @@ const ItemAdd: FC<Props> = ({
   const handleFormSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
     clearError();
     e.preventDefault();
-    if (selectedItem && selectedColor) {
+    if (selectedItem && selectedColor && isValidItemName(nameValue)) {
       handleSubmit(e);
       setNameValue('');
       setSelectedItem(undefined);

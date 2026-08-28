@@ -28,7 +28,7 @@ export const apiFetch = async (path: string, options: RequestInit = {}) => {
   if (response.status === 401 && token) {
     localStorage.removeItem('authToken');
     window.location.href = '/login';
-    return;
+    throw new Error('Token expired. Please log in again.');
   }
 
   if (!response.ok) {

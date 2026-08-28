@@ -16,7 +16,7 @@ const Trades: FC = () => {
 
   useEffect(() => {
     if (listChanged) refetchTrades();
-  }, [listChanged]);
+  }, [listChanged, refetchTrades]);
 
   if (!user) return null;
 
