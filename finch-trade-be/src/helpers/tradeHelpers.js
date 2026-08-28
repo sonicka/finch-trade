@@ -55,14 +55,12 @@ const getNonAnyColors = () =>
   queryAll(`SELECT * FROM colors WHERE color != $1`, ['any']);
 
 const getRecentlyTradedUsers = (currentUserId) => {
-  const twentyFourHoursAgo = new Date(
-    Date.now() - 24 * 60 * 60 * 1000,
-  ).toISOString();
   return new Promise((resolve, reject) => {
     db.all(
       `SELECT user_id1, user_id2 FROM trades_history
-        WHERE archived_at >= $1 AND (user_id1 = $2 OR user_id2 = $3)`,
-      [twentyFourHoursAgo, currentUserId, currentUserId],
+        WHERE archived_at >= NOW() - INTERVAL '24 hours' 
+          AND (user_id1 = $1 OR user_id2 = $2)`,
+      [currentUserId, currentUserId],
       (err, rows) => {
         if (err) return reject(err);
         const userIds = new Set();

@@ -5,7 +5,7 @@ export const getColorsFromDB = (req, res) => {
   db.all('SELECT * FROM colors', (err, rows) => {
     if (err) {
       console.error('Error fetching colors:', err);
-      return res.status(500).json({ error: 'Failed to retrieve colors' });
+      return res.status(500).json({ message: 'Failed to retrieve colors' });
     }
     res.json(rows);
   });
@@ -80,7 +80,7 @@ export const getAllItemsFromDB = (req, res) => {
   db.all('SELECT * FROM items ORDER BY LOWER(name), id', (err, rows) => {
     if (err) {
       console.error('Error fetching items:', err);
-      return res.status(500).json({ error: 'Failed to retrieve items' });
+      return res.status(500).json({ message: 'Failed to retrieve items' });
     }
     res.json(rows);
   });
@@ -109,7 +109,7 @@ export const getUserItemsFromDB = (req, res) => {
   db.all(query, [type, userId], (err, rows) => {
     if (err) {
       console.error('Error fetching items:', err);
-      return res.status(500).json({ error: 'Failed to retrieve items' });
+      return res.status(500).json({ message: 'Failed to retrieve items' });
     }
     res.json(rows);
   });
@@ -146,7 +146,7 @@ export const getItemByIdFromDB = (req, res) => {
   db.all('SELECT * FROM items WHERE id = $1', [itemId], (err, rows) => {
     if (err) {
       console.error('Error fetching item:', err);
-      return res.status(500).json({ error: 'Failed to retrieve the item' });
+      return res.status(500).json({ message: 'Failed to retrieve the item' });
     }
     res.json(rows);
   });

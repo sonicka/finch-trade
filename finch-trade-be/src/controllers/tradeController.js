@@ -15,7 +15,8 @@ export const getTradesFromDB = (req, res) => {
 
   findTrades(userId, (err, trades) => {
     if (err) {
-      res.status(500).json({ error: 'Error finding trades:', err });
+      console.error('Error finding trades:', err);
+      res.status(500).json({ message: 'Error finding trades' });
       return;
     }
     res.json(trades);
@@ -28,7 +29,7 @@ export const postRequestTrade = async (req, res) => {
   const { chosenItems } = req.body;
 
   if (!userId2 || !chosenItems?.my || !chosenItems?.their) {
-    return res.status(400).json({ error: 'Missing required trade data' });
+    return res.status(400).json({ message: 'Missing required trade data' });
   }
 
   try {
@@ -44,6 +45,28 @@ export const postRequestTrade = async (req, res) => {
       const existingTrade = await getTradeByUsers(userId1, userId2, client);
 
       if (existingTrade) {
+        // Verify that both users are trading the same items
+        // The existing trade should match what the current user is proposing
+        const currentUserIsUser1 = existingTrade.user_id1 === Number(userId1);
+        const existingMyItems = currentUserIsUser1
+          ? { id: existingTrade.item_id1, colorId: existingTrade.color_id1 }
+          : { id: existingTrade.item_id2, colorId: existingTrade.color_id2 };
+        const existingTheirItems = currentUserIsUser1
+          ? { id: existingTrade.item_id2, colorId: existingTrade.color_id2 }
+          : { id: existingTrade.item_id1, colorId: existingTrade.color_id1 };
+
+        // Verify items match
+        if (
+          chosenItems.my.id !== existingMyItems.id ||
+          chosenItems.my.colorId !== existingMyItems.colorId ||
+          chosenItems.their.id !== existingTheirItems.id ||
+          chosenItems.their.colorId !== existingTheirItems.colorId
+        ) {
+          throw new Error(
+            'Trade items do not match. Please review the trade details.',
+          );
+        }
+
         const requestedBy = existingTrade.requested_by
           ? JSON.parse(existingTrade.requested_by)
           : [];
@@ -73,7 +96,7 @@ export const postRequestTrade = async (req, res) => {
     });
   } catch (err) {
     console.error('Error processing trade:', err.message);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ message: err.message });
   }
 };
 
@@ -130,7 +153,7 @@ export const getPastTradesFromDB = async (req, res) => {
     res.status(200).json(allPastTransactions);
   } catch (error) {
     console.error('Error fetching past trades:', error);
-    res.status(500).json({ error: 'Failed to retrieve past trades' });
+    res.status(500).json({ message: 'Failed to retrieve past trades' });
   }
 };
 
@@ -165,7 +188,7 @@ export const postFinishGifting = async (req, res) => {
   } catch (err) {
     console.error('Error finishing gifting:', err.message);
     return res.status(500).json({
-      error: `Failed to finish gifting: ${err.message}`,
+      message: `Failed to finish gifting: ${err.message}`,
     });
   }
 };
