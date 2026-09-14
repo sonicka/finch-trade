@@ -18,15 +18,12 @@
 ## How to Use
 
 1. **Create an Account**:
-
    - Enter your **username**, **birb name**, **friend code** (make sure they match your data in [Finch](https://finchcare.com/) app) and **password**. (This data cannot be updated at the moment.)
 
 2. **Add Items**:
-
    - List your **trade items** (items you want to give away) and **wishlist items** (items you want to receive).
 
 3. **Trade Matching**:
-
    - Visit the **Trading Page**, where the app will suggest potential trades based on your items.
 
 4. **Accept Trade**:
@@ -50,23 +47,23 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 # Project Roadmap
 
 ### Current State
+
 - Basic functionalities already built
+- Feedback form implemented
 
 ### TODO General
+
 - [ ] Refinement and optimization of core logic
-- [ ] Thorough testing of the logic (possibly writing up some tests)
-- [ ] Setup **ESLint** and **Prettier** properly
-- [ ] Add **Send Feedback** functionality
-- [ ] Make it work publicly (migration to a more robust DB)
+- [ ] Thorough testing of the logic
+- [ ] Write up tests
+- [ ] Make it work publicly
 
-### TODO UI / UX
-- [ ] Make **Alert** component disappearing (auto-dismiss)
-- [ ] Build **Modal** component for confirmation actions (delete, etc.)
-- [ ] Make past trades collapsable (**Accordion style**)
+### TODO Frontend / UI / UX
 
-### TODO Frontend
+- [ ] Build a component for confirmation actions (delete, etc.)
 - [ ] Integrate **TanStack Query** to handle requests and caching
 - [ ] Handle **Loading / Error / Success** states properly across all views
 
 ### TODO Backend
+
 - [ ] Tie color options to each item separately (dynamic color sets)
