@@ -10,17 +10,86 @@ import {
 } from '../helpers/tradeHelpers.js';
 import { deleteItem } from '../helpers/itemHelpers.js';
 
-export const getTradesFromDB = (req, res) => {
-  const userId = req.userId;
+export const getTradesFromDB = async (req, res) => {
+  try {
+    res.json(await findTrades(req.userId));
+  } catch (error) {
+    console.error('Error finding trades:', error);
+    res.status(500).json({ message: 'Error finding trades' });
+  }
+};
 
-  findTrades(userId, (err, trades) => {
-    if (err) {
-      console.error('Error finding trades:', err);
-      res.status(500).json({ message: 'Error finding trades' });
-      return;
-    }
-    res.json(trades);
-  });
+const getTradeItemsForUser = (trade, userId) => {
+  const isUser1 = trade.user_id1 === Number(userId);
+  return {
+    my: isUser1
+      ? { id: trade.item_id1, colorId: trade.color_id1 }
+      : { id: trade.item_id2, colorId: trade.color_id2 },
+    their: isUser1
+      ? { id: trade.item_id2, colorId: trade.color_id2 }
+      : { id: trade.item_id1, colorId: trade.color_id1 },
+  };
+};
+
+const sameItem = (first, second) =>
+  first.id === second.id && first.colorId === second.colorId;
+
+const addRequester = (requestedBy, ...userIds) => [
+  ...new Set([
+    ...(requestedBy ? JSON.parse(requestedBy) : []),
+    ...userIds.map(String),
+  ]),
+];
+
+const updateExistingTrade = async (
+  trade,
+  userId1,
+  userId2,
+  chosenItems,
+  client,
+) => {
+  const existingItems = getTradeItemsForUser(trade, userId1);
+  if (
+    !sameItem(chosenItems.my, existingItems.my) ||
+    !sameItem(chosenItems.their, existingItems.their)
+  ) {
+    throw new Error(
+      'Trade items do not match. Please review the trade details.',
+    );
+  }
+
+  const requestedBy = addRequester(trade.requested_by, userId1, userId2);
+  const status = requestedBy.length === 2 ? 'confirmed' : 'pending';
+  await updateTrade(trade.id, status, requestedBy, client);
+  return { created: false, tradeId: trade.id, status };
+};
+
+const requestTrade = async (userId1, userId2, chosenItems, client) => {
+  const existingTrade = await getTradeByUsers(userId1, userId2, client);
+  if (existingTrade) {
+    return updateExistingTrade(
+      existingTrade,
+      userId1,
+      userId2,
+      chosenItems,
+      client,
+    );
+  }
+
+  const trade = await insertItemTransaction(
+    userId1,
+    userId2,
+    chosenItems,
+    client,
+  );
+  return { created: true, tradeId: trade.lastID, status: 'pending' };
+};
+
+const lockUserPair = (client, userId1, userId2) => {
+  const orderedUserIds = [Number(userId1), Number(userId2)].sort(
+    (first, second) => first - second,
+  );
+  return client.query('SELECT pg_advisory_xact_lock($1, $2)', orderedUserIds);
 };
 
 export const postRequestTrade = async (req, res) => {
@@ -34,59 +103,8 @@ export const postRequestTrade = async (req, res) => {
 
   try {
     const result = await db.transaction(async (client) => {
-      const orderedUserIds = [Number(userId1), Number(userId2)].sort(
-        (a, b) => a - b,
-      );
-      await client.query(
-        'SELECT pg_advisory_xact_lock($1, $2)',
-        orderedUserIds,
-      );
-
-      const existingTrade = await getTradeByUsers(userId1, userId2, client);
-
-      if (existingTrade) {
-        // Verify that both users are trading the same items
-        // The existing trade should match what the current user is proposing
-        const currentUserIsUser1 = existingTrade.user_id1 === Number(userId1);
-        const existingMyItems = currentUserIsUser1
-          ? { id: existingTrade.item_id1, colorId: existingTrade.color_id1 }
-          : { id: existingTrade.item_id2, colorId: existingTrade.color_id2 };
-        const existingTheirItems = currentUserIsUser1
-          ? { id: existingTrade.item_id2, colorId: existingTrade.color_id2 }
-          : { id: existingTrade.item_id1, colorId: existingTrade.color_id1 };
-
-        // Verify items match
-        if (
-          chosenItems.my.id !== existingMyItems.id ||
-          chosenItems.my.colorId !== existingMyItems.colorId ||
-          chosenItems.their.id !== existingTheirItems.id ||
-          chosenItems.their.colorId !== existingTheirItems.colorId
-        ) {
-          throw new Error(
-            'Trade items do not match. Please review the trade details.',
-          );
-        }
-
-        const requestedBy = existingTrade.requested_by
-          ? JSON.parse(existingTrade.requested_by)
-          : [];
-        if (!requestedBy.includes(String(userId1)))
-          requestedBy.push(String(userId1));
-        if (!requestedBy.includes(String(userId2)))
-          requestedBy.push(String(userId2));
-
-        const status = requestedBy.length === 2 ? 'confirmed' : 'pending';
-        await updateTrade(existingTrade.id, status, requestedBy, client);
-        return { created: false, tradeId: existingTrade.id, status };
-      }
-
-      const trade = await insertItemTransaction(
-        userId1,
-        userId2,
-        chosenItems,
-        client,
-      );
-      return { created: true, tradeId: trade.lastID, status: 'pending' };
+      await lockUserPair(client, userId1, userId2);
+      return requestTrade(userId1, userId2, chosenItems, client);
     });
 
     return res.status(result.created ? 201 : 200).json({
@@ -98,6 +116,44 @@ export const postRequestTrade = async (req, res) => {
     console.error('Error processing trade:', err.message);
     return res.status(500).json({ message: err.message });
   }
+};
+
+const deleteTradeItems = (trade, client) => {
+  const items = [
+    [trade.user_id1, trade.item_id1, trade.color_id1],
+    [trade.user_id2, trade.item_id2, trade.color_id2],
+    [trade.user_id1, trade.item_id2, trade.color_id2],
+    [trade.user_id2, trade.item_id1, trade.color_id1],
+  ];
+
+  return Promise.all(
+    items.map(([userId, itemId, colorId]) =>
+      deleteItem(userId, itemId, colorId, true, client),
+    ),
+  );
+};
+
+const finishTrade = async (trade, userId, client) => {
+  if (![String(trade.user_id1), String(trade.user_id2)].includes(userId)) {
+    return { forbidden: true };
+  }
+
+  const finishedBy = addRequester(trade.finished_by, userId);
+  const status = finishedBy.length === 2 ? 'finished' : trade.status;
+  await runQuery(
+    `UPDATE trades
+     SET status = $1, finished_by = $2, valid_until = NOW() + INTERVAL '24 hours'
+     WHERE id = $3`,
+    [status, JSON.stringify(finishedBy), trade.id],
+    client,
+  );
+
+  if (status !== 'finished') return { tradeId: trade.id, status };
+
+  await deleteTradeItems(trade, client);
+  await archiveTrade(trade, client);
+  await deleteTrade(trade.id, client);
+  return { tradeId: trade.id, status: 'archived' };
 };
 
 export const getPastTradesFromDB = async (req, res) => {
@@ -208,60 +264,7 @@ export const postFinishTrade = async (req, res) => {
 
       if (!trade) return { notFound: true };
 
-      if (![String(trade.user_id1), String(trade.user_id2)].includes(userId)) {
-        return { forbidden: true };
-      }
-
-      const finishedBy = trade.finished_by ? JSON.parse(trade.finished_by) : [];
-      if (!finishedBy.includes(userId)) finishedBy.push(userId);
-      const newStatus = finishedBy.length === 2 ? 'finished' : trade.status;
-
-      await runQuery(
-        `UPDATE trades
-     SET status = $1,
-       finished_by = $2,
-         valid_until = NOW() + INTERVAL '24 hours'
-    WHERE id = $3`,
-        [newStatus, JSON.stringify(finishedBy), trade.id],
-        client,
-      );
-
-      if (newStatus === 'finished') {
-        await deleteItem(
-          trade.user_id1,
-          trade.item_id1,
-          trade.color_id1,
-          true,
-          client,
-        );
-        await deleteItem(
-          trade.user_id2,
-          trade.item_id2,
-          trade.color_id2,
-          true,
-          client,
-        );
-        await deleteItem(
-          trade.user_id1,
-          trade.item_id2,
-          trade.color_id2,
-          true,
-          client,
-        );
-        await deleteItem(
-          trade.user_id2,
-          trade.item_id1,
-          trade.color_id1,
-          true,
-          client,
-        );
-        await archiveTrade(trade, client);
-        await deleteTrade(trade.id, client);
-
-        return { tradeId: trade.id, status: 'archived' };
-      }
-
-      return { tradeId: trade.id, status: newStatus };
+      return finishTrade(trade, userId, client);
     });
 
     if (result.notFound) {

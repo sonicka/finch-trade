@@ -1,7 +1,7 @@
 import db from '../models/db.js';
 import { queryOne, queryAll, runQuery } from '../utils.js';
 
-export const findTrades = async (userId, callback) => {
+export const findTrades = async (userId) => {
   try {
     const colors = await getNonAnyColors();
     const [existingTrades, recentlyTradedWith, wishItems, tradeItems] =
@@ -43,10 +43,10 @@ export const findTrades = async (userId, callback) => {
       });
     }
 
-    callback(null, giftsAndTrades);
+    return giftsAndTrades;
   } catch (err) {
     console.error('Error finding trades:', err);
-    callback(err);
+    throw err;
   }
 };
 
@@ -58,7 +58,7 @@ const getRecentlyTradedUsers = (currentUserId) => {
   return new Promise((resolve, reject) => {
     db.all(
       `SELECT user_id1, user_id2 FROM trades_history
-        WHERE archived_at >= NOW() - INTERVAL '24 hours' 
+        WHERE archived_at >= NOW() - INTERVAL '24 hours'
           AND (user_id1 = $1 OR user_id2 = $2)`,
       [currentUserId, currentUserId],
       (err, rows) => {

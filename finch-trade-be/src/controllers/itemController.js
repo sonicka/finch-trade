@@ -1,14 +1,12 @@
-import db from '../models/db.js';
-import { queryOne, runQuery } from '../utils.js';
+import { queryAll, queryOne, runQuery } from '../utils.js';
 
-export const getColorsFromDB = (req, res) => {
-  db.all('SELECT * FROM colors', (err, rows) => {
-    if (err) {
-      console.error('Error fetching colors:', err);
-      return res.status(500).json({ message: 'Failed to retrieve colors' });
-    }
-    res.json(rows);
-  });
+export const getColorsFromDB = async (req, res) => {
+  try {
+    res.json(await queryAll('SELECT * FROM colors'));
+  } catch (error) {
+    console.error('Error fetching colors:', error);
+    res.status(500).json({ message: 'Failed to retrieve colors' });
+  }
 };
 
 export const postItemToDB = async (req, res) => {
@@ -76,17 +74,16 @@ export const postItemToDB = async (req, res) => {
   }
 };
 
-export const getAllItemsFromDB = (req, res) => {
-  db.all('SELECT * FROM items ORDER BY LOWER(name), id', (err, rows) => {
-    if (err) {
-      console.error('Error fetching items:', err);
-      return res.status(500).json({ message: 'Failed to retrieve items' });
-    }
-    res.json(rows);
-  });
+export const getAllItemsFromDB = async (req, res) => {
+  try {
+    res.json(await queryAll('SELECT * FROM items ORDER BY LOWER(name), id'));
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ message: 'Failed to retrieve items' });
+  }
 };
 
-export const getUserItemsFromDB = (req, res) => {
+export const getUserItemsFromDB = async (req, res) => {
   const { type } = req.params;
   const userId = req.userId;
 
@@ -106,16 +103,15 @@ export const getUserItemsFromDB = (req, res) => {
     ORDER BY items.name ASC;
   `;
 
-  db.all(query, [type, userId], (err, rows) => {
-    if (err) {
-      console.error('Error fetching items:', err);
-      return res.status(500).json({ message: 'Failed to retrieve items' });
-    }
-    res.json(rows);
-  });
+  try {
+    res.json(await queryAll(query, [type, userId]));
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    res.status(500).json({ message: 'Failed to retrieve items' });
+  }
 };
 
-export const deleteItemFromDB = (req, res) => {
+export const deleteItemFromDB = async (req, res) => {
   const userId = req.userId;
   const { itemId, colorId, listType } = req.body;
 
@@ -126,28 +122,25 @@ export const deleteItemFromDB = (req, res) => {
   const query =
     'DELETE FROM user_items WHERE item_id = $1 AND color_id = $2 AND list_type = $3 AND user_id = $4;';
 
-  db.run(query, [itemId, colorId, listType, userId], function (err) {
-    if (err) {
-      console.error('Error deleting item:', err.message);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    if (this.changes === 0) {
-      console.log('No such item found.');
+  try {
+    const result = await runQuery(query, [itemId, colorId, listType, userId]);
+    if (result.changes === 0) {
       return res.status(404).json({ message: 'Item not found' });
     }
-    console.log(`Item successfully deleted from ${listType}`);
     return res.status(200).json({ message: `Item removed from ${listType}` });
-  });
+  } catch (error) {
+    console.error('Error deleting item:', error.message);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
-export const getItemByIdFromDB = (req, res) => {
+export const getItemByIdFromDB = async (req, res) => {
   const { itemId } = req.params;
 
-  db.all('SELECT * FROM items WHERE id = $1', [itemId], (err, rows) => {
-    if (err) {
-      console.error('Error fetching item:', err);
-      return res.status(500).json({ message: 'Failed to retrieve the item' });
-    }
-    res.json(rows);
-  });
+  try {
+    res.json(await queryAll('SELECT * FROM items WHERE id = $1', [itemId]));
+  } catch (error) {
+    console.error('Error fetching item:', error);
+    res.status(500).json({ message: 'Failed to retrieve the item' });
+  }
 };

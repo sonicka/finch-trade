@@ -1,6 +1,5 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import db from '../models/db.js';
 import dotenv from 'dotenv';
 import { queryOne, runQuery } from '../utils.js';
 dotenv.config();
@@ -87,31 +86,22 @@ export const login = async (req, res) => {
   }
 };
 
-export const getUserFromDB = (req, res) => {
+export const getUserFromDB = async (req, res) => {
   const { userId } = req.params;
 
-  db.all(
-    'SELECT id, username, birb_name AS "birbName", friend_code AS "friendCode" FROM users WHERE id = $1',
-    [userId],
-    (err, rows) => {
-      if (err) {
-        console.error('Error fetching user:', err);
-        return res.status(500).json({ message: 'Failed to retrieve the user' });
-      }
-
-      if (rows.length === 1) {
-        res.json(rows[0]);
-      } else if (rows.length === 0) {
-        res.status(404).json({ message: 'User not found' });
-      } else {
-        console.warn(`Unexpected multiple users with id ${userId}:`, rows);
-        res.status(500).json({
-          message:
-            'Database inconsistency: multiple users found with the same id',
-        });
-      }
-    },
-  );
+  try {
+    const user = await queryOne(
+      'SELECT id, username, birb_name AS "birbName", friend_code AS "friendCode" FROM users WHERE id = $1',
+      [userId],
+    );
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return res.status(500).json({ message: 'Failed to retrieve the user' });
+  }
 };
 
 export const editUser = async (req, res) => {
