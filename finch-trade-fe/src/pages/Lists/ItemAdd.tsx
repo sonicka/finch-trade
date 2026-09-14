@@ -1,7 +1,7 @@
-import { FC, SubmitEventHandler, useState } from 'react';
+import { FC, SubmitEventHandler, useRef, useState } from 'react';
+import AutocompleteSelect from '../../shared/components/AutocompleteSelect';
 import Select from '../../shared/components/Select';
 import Card from '../../shared/components/Card';
-import AutocompleteSelect from '../../shared/components/AutocompleteSelect';
 import IconButton from '../../shared/components/IconButton';
 import { Item, Color, ListType, UserItems } from '../../shared/types';
 
@@ -22,6 +22,7 @@ const ItemAdd: FC<Props> = ({
   handleSubmit,
   clearError,
 }) => {
+  const itemNameInputRef = useRef<HTMLInputElement>(null);
   const [filteredOptions, setFilteredOptions] = useState<Item[]>(items);
   const [nameValue, setNameValue] = useState<string>('');
   const [selectedItem, setSelectedItem] = useState<Item>();
@@ -85,12 +86,13 @@ const ItemAdd: FC<Props> = ({
   const handleFormSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
     clearError();
     e.preventDefault();
-    if (selectedItem && selectedColor && isValidItemName(nameValue)) {
+    if (selectedColor && isValidItemName(nameValue)) {
       handleSubmit(e);
       setNameValue('');
       setSelectedItem(undefined);
       setSelectedColor(undefined);
       setFilteredOptions(items);
+      itemNameInputRef.current?.focus();
     }
   };
 
@@ -106,6 +108,8 @@ const ItemAdd: FC<Props> = ({
           options={availableItems(filteredOptions)}
           value={nameValue}
           placeholder="Item name"
+          inputRef={itemNameInputRef}
+          autoFocus
           onInputChange={handleItemInputChange}
           onChange={handleItemOptionClick}
         />

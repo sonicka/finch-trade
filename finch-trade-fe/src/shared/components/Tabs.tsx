@@ -24,7 +24,7 @@ const Tabs = ({ tabs }: Tabs) => {
               activeTab === index
                 ? 'bg-lightBeige text-darkBeige'
                 : 'border-transparent text-lightBeige'
-            }`}
+            } focus:outline-2 focus:outline-darkBeige`}
             onClick={() => setActiveTab(index)}
           />
         ))}

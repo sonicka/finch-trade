@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-popover": "^1.1.23",
+    "@radix-ui/react-select": "^2.3.7",
     "@tailwindcss/vite": "^4.2.2",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",

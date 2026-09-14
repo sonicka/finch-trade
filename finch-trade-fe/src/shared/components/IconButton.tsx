@@ -28,7 +28,7 @@ const IconButton: FC<Props> = ({
   return (
     <button
       onClick={onClick}
-      className={`${size} my-auto flex flex-none items-center justify-center rounded-full border-2
+      className={`${size} my-auto flex flex-none items-center justify-center rounded-full border-2 outline-none focus:ring-2 focus:ring-darkBeige focus:ring-offset-1
         ${colorClasses[color]} disabled:cursor-not-allowed disabled:border-grey disabled:text-grey disabled:hover:bg-inherit
         ${className}`}
       disabled={disabled}
