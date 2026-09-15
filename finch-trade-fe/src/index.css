@@ -1,7 +1,6 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-  /* Define your custom beige color here */
   --color-lightBeige: #fef8e9;
   --color-beige: #edddb5;
   --color-mediumBeige: #a09070;
@@ -16,3 +15,15 @@ body {
 }
 
 @plugin "tailwind-scrollbar";
+
+/* Buy Me a Coffee widget styles */
+#bmc-iframe {
+  height: 60vh !important;
+  min-height: 0 !important;
+}
+
+@media (max-width: 768px) {
+  #bmc-iframe {
+    height: calc(100vh - 200px) !important;
+  }
+}
