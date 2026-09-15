@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useRef, useState } from 'react';
+import { ChangeEvent, SubmitEvent, useRef, useState } from 'react';
 import { ScreenshotData, useUseroFeedback } from '@usero/sdk/headless/react';
 
 const ratingOptions = [
@@ -45,7 +45,7 @@ const FeedbackButton = () => {
     }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!rating && !comment.trim()) {
       setMessage('Choose a rating or add a comment before sending.');
@@ -75,7 +75,7 @@ const FeedbackButton = () => {
   };
 
   return (
-    <div className="relative mx-2 mb-2 self-start">
+    <div className="relative">
       <button
         type="button"
         className="rounded-xl border-2 border-mediumBeige bg-lightBeige px-4 py-2 text-sm font-semibold text-darkBeige shadow-sm outline-none transition hover:bg-beige focus:ring-1 focus:ring-darkBeige focus:ring-offset-1"
@@ -91,7 +91,7 @@ const FeedbackButton = () => {
           id="feedback-panel"
           role="dialog"
           aria-labelledby="feedback-title"
-          className="absolute bottom-full left-0 z-30 mb-3 w-[min(400px,calc(100vw-1rem))] rounded-2xl border-2 border-mediumBeige bg-lightBeige p-4 text-darkBeige shadow-xl"
+          className="absolute left-0 top-full z-30 mt-3 w-[min(400px,calc(100vw-1rem))] rounded-2xl border-2 border-mediumBeige bg-lightBeige p-4 text-darkBeige shadow-xl"
         >
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex items-start justify-between gap-3">

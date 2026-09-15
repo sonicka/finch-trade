@@ -2,6 +2,7 @@ import { FC } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Card from './Card';
 import Button from './Button';
+import FeedbackButton from './FeedbackButton';
 import { useUserData } from '../context/UserProvider';
 
 const UserHeader: FC = () => {
@@ -17,6 +18,7 @@ const UserHeader: FC = () => {
         <div className="grid grid-cols-3 w-full items-center">
           <div className="flex justify-start">
             {/* <Button label="About" onClick={() => null} /> */}
+            <FeedbackButton />
           </div>
           <div className="flex flex-col gap-2 items-center">
             <img
