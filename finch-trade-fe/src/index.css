@@ -20,6 +20,7 @@ body {
 #bmc-iframe {
   height: 60vh !important;
   min-height: 0 !important;
+  transform-origin: left bottom !important;
 }
 
 @media (max-width: 768px) {
