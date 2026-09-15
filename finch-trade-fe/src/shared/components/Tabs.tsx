@@ -11,7 +11,6 @@ interface Tabs {
 
 const Tabs = ({ tabs }: Tabs) => {
   const [activeTab, setActiveTab] = useState<number>(0);
-  const width = `w-1/${tabs.length}`;
 
   return (
     <div className="w-full flex flex-col justify-center">
@@ -20,7 +19,7 @@ const Tabs = ({ tabs }: Tabs) => {
           <Button
             key={tab.label}
             label={tab.label}
-            className={`py-2 px-4 my-2 mx-6 ${width} text-center rounded-lg border-b-2 border-darkBeige ${
+            className={`py-2 px-4 my-2 mx-6 flex-1 text-center rounded-lg border-b-2 border-darkBeige ${
               activeTab === index
                 ? 'bg-lightBeige text-darkBeige'
                 : 'border-transparent text-lightBeige'
