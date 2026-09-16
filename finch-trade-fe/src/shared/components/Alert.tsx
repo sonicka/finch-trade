@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import IconButton from './IconButton';
+import { alertColors, getAlertMessage } from './alertUtils';
 
 export interface AlertProps {
   message: string;
@@ -51,24 +52,13 @@ const AlertMessage: FC<AlertEntry & { onClose: () => void }> = ({
     };
   }, [shouldAutoHide]);
 
-  const colors = {
-    error: 'bg-red-100 border-red-400 text-red-700',
-    success: 'bg-green-100 border-green-400 text-green-700',
-    info: 'bg-lightBeige border-darkBeige text-darkBeige',
-  };
-
   return (
     <div
-      className={`relative flex items-start gap-3 rounded-xl border p-4 text-left text-md shadow transition-opacity duration-500 ${colors[type]} ${visible ? 'opacity-100' : 'opacity-0'}`}
+      className={`relative flex items-start gap-3 rounded-xl border p-4 text-left text-md shadow transition-opacity duration-500 ${alertColors[type]} ${visible ? 'opacity-100' : 'opacity-0'}`}
       role="alert"
     >
       <span className="min-w-0 flex-1 break-words">
-        {message ||
-          (type === 'error'
-            ? 'Something went wrong. Please try again later.'
-            : type === 'success'
-              ? 'Success.'
-              : '')}
+        {getAlertMessage(message, type)}
       </span>
       {!shouldAutoHide && (
         <IconButton

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Alert from '../../shared/components/Alert';
+import InlineAlert from '../../shared/components/InlineAlert';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import FormInput from '../../shared/components/FormInput';
@@ -150,17 +150,20 @@ const Login: React.FC = () => {
                 required
               />
             )}
-            <div className="py-4 text-center">
-              <Button
-                label={isLogin ? 'Log in' : 'Sign up'}
-                buttonProps={{ type: 'submit' }}
-                disabled={!isFormValid}
-              />
-              {error && <Alert type="error" message={error} />}
-              <div className="mt-8 w-full text-center">
+            <div className="py-4 gap-6 flex flex-col">
+              <div className="self-center">
+                <Button
+                  label={isLogin ? 'Log in' : 'Sign up'}
+                  buttonProps={{ type: 'submit' }}
+                  disabled={!isFormValid}
+                />
+              </div>
+              {error && <InlineAlert type="error" message={error} />}
+              <div className="w-full text-center">
                 {isLogin && (
                   <span className="mt-4">
-                    Don't have an account yet?{' '}
+                    Don't have an account yet?
+                    <br />
                     <button
                       onClick={() => {
                         clearError();
@@ -174,7 +177,8 @@ const Login: React.FC = () => {
                 )}
                 {!isLogin && (
                   <span>
-                    Already have an account?{' '}
+                    Already have an account?
+                    <br />
                     <button
                       onClick={() => {
                         clearError();

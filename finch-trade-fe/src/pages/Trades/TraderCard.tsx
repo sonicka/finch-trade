@@ -3,7 +3,7 @@ import TraderTradingSection from './TraderTradingSection';
 import TraderGiftingSection from './TraderGiftingSection';
 import TradeButtons from './TradeButtons';
 import TradeAlert from './TradeAlert';
-import Alert from '../../shared/components/Alert';
+import InlineAlert from '../../shared/components/InlineAlert';
 import Card from '../../shared/components/Card';
 import { useTrades } from '../../shared/context/UserProvider';
 import { useManageTrade, ChosenItems } from '../../shared/hooks/trades';
@@ -46,8 +46,8 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
 
   return (
     <Card simple>
-      <div className="py-8 px-4">
-        <h2 className="text-xl mb-5 text-center font-semibold text-gray-900">
+      <div className="flex flex-col gap-6 items-center justify-center py-8 px-8">
+        <h2 className="text-xl text-center font-semibold">
           You have matched with
           <br />
           <b>{`${trader?.birbName} & ${trader?.username}!`}</b>
@@ -69,7 +69,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
           />
         )}
         {traderData.recentlyTraded ? (
-          <Alert message="You’ve already made a trade with this user in the past 24 hours. Come back tomorrow to trade again!" />
+          <InlineAlert message="You’ve already made a trade with this user in the past 24 hours. Come back tomorrow to trade again!" />
         ) : (
           <TradeButtons
             buttons={[

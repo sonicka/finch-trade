@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Alert from '../../shared/components/Alert';
+import InlineAlert from '../../shared/components/InlineAlert';
 import { Trader, User } from '../../shared/types';
 
 interface Props {
@@ -28,7 +28,7 @@ const TradeAlert: FC<Props> = ({ friendCodeShown, trader, traderData }) => {
     return '';
   };
 
-  return <Alert type="success" message={getAlertMessage()} />;
+  return <InlineAlert type="success" message={getAlertMessage()} />;
 };
 
 export default TradeAlert;

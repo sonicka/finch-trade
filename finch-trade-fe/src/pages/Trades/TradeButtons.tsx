@@ -13,7 +13,7 @@ interface Props {
 
 const TradeButtons: FC<Props> = ({ buttons }) => {
   return (
-    <div className="mt-4 flex justify-center items-center">
+    <div className="flex justify-center items-center">
       {buttons.map((btn) =>
         btn.shown ? (
           <Button
