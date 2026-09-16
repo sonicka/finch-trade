@@ -61,3 +61,20 @@ test('database migrations protect active trades and item names', async () => {
   assert.match(itemNames, /CREATE UNIQUE INDEX/);
   assert.match(timestamps, /TYPE TIMESTAMPTZ/);
 });
+
+test('seed data creates a realistic local demo pair with matching trade potential', async () => {
+  const seed = await readBackendFile('migrations/002_seed_data.sql');
+
+  assert.match(
+    seed,
+    /INSERT INTO users \(id, email, friend_code, username, birb_name, password\)/,
+  );
+  assert.match(seed, /INSERT INTO items \(name\)/);
+  assert.match(
+    seed,
+    /INSERT INTO user_items \(user_id, item_id, color_id, list_type\)/,
+  );
+  assert.match(seed, /wishlist/);
+  assert.match(seed, /tradelist/);
+  assert.match(seed, /blueberry|sunflower|acorn|pinecone/i);
+});

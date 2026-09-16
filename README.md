@@ -29,6 +29,17 @@
 4. **Accept Trade**:
    - If you find a trade you like, simply accept it and share your **friend code** with the other user to execute the trade.
 
+## Local demo setup
+
+If you are forking the project to test it locally, run the backend migrations first. The seed script creates two demo users with overlapping wishlist/tradelist items so the trading page immediately shows a potential match.
+
+- Demo email 1: `demo1@finchtrade.local`
+- Demo email 2: `demo2@finchtrade.local`
+- Password for both: `demo123`
+- Matching trade example: `Maya` wants `Blueberry` and offers `Sunflower`; `Noah` wants `Sunflower` and offers `Blueberry`.
+
+This is intentionally seeded in the database so a fresh local clone can load the app and test the matching flow without manual setup.
+
 ## Contributions
 
 Currently, contributions are needed **only for testing** purposes. If you're interested in helping out with testing, please reach out!

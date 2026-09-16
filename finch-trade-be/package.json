@@ -9,6 +9,7 @@
     "dev": "nodemon src/server.js",
     "migrate": "node src/migrate.js",
     "migrate:status": "node src/migrate.js --status",
+    "reset-demo-data": "node src/reset-demo-data.js",
     "test": "node --test"
   },
   "dependencies": {
