@@ -1,4 +1,4 @@
-import { FC, SubmitEventHandler, useRef, useState } from 'react';
+import { FC, SubmitEventHandler, useEffect, useRef, useState } from 'react';
 import AutocompleteSelect from '../../shared/components/AutocompleteSelect';
 import Select from '../../shared/components/Select';
 import Card from '../../shared/components/Card';
@@ -27,6 +27,10 @@ const ItemAdd: FC<Props> = ({
   const [nameValue, setNameValue] = useState<string>('');
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [selectedColor, setSelectedColor] = useState<Color>();
+
+  useEffect(() => {
+    setFilteredOptions(items);
+  }, [items]);
 
   const isValidItemName = (name: string): boolean => {
     return name.trim().length > 0 && name.trim().length <= 40;
@@ -67,7 +71,7 @@ const ItemAdd: FC<Props> = ({
         ),
       );
     } else {
-      setFilteredOptions(availableItems([]));
+      setFilteredOptions(availableItems(items));
     }
   };
 

@@ -32,6 +32,17 @@ describe('ItemAdd', () => {
     expect(confirm).toBeDisabled();
   });
 
+  it('shows item options when the item name field is focused', () => {
+    renderItemAdd();
+
+    fireEvent.focus(screen.getByLabelText('Item name'));
+
+    expect(screen.getByRole('option', { name: 'Leaf' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('option', { name: 'Mushroom' }),
+    ).toBeInTheDocument();
+  });
+
   it('enables confirmation after selecting an item and color', () => {
     renderItemAdd();
     const confirm = screen.getByRole('button', { name: 'Confirm' });
