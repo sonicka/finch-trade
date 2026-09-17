@@ -35,7 +35,7 @@ const ItemAdd: FC<Props> = ({
   const disabled = !selectedColor || !nameValue || !isValidItemName(nameValue);
   const itemsWithAnyColor = new Set(
     [...userItems.wishlist, ...userItems.tradelist]
-      .filter((item) => item.color_id === 1)
+      .filter((item) => item.color === 1)
       .map((item) => item.item_id),
   );
   const availableItems = (options: Item[]) =>
@@ -43,7 +43,7 @@ const ItemAdd: FC<Props> = ({
   const usedColorIds = new Set(
     [...userItems.wishlist, ...userItems.tradelist]
       .filter((item) => item.item_id === selectedItem?.id)
-      .map((item) => item.color_id),
+      .map((item) => item.color),
   );
   const filteredColors = colors.filter(
     (color: Color) =>
