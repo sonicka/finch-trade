@@ -124,7 +124,6 @@ const ItemAdd: FC<Props> = ({
           placeholder="Color"
           onChange={handleColorChange}
           labelFormatter={(color: Color) => color?.color}
-          valueFormatter={(color: Color) => color?.id.toString()}
         />
         <IconButton
           icon={

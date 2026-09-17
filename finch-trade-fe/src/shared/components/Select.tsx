@@ -8,7 +8,6 @@ interface Props<T extends { id: number }> {
   placeholder?: string;
   onChange: (value: T) => void;
   labelFormatter?: (value: T) => string;
-  valueFormatter?: (value: T) => string;
 }
 
 const Select = <T extends { id: number }>({
@@ -18,7 +17,6 @@ const Select = <T extends { id: number }>({
   placeholder = 'Select an option',
   onChange,
   labelFormatter,
-  valueFormatter,
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const noValue =
@@ -31,6 +29,7 @@ const Select = <T extends { id: number }>({
   return (
     <div className="relative inline-block w-full">
       <SelectPrimitive.Root
+        name={id}
         value={value ? value.id.toString() : ''}
         onValueChange={(selectedId) => {
           const selectedValue = options.find(
@@ -40,33 +39,24 @@ const Select = <T extends { id: number }>({
         }}
         onOpenChange={setIsOpen}
       >
-        <input
-          type="hidden"
-          name={id}
-          value={
-            (typeof valueFormatter === 'function' && value
-              ? valueFormatter(value)
-              : value?.toString()) ?? ''
-          }
-        />
-        <label
-          htmlFor={id}
-          className={`absolute left-3 px-1 transition-all cursor-pointer bg-lightBeige z-10
-      ${
-        isOpen || !noValue
-          ? '-top-2.5 left-2 text-xs text-darkBeige'
-          : 'top-2.5 text-base text-mediumBeige'
-      }`}
-        >
-          {placeholder}
-        </label>
         <SelectPrimitive.Trigger
           id={id}
-          tabIndex={0}
-          className={`w-full border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all p-2 text-darkBeige
+          aria-labelledby={`${id}-label`}
+          className={`relative w-full border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all p-2 text-darkBeige
                    bg-transparent text-left outline-none focus:ring-2 focus:ring-darkBeige focus:ring-offset-1
                    ${isOpen ? 'border-darkBeige' : 'border-mediumBeige'}`}
         >
+          <span
+            id={`${id}-label`}
+            className={`pointer-events-none absolute left-3 px-1 transition-all bg-lightBeige z-10
+        ${
+          isOpen || !noValue
+            ? '-top-2.5 left-2 text-xs text-darkBeige'
+            : 'top-2.5 text-base text-mediumBeige'
+        }`}
+          >
+            {placeholder}
+          </span>
           <SelectPrimitive.Value placeholder={'\u00a0'}>
             <span className={`${!noValue && 'text-darkBeige'}`}>
               {selectedLabel}

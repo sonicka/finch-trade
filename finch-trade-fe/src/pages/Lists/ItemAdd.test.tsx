@@ -35,12 +35,20 @@ describe('ItemAdd', () => {
   it('shows item options when the item name field is focused', () => {
     renderItemAdd();
 
-    fireEvent.focus(screen.getByLabelText('Item name'));
+    fireEvent.click(screen.getByLabelText('Item name'));
 
     expect(screen.getByRole('option', { name: 'Leaf' })).toBeInTheDocument();
     expect(
       screen.getByRole('option', { name: 'Mushroom' }),
     ).toBeInTheDocument();
+  });
+
+  it('opens the color options when the field is clicked', () => {
+    renderItemAdd();
+
+    fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
+
+    expect(screen.getByRole('option', { name: 'white' })).toBeInTheDocument();
   });
 
   it('enables confirmation after selecting an item and color', () => {

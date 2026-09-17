@@ -96,7 +96,7 @@ const AutocompleteSelect = <T extends { id: string | number; name: string }>({
             tabIndex={0}
             autoFocus={autoFocus}
             value={value}
-            onFocus={() => setIsOpen(true)}
+            onClick={() => setIsOpen(true)}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
             role="combobox"
