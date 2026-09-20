@@ -6,11 +6,13 @@ import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './shared/components/ProtectedRoute';
 import { Providers } from './providers/Providers';
+import DemoNotice from './shared/components/DemoNotice';
 
 const App = () => {
   return (
     <Router>
       <Providers>
+        <DemoNotice />
         <Routes>
           <Route
             path="/"

@@ -46,9 +46,9 @@ BEGIN
       (2, (SELECT id FROM items WHERE name = 'Sunflower'), 6, 'wishlist'),
       (2, (SELECT id FROM items WHERE name = 'Clover'), 11, 'wishlist'),
       (2, (SELECT id FROM items WHERE name = 'Moss'), 1, 'wishlist'),
-      (2, (SELECT id FROM items WHERE name = 'Blueberry'), 1, 'tradelist'),
+      (2, (SELECT id FROM items WHERE name = 'Blueberry'), 11, 'tradelist'),
       (2, (SELECT id FROM items WHERE name = 'Acorn'), 11, 'tradelist'),
-      (2, (SELECT id FROM items WHERE name = 'Feather'), 1, 'tradelist');
+      (2, (SELECT id FROM items WHERE name = 'Feather'), 4, 'tradelist');
 
     PERFORM setval('users_id_seq', COALESCE((SELECT MAX(id) FROM users), 1));
   END IF;

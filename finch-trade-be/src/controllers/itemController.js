@@ -18,6 +18,12 @@ export const postItemToDB = async (req, res) => {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
+  if (listType === 'tradelist' && color === 1) {
+    return res
+      .status(400)
+      .json({ message: 'Tradelist items must have a specific color.' });
+  }
+
   try {
     const result = await runQuery(
       `INSERT INTO items (name) VALUES ($1)
@@ -27,19 +33,20 @@ export const postItemToDB = async (req, res) => {
     );
     const itemId = result.lastID;
 
-    let existingUserItem;
-    // "any" color
-    if (color === 1) {
-      existingUserItem = await queryOne(
-        'SELECT list_type FROM user_items WHERE user_id = $1 AND item_id = $2',
-        [userId, itemId],
-      );
-    } else {
-      existingUserItem = await queryOne(
-        'SELECT list_type FROM user_items WHERE user_id = $1 AND item_id = $2 AND color_id IN ($3, 1)',
-        [userId, itemId, color],
-      );
-    }
+    const existingUserItem = await queryOne(
+      color === 1
+        ? `SELECT list_type, color_id
+           FROM user_items
+           WHERE user_id = $1 AND item_id = $2
+           LIMIT 1`
+        : `SELECT list_type, color_id
+           FROM user_items
+           WHERE user_id = $1 AND item_id = $2
+             AND (color_id = $3 OR color_id = 1)
+           ORDER BY CASE WHEN color_id = $3 THEN 0 ELSE 1 END
+           LIMIT 1`,
+      color === 1 ? [userId, itemId] : [userId, itemId, color],
+    );
 
     if (existingUserItem) {
       if (color === 1) {
@@ -52,7 +59,11 @@ export const postItemToDB = async (req, res) => {
             message: `You cannot add the item in "any" color to ${listType} if you already have it in the other list.`,
           });
         }
-      } else {
+      } else if (existingUserItem.color_id === 1) {
+        return res.status(400).json({
+          message: `Remove the any-color version of this item before adding a specific color.`,
+        });
+      } else if (existingUserItem.list_type === listType) {
         return res.status(400).json({
           message: `This item is already in your ${existingUserItem.list_type}.`,
         });

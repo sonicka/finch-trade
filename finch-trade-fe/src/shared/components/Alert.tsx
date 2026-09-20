@@ -129,6 +129,7 @@ export const AlertProvider: FC<{ children: ReactNode }> = ({ children }) => {
 const Alert: FC<AlertProps> = (props) => {
   const context = useContext(AlertContext);
   const lastAlertKey = useRef<string | null>(null);
+  const alertId = useRef(Date.now() + Math.random()).current;
 
   if (!context) {
     throw new Error('Alert must be rendered inside AlertProvider');
@@ -138,7 +139,7 @@ const Alert: FC<AlertProps> = (props) => {
     const alertKey = `${props.message}\u0000${props.type ?? ''}\u0000${props.autoHide ?? ''}`;
     if (lastAlertKey.current === alertKey) return;
 
-    context.register({ ...props, id: Date.now() + Math.random() });
+    context.register({ ...props, id: alertId });
     lastAlertKey.current = alertKey;
   }, [context, props.message, props.type, props.autoHide]);
 

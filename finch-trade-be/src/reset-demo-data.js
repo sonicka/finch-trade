@@ -46,7 +46,7 @@ const resetDemoData = async () => {
     await client.query(`
       INSERT INTO items (name)
       VALUES
-        ('Blueberry'),
+         ('Blueberry'),
         ('Sunflower'),
         ('Pinecone'),
         ('Acorn'),
@@ -77,9 +77,9 @@ const resetDemoData = async () => {
          ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Sunflower'), 6, 'wishlist'),
          ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Clover'), 11, 'wishlist'),
          ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Moss'), 1, 'wishlist'),
-         ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Blueberry'), 1, 'tradelist'),
+         ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Blueberry'), 11, 'tradelist'),
          ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Acorn'), 11, 'tradelist'),
-         ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Feather'), 1, 'tradelist');`,
+         ((SELECT id FROM users WHERE email = 'demo2@finchtrade.local'), (SELECT id FROM items WHERE name = 'Feather'), 4, 'tradelist');`,
     );
 
     await client.query('COMMIT');

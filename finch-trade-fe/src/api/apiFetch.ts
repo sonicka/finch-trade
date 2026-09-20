@@ -1,4 +1,8 @@
+import { mockApiFetch } from './mockApi';
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const DEMO_MODE =
+  import.meta.env.VITE_DEMO_MODE === 'true' && import.meta.env.MODE !== 'test';
 
 /**
  * Wraps fetch to:
@@ -7,6 +11,8 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL;
  *  - throw a normalized Error on non-2xx responses
  */
 export const apiFetch = async (path: string, options: RequestInit = {}) => {
+  if (DEMO_MODE) return mockApiFetch(path, options);
+
   const token = localStorage.getItem('authToken');
 
   const headers: HeadersInit = {

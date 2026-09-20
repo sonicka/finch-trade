@@ -40,6 +40,18 @@ If you are forking the project to test it locally, run the backend migrations fi
 
 This is intentionally seeded in the database so a fresh local clone can load the app and test the matching flow without manual setup.
 
+## Frontend-only preview
+
+You can also preview the app without running the backend or connecting a database. The frontend includes mock data for the wishlist, tradelist, trading, and gifting flows.
+You can see it deployed [here]().
+
+Demo accounts:
+
+- `demo1@finchtrade.local` / `demo123`
+- `demo2@finchtrade.local` / `demo123`
+
+The demo data is stored in the visitor's browser, so each visitor gets an independent copy. Clearing site data restores the original sample data.
+
 ## Contributions
 
 Currently, contributions are needed **only for testing** purposes. If you're interested in helping out with testing, please reach out!

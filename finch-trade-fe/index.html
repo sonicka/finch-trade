@@ -9,17 +9,12 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <script
-      data-name="BMC-Widget"
-      data-cfasync="false"
-      src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
-      data-id="sonicka"
-      data-description="Support me on Buy me a coffee!"
-      data-message="If this page helped you, feel free to buy me a coffee! ♡"
-      data-color="#7c6732"
-      data-position="left"
-      data-x_margin="24"
-      data-y_margin="24"
-    ></script>
+    <script>
+      if ('%VITE_DEMO_MODE%' !== 'true') {
+        document.write(
+          '<script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="sonicka" data-description="Support me on Buy me a coffee!" data-message="If this page helped you, feel free to buy me a coffee! ♡" data-color="#7c6732" data-position="left" data-x_margin="24" data-y_margin="24"><\/script>',
+        );
+      }
+    </script>
   </body>
 </html>
