@@ -100,7 +100,7 @@ const seedTrades: DemoTrade[] = [
     userId2: 2,
     itemId2: 1,
     colorId2: 11,
-    status: 'pending',
+    status: 'new',
     requestedBy: [1],
     finishedBy: [],
   },
