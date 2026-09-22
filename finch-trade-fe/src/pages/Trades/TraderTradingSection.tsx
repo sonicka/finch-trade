@@ -33,69 +33,75 @@ const TraderTradingSection: FC<Props> = ({
     : traderData.has;
 
   return (
-    <div className="flex flex-col text-center gap-2 justify-center text-gray-600 mt-2">
-      {`${trader?.birbName} would like to have:`}
-      {traderWantedItems.map((item: TradeItem) => (
-        <div
-          key={item.itemId + '' + item.colorId}
-          className="flex justify-center text-gray-600 mt-2 mb-5"
-        >
-          <label
-            className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded || isTradeOngoing ? '' : 'cursor-pointer'}`}
+    <div className="flex flex-col text-center gap-8 justify-center text-gray-600 mt-2 mb-6">
+      <div>
+        <b>{`${trader?.birbName} would like to have:`}</b>
+        {traderWantedItems.map((item: TradeItem) => (
+          <div
+            key={item.itemId + '' + item.colorId}
+            className="flex justify-center text-gray-600 mt-4"
           >
-            <input
-              type="radio"
-              name={`myTradeItem-${trader.friendCode}`}
-              className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-              checked={
-                chosenItems.my?.id === item.itemId &&
-                chosenItems.my?.colorId === item.colorId
-              }
-              onChange={() =>
-                setChosenItems({
-                  ...chosenItems,
-                  my: { id: item.itemId, colorId: item.colorId },
-                })
-              }
-              disabled={isTradeOngoing || traderData.recentlyTraded}
-            />
-            <ColorCircle colors={colors} colorId={item.colorId} />
-            {getItemName(items, item.itemId)}
-          </label>
-        </div>
-      ))}
-      {`${trader?.birbName} can give you:`}
-      {traderOwnedItems.map((item: TradeItem) => (
-        <div
-          key={item.itemId + '' + item.colorId}
-          className="flex justify-center text-gray-600 mt-2 mb-5"
-        >
-          <label className="flex items-center space-x-2 cursor-pointer">
-            <input
-              type="radio"
-              name={`theirTradeItem-${trader.friendCode}`}
-              className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-              checked={
-                chosenItems.their?.id === item.itemId &&
-                chosenItems.their?.colorId === item.colorId
-              }
-              onChange={() =>
-                setChosenItems({
-                  ...chosenItems,
-                  their: { id: item.itemId, colorId: item.colorId },
-                })
-              }
-              disabled={isTradeOngoing}
-            />
-            <>
-              <div className="pr-1">
-                <ColorCircle colors={colors} colorId={item.colorId} />
-              </div>
+            <label
+              className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded || isTradeOngoing ? '' : 'cursor-pointer'}`}
+            >
+              <input
+                type="radio"
+                name={`myTradeItem-${trader.friendCode}`}
+                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                checked={
+                  chosenItems.my?.id === item.itemId &&
+                  chosenItems.my?.colorId === item.colorId
+                }
+                onChange={() =>
+                  setChosenItems({
+                    ...chosenItems,
+                    my: { id: item.itemId, colorId: item.colorId },
+                  })
+                }
+                disabled={isTradeOngoing || traderData.recentlyTraded}
+              />
+              <ColorCircle colors={colors} colorId={item.colorId} />
               {getItemName(items, item.itemId)}
-            </>
-          </label>
-        </div>
-      ))}
+            </label>
+          </div>
+        ))}
+      </div>
+      <div>
+        <b>{`${trader?.birbName} can give you:`}</b>
+        {traderOwnedItems.map((item: TradeItem) => (
+          <div
+            key={item.itemId + '' + item.colorId}
+            className="flex justify-center text-gray-600 mt-4"
+          >
+            <label
+              className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded || isTradeOngoing ? '' : 'cursor-pointer'}`}
+            >
+              <input
+                type="radio"
+                name={`theirTradeItem-${trader.friendCode}`}
+                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                checked={
+                  chosenItems.their?.id === item.itemId &&
+                  chosenItems.their?.colorId === item.colorId
+                }
+                onChange={() =>
+                  setChosenItems({
+                    ...chosenItems,
+                    their: { id: item.itemId, colorId: item.colorId },
+                  })
+                }
+                disabled={isTradeOngoing || traderData.recentlyTraded}
+              />
+              <>
+                <div className="pr-1">
+                  <ColorCircle colors={colors} colorId={item.colorId} />
+                </div>
+                {getItemName(items, item.itemId)}
+              </>
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

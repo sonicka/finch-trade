@@ -24,37 +24,39 @@ const TraderGiftingSection: FC<Props> = ({
   const traderWantedItems = traderData.wants;
 
   return (
-    <div className="flex flex-col items-center gap-2 justify-center text-gray-600 mt-2">
-      {`${trader?.birbName} has nothing to trade, but would like to have:`}
-      {traderWantedItems.map((item: TradeItem) => (
-        <div
-          key={item.itemId + item.colorId}
-          className="flex justify-center text-gray-600 mt-2 mb-5"
-        >
-          <label
-            className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded ? '' : 'cursor-pointer'}`}
+    <div className="flex flex-col items-center justify-center text-gray-600 mt-2 mb-6">
+      <div>
+        <b>{`${trader?.birbName} has nothing to trade, but would like to have:`}</b>
+        {traderWantedItems.map((item: TradeItem) => (
+          <div
+            key={item.itemId + item.colorId}
+            className="flex justify-center text-gray-600 mt-4"
           >
-            <input
-              type="radio"
-              name="theirTradeItem"
-              className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
-              checked={
-                chosenItems.my?.id === item.itemId &&
-                chosenItems.my?.colorId === item.colorId
-              }
-              onChange={() =>
-                setChosenItems({
-                  ...chosenItems,
-                  my: { id: item.itemId, colorId: item.colorId },
-                })
-              }
-              disabled={traderData.recentlyTraded}
-            />
-            <ColorCircle colors={colors} colorId={item.colorId} />
-            {getItemName(items, item.itemId)}
-          </label>
-        </div>
-      ))}
+            <label
+              className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded ? '' : 'cursor-pointer'}`}
+            >
+              <input
+                type="radio"
+                name="theirTradeItem"
+                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2"
+                checked={
+                  chosenItems.my?.id === item.itemId &&
+                  chosenItems.my?.colorId === item.colorId
+                }
+                onChange={() =>
+                  setChosenItems({
+                    ...chosenItems,
+                    my: { id: item.itemId, colorId: item.colorId },
+                  })
+                }
+                disabled={traderData.recentlyTraded}
+              />
+              <ColorCircle colors={colors} colorId={item.colorId} />
+              {getItemName(items, item.itemId)}
+            </label>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

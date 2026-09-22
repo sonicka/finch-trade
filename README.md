@@ -82,6 +82,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 
 - [ ] Thorough testing of the logic and potential optimization
 - [ ] Make it work publicly
+- [ ] Tests need recheck
 
 ### TODO Frontend / UI / UX
 
@@ -92,3 +93,5 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 ### TODO Backend
 
 - [ ] Tie color options to each item separately (dynamic color sets)
+- [ ] Finish trade functionality needs refactor
+- [ ] Disabling item delete might need handling on BE as well

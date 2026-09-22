@@ -6,7 +6,7 @@ import { useUserItems } from '../../shared/context/UserProvider';
 import { useUserData } from '../../shared/context/UserProvider';
 import { useManageItem } from '../../shared/hooks/items';
 import { getColorName } from '../../shared/utils';
-import { ListType } from '../../shared/types';
+import { ListType, UserItem } from '../../shared/types';
 import Alert from '../../shared/components/Alert';
 
 interface Props {
@@ -62,7 +62,7 @@ const List: React.FC<Props> = ({ type }) => {
             <Alert key={id} type="success" message={message} autoHide />
           ))}
           {error && <Alert type="error" message={error} />}
-          {userItems?.map((item) => (
+          {userItems?.map((item: UserItem) => (
             <div className="mb-3" key={item.item_id + '' + item.color}>
               <Item
                 key={item.name + item.color}
@@ -72,6 +72,7 @@ const List: React.FC<Props> = ({ type }) => {
                   color: getColorName(colors, item.color),
                 }}
                 text={item.name}
+                isInTrade={item.isInTrade}
                 handleRemove={handleRemove}
               />
             </div>

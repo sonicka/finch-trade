@@ -107,6 +107,10 @@ export const getUserItemsFromDB = async (req, res) => {
       user_items.user_id,
       user_items.item_id,
       user_items.color_id AS color,
+      CASE
+        WHEN user_items.in_trade_with_user IS NOT NULL THEN true
+        ELSE false
+        END AS "isInTrade",
       items.name
     FROM user_items
     JOIN items ON user_items.item_id = items.id

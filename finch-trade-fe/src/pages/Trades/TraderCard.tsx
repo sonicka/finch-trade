@@ -94,7 +94,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
               },
               {
                 id: 'finish-trade',
-                label: 'Finish trade',
+                label: gifting ? 'Finish gifting' : 'Finish trade',
                 onClick: handleFinishTrade,
                 disabled: traderData.finishedByMe,
                 shown: tradeAccepted || (gifting && friendCodeShown),

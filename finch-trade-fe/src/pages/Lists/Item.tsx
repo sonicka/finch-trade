@@ -8,10 +8,11 @@ interface Props {
   color: Color;
   text: string;
   itemId: number;
+  isInTrade: boolean;
   handleRemove: (itemId: number, colorId: number) => Promise<void>;
 }
 
-const Item: FC<Props> = ({ color, text, itemId, handleRemove }) => {
+const Item: FC<Props> = ({ color, text, itemId, isInTrade, handleRemove }) => {
   return (
     <Card simple>
       <div className="w-full flex justify-between p-4 rounded-lg">
@@ -43,6 +44,7 @@ const Item: FC<Props> = ({ color, text, itemId, handleRemove }) => {
           onClick={() => handleRemove(itemId, color.id)}
           buttonProps={{ 'aria-label': 'Remove' }}
           className="border-none"
+          disabled={isInTrade}
         />
       </div>
     </Card>

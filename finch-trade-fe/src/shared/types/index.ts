@@ -37,6 +37,7 @@ export interface UserItem {
   item_id: number;
   color: number;
   name: string;
+  isInTrade: boolean;
 }
 
 export interface UserItems {

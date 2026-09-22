@@ -133,22 +133,23 @@ const deleteTradeItems = (trade, client) => {
   );
 };
 
+// todo this works but is written poorly
 const finishTrade = async (trade, userId, client) => {
   if (![String(trade.user_id1), String(trade.user_id2)].includes(userId)) {
     return { forbidden: true };
   }
 
   const finishedBy = addRequester(trade.finished_by, userId);
-  const status = finishedBy.length === 2 ? 'finished' : trade.status;
   await runQuery(
     `UPDATE trades
      SET status = $1, finished_by = $2, valid_until = NOW() + INTERVAL '24 hours'
      WHERE id = $3`,
-    [status, JSON.stringify(finishedBy), trade.id],
+    [trade.status, JSON.stringify(finishedBy), trade.id],
     client,
   );
 
-  if (status !== 'finished') return { tradeId: trade.id, status };
+  if (trade.status === 'confirmed' && finishedBy.length !== 2)
+    return { tradeId: trade.id, status: trade.status };
 
   await deleteTradeItems(trade, client);
   await archiveTrade(trade, client);
