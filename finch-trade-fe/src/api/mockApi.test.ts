@@ -18,8 +18,7 @@ describe('mock trade flow', () => {
 
     await login('demo1@finchtrade.local');
     const requesterTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
-    expect(requesterTrade.status).toBe('pending');
-    expect(requesterTrade.requestedByMe).toBe(true);
+    expect(requesterTrade.recentlyTraded).toBe(false);
 
     await login('demo2@finchtrade.local');
     const noahTradelist = (await mockApiFetch(
@@ -36,8 +35,7 @@ describe('mock trade flow', () => {
     );
     expect(noahTradelist.some((item) => item.color === 1)).toBe(false);
     const recipientTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
-    expect(recipientTrade.requestedByMe).toBe(false);
-    expect(recipientTrade.status).toBe('pending');
+    expect(recipientTrade.recentlyTraded).toBe(false);
 
     await mockApiFetch('/api/trades/requestTrade?userId2=1', {
       method: 'POST',
@@ -49,7 +47,7 @@ describe('mock trade flow', () => {
       }),
     });
     const confirmedTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
-    expect(confirmedTrade.status).toBe('confirmed');
+    expect(confirmedTrade.status).toBe('pending');
 
     await mockApiFetch('/api/trades/finishTrade/1', { method: 'POST' });
     const waitingTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
@@ -78,7 +76,7 @@ describe('mock trade flow', () => {
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Sunflower',
+        name: 'Classic Diner Sundae',
         color: 2,
         listType: 'wishlist',
       }),
@@ -86,7 +84,7 @@ describe('mock trade flow', () => {
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Sunflower',
+        name: 'Classic Diner Sundae',
         color: 3,
         listType: 'wishlist',
       }),
@@ -103,7 +101,11 @@ describe('mock trade flow', () => {
     await expect(
       mockApiFetch('/api/items/add', {
         method: 'POST',
-        body: JSON.stringify({ name: 'Moss', color: 1, listType: 'tradelist' }),
+        body: JSON.stringify({
+          name: 'Preppy Vintage Dress',
+          color: 1,
+          listType: 'tradelist',
+        }),
       }),
     ).rejects.toThrow('Tradelist items must have a specific color.');
   });
@@ -120,14 +122,18 @@ describe('mock trade flow', () => {
 
     await mockApiFetch('/api/items/add', {
       method: 'POST',
-      body: JSON.stringify({ name: 'Acorn', color: 2, listType: 'tradelist' }),
+      body: JSON.stringify({
+        name: 'Classic Diner Visor',
+        color: 2,
+        listType: 'tradelist',
+      }),
     });
 
     const tradelist = (await mockApiFetch('/api/items/tradelist')) as Array<{
       name: string;
     }>;
     const names = tradelist.map((item) => item.name);
-    expect(names[0]).toBe('Acorn');
+    expect(names[0]).toBe('Classic Diner Sundae');
     expect(names).toEqual(
       [...names].sort((first, second) =>
         first.localeCompare(second, undefined, { sensitivity: 'base' }),
@@ -147,14 +153,18 @@ describe('mock trade flow', () => {
 
     await mockApiFetch('/api/items/add', {
       method: 'POST',
-      body: JSON.stringify({ name: 'Aster', color: 2, listType: 'wishlist' }),
+      body: JSON.stringify({
+        name: 'Classic Diner Visor',
+        color: 2,
+        listType: 'wishlist',
+      }),
     });
 
     const allItems = (await mockApiFetch('/api/items')) as Array<{
       name: string;
     }>;
     const names = allItems.map((item) => item.name);
-    expect(names[0]).toBe('Acorn');
+    expect(names[0]).toBe('Classic Diner Roller Skates');
     expect(names).toEqual(
       [...names].sort((first, second) =>
         first.localeCompare(second, undefined, { sensitivity: 'base' }),
@@ -181,7 +191,7 @@ describe('mock trade flow', () => {
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Dandelion',
+        name: 'Preppy Vintage Neck Ribbon',
         color: 2,
         listType: 'wishlist',
       }),
@@ -189,25 +199,33 @@ describe('mock trade flow', () => {
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Feather',
+        name: 'Preppy Vintage Heels',
         color: 2,
         listType: 'tradelist',
       }),
     });
     await mockApiFetch('/api/items/add', {
       method: 'POST',
-      body: JSON.stringify({ name: 'Moss', color: 2, listType: 'wishlist' }),
+      body: JSON.stringify({
+        name: 'Preppy Vintage Dress',
+        color: 2,
+        listType: 'wishlist',
+      }),
     });
 
     await signUp('potential2@finchtrade.local');
     await mockApiFetch('/api/items/add', {
       method: 'POST',
-      body: JSON.stringify({ name: 'Feather', color: 2, listType: 'wishlist' }),
+      body: JSON.stringify({
+        name: 'Preppy Vintage Heels',
+        color: 2,
+        listType: 'wishlist',
+      }),
     });
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Dandelion',
+        name: 'Preppy Vintage Neck Ribbon',
         color: 2,
         listType: 'tradelist',
       }),
@@ -247,7 +265,7 @@ describe('mock trade flow', () => {
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Dandelion',
+        name: 'Preppy Vintage Neck Ribbon',
         color: 2,
         listType: 'wishlist',
       }),
@@ -257,7 +275,7 @@ describe('mock trade flow', () => {
     await mockApiFetch('/api/items/add', {
       method: 'POST',
       body: JSON.stringify({
-        name: 'Dandelion',
+        name: 'Preppy Vintage Neck Ribbon',
         color: 2,
         listType: 'tradelist',
       }),
@@ -302,7 +320,11 @@ describe('mock trade flow', () => {
 
     await mockApiFetch('/api/items/add', {
       method: 'POST',
-      body: JSON.stringify({ name: 'Moss', color: 2, listType: 'tradelist' }),
+      body: JSON.stringify({
+        name: 'Preppy Vintage Dress',
+        color: 2,
+        listType: 'tradelist',
+      }),
     });
   });
 });

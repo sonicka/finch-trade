@@ -42,7 +42,7 @@ BEGIN
     SELECT 1
     FROM trades
     WHERE user_id1 IS NULL OR user_id2 IS NULL
-      OR status IS NULL OR status NOT IN ('new', 'pending', 'confirmed', 'finished')
+      OR status IS NULL OR status NOT IN ('pending', 'confirmed')
       OR requested_by IS NULL OR finished_by IS NULL
       OR item_id1 IS NULL OR item_id2 IS NULL
       OR color_id1 IS NULL OR color_id2 IS NULL
@@ -112,7 +112,7 @@ ALTER TABLE colors
 
 ALTER TABLE trades
   ADD CONSTRAINT trades_status_check
-  CHECK (status IN ('new', 'pending', 'confirmed', 'finished'));
+  CHECK (status IN ('pending', 'confirmed'));
 
 ALTER TABLE trades_history
   ADD CONSTRAINT trades_history_gift_or_trade_check

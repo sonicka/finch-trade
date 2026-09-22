@@ -76,5 +76,8 @@ test('seed data creates a realistic local demo pair with matching trade potentia
   );
   assert.match(seed, /wishlist/);
   assert.match(seed, /tradelist/);
-  assert.match(seed, /blueberry|sunflower|acorn|pinecone/i);
+  assert.match(
+    seed,
+    /classic diner roller skates|classic diner sundae|classic diner visor|classic diner uniform/i,
+  );
 });

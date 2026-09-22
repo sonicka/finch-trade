@@ -18,16 +18,20 @@
 ## How to Use
 
 1. **Create an Account**:
-   - Enter your **username**, **birb name**, **friend code** (make sure they match your data in [Finch](https://finchcare.com/) app) and **password**. (This data cannot be updated at the moment.)
+
+- Enter your **username**, **birb name**, **friend code** (make sure they match your data in [Finch](https://finchcare.com/) app) and **password**. (This data cannot be updated at the moment.)
 
 2. **Add Items**:
-   - List your **trade items** (items you want to give away) and **wishlist items** (items you want to receive).
+
+- List your **trade items** (items you want to give away) and **wishlist items** (items you want to receive).
 
 3. **Trade Matching**:
-   - Visit the **Trading Page**, where the app will suggest potential trades based on your items.
+
+- Visit the **Trading Page**, where the app will suggest potential trades based on your items.
 
 4. **Accept Trade**:
-   - If you find a trade you like, simply accept it and share your **friend code** with the other user to execute the trade.
+
+- If you find a trade you like, simply accept it and share your **friend code** with the other user to execute the trade.
 
 ## Local demo setup
 
@@ -36,7 +40,7 @@ If you are forking the project to test it locally, run the backend migrations fi
 - Demo email 1: `demo1@finchtrade.local`
 - Demo email 2: `demo2@finchtrade.local`
 - Password for both: `demo123`
-- Matching trade example: `Maya` wants `Blueberry` and offers `Sunflower`; `Noah` wants `Sunflower` and offers `Blueberry`.
+- Matching trade example: `Maya` wants `Classic Diner Roller Skates` and offers `Classic Diner Sundae`; `Noah` wants `Classic Diner Sundae` and offers `Classic Diner Roller Skates`.
 
 This is intentionally seeded in the database so a fresh local clone can load the app and test the matching flow without manual setup.
 
@@ -72,19 +76,17 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 ### Current State
 
 - Basic functionalities already built
-- Feedback form implemented
+- Feedback form and Buy me coffee button implemented
 
 ### TODO General
 
-- [ ] Refinement and optimization of core logic
-- [ ] Thorough testing of the logic
-- [ ] Write up tests
+- [ ] Thorough testing of the logic and potential optimization
 - [ ] Make it work publicly
 
 ### TODO Frontend / UI / UX
 
 - [ ] Build a component for confirmation actions (delete, etc.)
-- [ ] Integrate **TanStack Query** to handle requests and caching
+- [ ] Integrate **TanStack Query** to handle requests, caching and loading/error states
 - [ ] Handle **Loading / Error / Success** states properly across all views
 
 ### TODO Backend

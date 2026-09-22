@@ -17,12 +17,14 @@ Use `npm run migrate:status` to see which migration files are applied or
 pending. Both commands use the direct database URL when it is configured.
 
 Notes:
+
 - Server entry: src/server.js
 - Database migrations: migrations/
 - Add tests in the src/tests folder
 
 Local demo data:
+
 - After running `npm run migrate`, the app seeds two demo users so the trade matcher is immediately usable in a local fork.
 - Demo account 1: `demo1@finchtrade.local` / `demo123`
 - Demo account 2: `demo2@finchtrade.local` / `demo123`
-- Their lists are intentionally built to overlap: `Maya` wants `Blueberry` and offers `Sunflower`; `Noah` wants `Sunflower` and offers `Blueberry`, creating a clear potential trade.
+- Their lists are intentionally built to overlap: `Maya` wants `Classic Diner Roller Skates` and offers `Classic Diner Sundae`; `Noah` wants `Classic Diner Sundae` and offers `Classic Diner Roller Skates`, creating a clear potential trade.

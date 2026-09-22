@@ -25,7 +25,7 @@ interface DemoTrade {
   userId2: number;
   itemId2: number;
   colorId2: number;
-  status: 'new' | 'pending' | 'confirmed' | 'finished';
+  status: 'pending' | 'confirmed'; // todo check
   requestedBy: number[];
   finishedBy: number[];
 }
@@ -65,45 +65,48 @@ const colors: Color[] = [
 ].map((color, index) => ({ id: index + 1, color }));
 
 const items: Item[] = [
-  'Blueberry',
-  'Sunflower',
-  'Pinecone',
-  'Acorn',
-  'Moss',
-  'Fern',
-  'Clover',
-  'Feather',
-  'Dandelion',
+  'Classic Diner Roller Skates',
+  'Classic Diner Sundae',
+  'Classic Diner Uniform',
+  'Classic Diner Visor',
+  'Preppy Vintage Dress',
+  'Preppy Vintage Eyeglasses',
+  'Preppy Vintage Headband',
+  'Preppy Vintage Heels',
+  'Preppy Vintage Neck Ribbon',
+  'Quirky Vintage Pants',
+  'Quirky Vintage Polo',
+  'Vintage Drive-in Bed',
+  'Vintage Drive-in Clock',
+  'Vintage Drive-in Counter',
+  'Vintage Drive-in Doormat',
+  'Vintage Drive-in Door',
+  'Vintage Drive-in Gumball Machine',
+  'Vintage Drive-in Lamp',
+  'Vintage Drive-in Milkshake Maker',
+  'Vintage Drive-in Rug',
+  'Vintage Drive-in Sign',
+  'Vintage Drive-in Ticket Machine',
+  'Vintage Drive-in Wall',
+  'Vintage Drive-in Window',
+  'Vintage Movie Ticket',
+  'Vintage Saddle Shoes',
+  'Vintage Soda',
 ].map((name, index) => ({ id: index + 1, name }));
 
-const seedItems: Array<[number, number, number, ListType]> = [
-  [1, 1, 1, 'wishlist'],
-  [1, 6, 1, 'wishlist'],
-  [1, 4, 11, 'wishlist'],
-  [1, 2, 6, 'tradelist'],
-  [1, 3, 3, 'tradelist'],
-  [1, 7, 11, 'tradelist'],
-  [2, 2, 6, 'wishlist'],
-  [2, 7, 11, 'wishlist'],
-  [2, 5, 1, 'wishlist'],
-  [2, 1, 11, 'tradelist'],
-  [2, 4, 11, 'tradelist'],
-  [2, 8, 4, 'tradelist'],
-];
-
-const seedTrades: DemoTrade[] = [
-  {
-    id: 1,
-    userId1: 1,
-    itemId1: 2,
-    colorId1: 6,
-    userId2: 2,
-    itemId2: 1,
-    colorId2: 11,
-    status: 'new',
-    requestedBy: [1],
-    finishedBy: [],
-  },
+const seedItems: Array<[number, number, number, ListType, boolean]> = [
+  [1, 1, 1, 'wishlist', false],
+  [1, 6, 1, 'wishlist', false],
+  [1, 4, 11, 'wishlist', false],
+  [1, 2, 6, 'tradelist', false],
+  [1, 3, 3, 'tradelist', false],
+  [1, 7, 11, 'tradelist', false],
+  [2, 2, 6, 'wishlist', false],
+  [2, 7, 11, 'wishlist', false],
+  [2, 5, 1, 'wishlist', false],
+  [2, 1, 11, 'tradelist', false],
+  [2, 4, 11, 'tradelist', false],
+  [2, 8, 4, 'tradelist', false],
 ];
 
 const createInitialState = (): DemoState => ({
@@ -127,14 +130,17 @@ const createInitialState = (): DemoState => ({
   ],
   colors,
   items,
-  userItems: [...seedItems].map(([user_id, item_id, color, listType]) => ({
-    user_id,
-    item_id,
-    color,
-    name: items.find((item) => item.id === item_id)?.name ?? '',
-    listType,
-  })),
-  trades: seedTrades,
+  userItems: [...seedItems].map(
+    ([user_id, item_id, color, listType, isInTrade]) => ({
+      user_id,
+      item_id,
+      color,
+      name: items.find((item) => item.id === item_id)?.name ?? '',
+      listType,
+      isInTrade,
+    }),
+  ),
+  trades: [],
   pastTrades: [],
   gifts: [],
 });
@@ -146,7 +152,7 @@ const getState = (): DemoState => {
     const parsed = JSON.parse(saved) as DemoState;
     parsed.gifts ??= [];
     if (parsed.trades.length === 0 && parsed.pastTrades.length === 0) {
-      parsed.trades = seedTrades;
+      parsed.trades = [];
     }
     return parsed;
   } catch {
@@ -219,11 +225,12 @@ const getUserItems = (userId: number, listType: ListType): UserItem[] =>
       }
       return first.color - second.color;
     })
-    .map(({ user_id, item_id, color, name }) => ({
+    .map(({ user_id, item_id, color, name, isInTrade }) => ({
       user_id,
       item_id,
       color,
       name,
+      isInTrade,
     }));
 
 const getSortedItems = () =>
@@ -510,6 +517,7 @@ export const mockApiFetch = async (
       color: body.color,
       name: item.name,
       listType: body.listType,
+      isInTrade: false,
     });
     save();
     return { message: `Item added to ${body.listType}`, itemId: item.id };
@@ -606,8 +614,8 @@ export const mockApiFetch = async (
   if (finishMatch && method === 'POST') {
     const userId = getUserId();
     const trade = state.trades.find(({ id }) => id === Number(finishMatch[1]));
-    if (!trade || trade.status !== 'confirmed')
-      throw new Error('Trade not found or not confirmed');
+    if (!trade || trade.status !== 'pending')
+      throw new Error('Trade not found or not pending'); // todo check what
     trade.finishedBy = [...new Set([...trade.finishedBy, userId])];
     if (trade.finishedBy.length === 2) {
       removeTradeItem(trade.userId1, trade.itemId1, trade.colorId1, true);
@@ -624,7 +632,7 @@ export const mockApiFetch = async (
         itemId2: trade.itemId2,
         colorId2: trade.colorId2,
         archivedAt: new Date().toISOString(),
-        status: 'finished',
+        status: 'archived', // todo check
         type: 'trade',
       });
       state.trades.splice(state.trades.indexOf(trade), 1);

@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS trades (
   id SERIAL PRIMARY KEY,
   user_id1 INTEGER,
   user_id2 INTEGER,
-  status TEXT DEFAULT 'new',
+  status TEXT DEFAULT 'pending',
   requested_by TEXT NOT NULL DEFAULT '[]',
   finished_by TEXT NOT NULL DEFAULT '[]',
   valid_until TIMESTAMP,
