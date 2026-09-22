@@ -614,8 +614,8 @@ export const mockApiFetch = async (
   if (finishMatch && method === 'POST') {
     const userId = getUserId();
     const trade = state.trades.find(({ id }) => id === Number(finishMatch[1]));
-    if (!trade || trade.status !== 'pending')
-      throw new Error('Trade not found or not pending'); // todo check what
+    if (!trade || trade.status !== 'confirmed')
+      throw new Error('Trade not found or not confirmed');
     trade.finishedBy = [...new Set([...trade.finishedBy, userId])];
     if (trade.finishedBy.length === 2) {
       removeTradeItem(trade.userId1, trade.itemId1, trade.colorId1, true);
