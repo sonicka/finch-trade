@@ -47,7 +47,7 @@ This is intentionally seeded in the database so a fresh local clone can load the
 ## Frontend-only preview
 
 You can also preview the app without running the backend or connecting a database. The frontend includes mock data for the wishlist, tradelist, trading, and gifting flows.
-You can see it deployed [here]().
+You can see it deployed [here](https://finch-trade.vercel.app/).
 
 Demo accounts:
 
