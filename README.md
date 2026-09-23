@@ -13,7 +13,7 @@
 
 - **Frontend**: React, Tailwind CSS
 - **Backend**: Node.js, Express
-- **Database**: SQLite (For now, will be replaced with a more scalable option in the future)
+- **Database**: PostgreSQL
 
 ## How to Use
 
