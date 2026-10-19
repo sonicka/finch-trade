@@ -1,10 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { apiFetch } from './apiFetch';
 
 describe('apiFetch', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it('adds the auth and JSON headers and returns the response body', async () => {
@@ -48,6 +52,8 @@ describe('apiFetch', () => {
 
   it('clears an expired token and redirects to login', async () => {
     localStorage.setItem('authToken', 'expired-token');
+    const location = { href: '/' };
+    vi.stubGlobal('window', { location });
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(
       new Response(JSON.stringify({ message: 'Unauthorized' }), {
         status: 401,
@@ -58,5 +64,6 @@ describe('apiFetch', () => {
       'Token expired. Please log in again.',
     );
     expect(localStorage.getItem('authToken')).toBeNull();
+    expect(location.href).toBe('/login');
   });
 });
