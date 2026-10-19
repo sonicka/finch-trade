@@ -46,9 +46,23 @@ describe('mock trade flow', () => {
         },
       }),
     });
-    const confirmedTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
-    expect(confirmedTrade.status).toBe('pending');
+    const pendingTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
+    expect(pendingTrade.status).toBe('pending');
 
+    await login('demo1@finchtrade.local');
+    await mockApiFetch('/api/trades/requestTrade?userId2=2', {
+      method: 'POST',
+      body: JSON.stringify({
+        chosenItems: {
+          my: { id: 2, colorId: 6 },
+          their: { id: 1, colorId: 11 },
+        },
+      }),
+    });
+    const confirmedTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
+    expect(confirmedTrade.status).toBe('confirmed');
+
+    await login('demo2@finchtrade.local');
     await mockApiFetch('/api/trades/finishTrade/1', { method: 'POST' });
     const waitingTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
     expect(waitingTrade.finishedByMe).toBe(true);
