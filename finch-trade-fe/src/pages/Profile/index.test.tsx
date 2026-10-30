@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Profile from './index';
 import { editUser } from '../../api/api';
 
@@ -8,7 +9,10 @@ vi.mock('../../api/api', () => ({
   fetchUser: vi.fn(),
 }));
 
-vi.mock('../../shared/context/UserProvider', () => ({
+vi.mock('../../shared/context/UserProvider', async (importOriginal) => ({
+  ...(await importOriginal<
+    typeof import('../../shared/context/UserProvider')
+  >()),
   useUserData: () => ({
     user: {
       id: 7,
@@ -27,17 +31,24 @@ vi.mock('../../shared/components/Alert', () => ({
 }));
 
 describe('Profile page', () => {
+  const renderProfile = () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { mutations: { retry: false } },
+    });
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <Profile />
+      </QueryClientProvider>,
+    );
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(editUser).mockResolvedValue({ message: 'Profile updated' });
   });
 
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   it('keeps save disabled until a valid change is made', () => {
-    render(<Profile />);
+    renderProfile();
     const saveButton = screen.getByRole('button', { name: 'Save' });
 
     expect(saveButton).toBeDisabled();
@@ -52,7 +63,7 @@ describe('Profile page', () => {
   });
 
   it('saves changed account details and displays success feedback', async () => {
-    render(<Profile />);
+    renderProfile();
 
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'maya.new@example.com' },
@@ -72,7 +83,7 @@ describe('Profile page', () => {
   });
 
   it('does not submit mismatched passwords', () => {
-    render(<Profile />);
+    renderProfile();
 
     fireEvent.change(screen.getByLabelText('New Password'), {
       target: { value: 'new-password' },
@@ -85,9 +96,8 @@ describe('Profile page', () => {
   });
 
   it('displays API errors', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => {});
     vi.mocked(editUser).mockRejectedValue(new Error('Email already in use.'));
-    render(<Profile />);
+    renderProfile();
 
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'taken@example.com' },

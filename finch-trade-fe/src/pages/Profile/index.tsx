@@ -38,7 +38,7 @@ const Profile = () => {
       (!!password && !!passwordAgain && password === passwordAgain)
     ) {
       if (id) {
-        await editUser(id!, { email: newEmail, password, passwordAgain });
+        await editUser(id, { email: newEmail, password, passwordAgain });
       }
     }
   };
