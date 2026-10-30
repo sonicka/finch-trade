@@ -1,24 +1,15 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 import PastGiftCard from './PastGiftCard';
 import PastTradeCard from './PastTradeCard';
 import TraderCard from './TraderCard';
 import Card from '../../shared/components/Card';
-import {
-  useTrades,
-  useUser,
-  useUserData,
-} from '../../shared/context/UserProvider';
+import { useTrades, useUser } from '../../shared/context/UserProvider';
 import { PastGift, PastTrade, Trader } from '../../shared/types';
 
 const Trades: FC = () => {
   const user = useUser();
-  const { trades, getTrades: refetchTrades, pastTrades } = useTrades();
-  const { listChanged } = useUserData();
+  const { trades, pastTrades } = useTrades();
   const [isPastTradesOpen, setIsPastTradesOpen] = useState(true);
-
-  useEffect(() => {
-    if (listChanged) refetchTrades();
-  }, [listChanged, refetchTrades]);
 
   if (!user) return null;
 

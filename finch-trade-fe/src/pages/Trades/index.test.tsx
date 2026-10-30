@@ -6,11 +6,9 @@ import { PastGift, Trader, User } from '../../shared/types';
 const mocks = vi.hoisted(() => ({
   finishGifting: vi.fn(),
   finishTrade: vi.fn(),
-  getPastTrades: vi.fn(),
-  getTrades: vi.fn(),
-  listChanged: false,
   pastTrades: [] as PastGift[],
   requestTrade: vi.fn(),
+  tradeError: null as string | null,
   trades: [] as Trader[],
   trader: undefined as User | undefined,
   user: {
@@ -26,11 +24,8 @@ vi.mock('../../shared/context/UserProvider', () => ({
   useUser: () => mocks.user,
   useTrades: () => ({
     trades: mocks.trades,
-    getTrades: mocks.getTrades,
     pastTrades: mocks.pastTrades,
-    getPastTrades: mocks.getPastTrades,
   }),
-  useUserData: () => ({ listChanged: mocks.listChanged }),
 }));
 
 vi.mock('../../shared/context/DataProvider', () => ({
@@ -56,6 +51,7 @@ vi.mock('../../shared/hooks/trades', () => ({
     requestTrade: mocks.requestTrade,
     finishTrade: mocks.finishTrade,
     finishGifting: mocks.finishGifting,
+    error: mocks.tradeError,
   }),
 }));
 
@@ -80,10 +76,10 @@ const renderTrades = () => render(<Trades />);
 describe('Trades page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mocks.listChanged = false;
     mocks.pastTrades = [];
     mocks.trader = traderProfile;
     mocks.trades = [makeTrader()];
+    mocks.tradeError = null;
   });
 
   it('accepts an incoming request with the requested items', async () => {
@@ -141,7 +137,6 @@ describe('Trades page', () => {
         my: { id: 2, colorId: 6 },
         their: { id: 1, colorId: 4 },
       });
-      expect(mocks.getPastTrades).toHaveBeenCalledOnce();
     });
   });
 
@@ -157,13 +152,18 @@ describe('Trades page', () => {
 
     await waitFor(() => {
       expect(mocks.finishGifting).toHaveBeenCalledWith(1, 2, 1, 4);
-      expect(mocks.getPastTrades).toHaveBeenCalledOnce();
     });
   });
 
-  it('shows the empty state, refetches after a list change, and toggles past trades', async () => {
+  it('renders trade mutation errors in the relevant trader card', () => {
+    mocks.tradeError = 'Could not finish the trade.';
+    renderTrades();
+
+    expect(screen.getByText('Could not finish the trade.')).toBeInTheDocument();
+  });
+
+  it('shows the empty state and toggles past trades', async () => {
     mocks.trades = [];
-    mocks.listChanged = true;
     mocks.pastTrades = [
       {
         id: 8,
@@ -179,7 +179,6 @@ describe('Trades page', () => {
     expect(
       screen.getByText('No trades available at the moment.'),
     ).toBeInTheDocument();
-    await waitFor(() => expect(mocks.getTrades).toHaveBeenCalledOnce());
     expect(screen.getByText('You gifted')).toBeInTheDocument();
 
     const pastTradesButton = screen.getByRole('button', {

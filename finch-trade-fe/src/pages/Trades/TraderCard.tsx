@@ -5,7 +5,6 @@ import TradeButtons from './TradeButtons';
 import TradeAlert from './TradeAlert';
 import InlineAlert from '../../shared/components/InlineAlert';
 import Card from '../../shared/components/Card';
-import { useTrades } from '../../shared/context/UserProvider';
 import { useManageTrade, ChosenItems } from '../../shared/hooks/trades';
 import { useUserById } from '../../shared/hooks/users';
 import { Trader } from '../../shared/types';
@@ -18,8 +17,7 @@ interface Props {
 const TraderCard: FC<Props> = ({ traderData, userId }) => {
   const trader = useUserById(traderData.userId);
   const { chosenItems, setChosenItems } = useChosenItems(traderData);
-  const { requestTrade, finishTrade, finishGifting } = useManageTrade();
-  const { getPastTrades } = useTrades();
+  const { requestTrade, finishTrade, finishGifting, error } = useManageTrade();
   const [friendCodeShown, setFriendCodeShown] = useState<boolean>(false);
   const { gifting, requestedByMe, requestedByThem, tradeAccepted, showAlert } =
     getTradeStatus(traderData, friendCodeShown);
@@ -29,17 +27,18 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
   const handleRequestTrade = () => requestTrade(traderData.userId, chosenItems);
 
   const handleFinishTrade = async () => {
+    let didFinish: boolean;
     if (gifting && chosenItems.my?.id)
-      await finishGifting(
+      didFinish = await finishGifting(
         userId,
         traderData.userId,
         chosenItems.my?.id,
         chosenItems.my?.colorId,
       );
-    else await finishTrade(traderData.tradeId, chosenItems);
+    else didFinish = await finishTrade(traderData.tradeId, chosenItems);
+    if (!didFinish) return;
     setFriendCodeShown(false);
     setChosenItems({ my: null, their: null });
-    await getPastTrades();
   };
 
   if (!trader) return null;
@@ -52,6 +51,7 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
           <br />
           <b>{`${trader?.birbName} & ${trader?.username}!`}</b>
         </h2>
+        {error && <InlineAlert message={error} type="error" />}
         {gifting && (
           <TraderGiftingSection
             trader={trader}

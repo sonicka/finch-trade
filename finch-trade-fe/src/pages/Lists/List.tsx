@@ -3,7 +3,6 @@ import Item from './Item';
 import ItemAdd from './ItemAdd';
 import { useColors, useItems } from '../../shared/context/DataProvider';
 import { useUserItems } from '../../shared/context/UserProvider';
-import { useUserData } from '../../shared/context/UserProvider';
 import { useManageItem } from '../../shared/hooks/items';
 import { getColorName } from '../../shared/utils';
 import { ListType, UserItem } from '../../shared/types';
@@ -17,8 +16,10 @@ const maxHeight = `calc(100vh - ${147 + 66 + 99 + 93 + 32}px)`;
 
 const List: React.FC<Props> = ({ type }) => {
   const [allItems] = useItems();
-  const [userItems] = useUserItems(type);
-  const { userItems: allUserItems } = useUserData();
+  const { data: wishlist = [] } = useUserItems('wishlist');
+  const { data: tradelist = [] } = useUserItems('tradelist');
+  const allUserItems = { wishlist, tradelist };
+  const userItems = allUserItems[type];
   const { addNewItem, removeItem, error, successes, clearMessage } =
     useManageItem();
   const colors = useColors();

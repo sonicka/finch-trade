@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { addItem, deleteItem } from '../../api/api';
 import { ListType } from '../types';
-import { useUserData } from '../context/UserProvider';
+import { useUser, userDataQueryKeys } from '../context/UserProvider';
 import { useItems } from '../context/DataProvider';
 
 export interface ItemSuccessMessage {
@@ -10,11 +11,45 @@ export interface ItemSuccessMessage {
 }
 
 export const useManageItem = () => {
-  const { getUserItems, listChanged, toggleListChange } = useUserData();
+  const user = useUser();
+  const queryClient = useQueryClient();
   const [, getAllItems] = useItems();
   const [successes, setSuccesses] = useState<ItemSuccessMessage[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const mutation = useMutation({
+    mutationFn: async ({
+      action,
+      payload,
+    }: {
+      action: 'add' | 'remove';
+      payload: {
+        itemId?: number;
+        name?: string;
+        colorId: number;
+        type: ListType;
+      };
+    }) => {
+      if (action === 'add') {
+        return addItem({
+          name: payload.name!,
+          color: payload.colorId,
+          listType: payload.type,
+        });
+      }
+
+      return deleteItem(payload.itemId!, payload.colorId, payload.type);
+    },
+    onSuccess: async () => {
+      if (!user?.id) return;
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: userDataQueryKeys.items(user.id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: userDataQueryKeys.trades(user.id),
+        }),
+      ]);
+    },
+  });
 
   const handleItem = async (
     action: 'add' | 'remove',
@@ -29,26 +64,14 @@ export const useManageItem = () => {
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    mutation.reset();
 
     try {
-      let response;
+      if (action === 'add' && !payload.name) return;
+      const response = await mutation.mutateAsync({ action, payload });
+
       if (action === 'add') {
-        if (!payload.name) return;
-        response = await addItem({
-          name: payload.name,
-          color: payload.colorId,
-          listType: payload.type,
-        });
         await getAllItems();
-      }
-      if (action === 'remove') {
-        response = await deleteItem(
-          payload.itemId!,
-          payload.colorId,
-          payload.type,
-        );
       }
 
       if (response?.message) {
@@ -57,13 +80,8 @@ export const useManageItem = () => {
           { id: Date.now() + Math.random(), message: response.message },
         ]);
       }
-
-      await getUserItems(payload.type);
-      if (!listChanged) toggleListChange(true);
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e?.message : `Failed to ${action} item`);
-    } finally {
-      setLoading(false);
+    } catch {
+      // The mutation retains the error for the UI.
     }
   };
 
@@ -75,8 +93,15 @@ export const useManageItem = () => {
 
   const clearMessage = () => {
     setSuccesses([]);
-    setError(null);
+    mutation.reset();
   };
+
+  const error =
+    mutation.error instanceof Error
+      ? mutation.error.message
+      : mutation.error
+        ? 'Failed to update item'
+        : null;
 
   return {
     addNewItem,
@@ -84,6 +109,6 @@ export const useManageItem = () => {
     error,
     successes,
     clearMessage,
-    loading,
+    loading: mutation.isPending,
   };
 };

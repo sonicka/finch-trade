@@ -7,7 +7,6 @@ const mocks = vi.hoisted(() => ({
   useItems: vi.fn(),
   useColors: vi.fn(),
   useUserItems: vi.fn(),
-  useUserData: vi.fn(),
   useManageItem: vi.fn(),
   removeItem: vi.fn(),
   addNewItem: vi.fn(),
@@ -21,7 +20,6 @@ vi.mock('../../shared/context/DataProvider', () => ({
 
 vi.mock('../../shared/context/UserProvider', () => ({
   useUserItems: mocks.useUserItems,
-  useUserData: mocks.useUserData,
 }));
 
 vi.mock('../../shared/hooks/items', () => ({
@@ -54,10 +52,9 @@ describe('List item removal integration', () => {
     vi.clearAllMocks();
     mocks.useItems.mockReturnValue([items, vi.fn()]);
     mocks.useColors.mockReturnValue(colors);
-    mocks.useUserData.mockReturnValue({
-      userItems: { wishlist: [leaf], tradelist: [] },
-    });
-    mocks.useUserItems.mockReturnValue([[leaf], vi.fn()]);
+    mocks.useUserItems.mockImplementation((type) => ({
+      data: type === 'wishlist' ? [leaf] : [],
+    }));
     mocks.useManageItem.mockReturnValue({
       addNewItem: mocks.addNewItem,
       removeItem: mocks.removeItem,
@@ -81,10 +78,7 @@ describe('List item removal integration', () => {
 
     expect(mocks.removeItem).toHaveBeenCalledWith(1, 4, 'wishlist');
 
-    mocks.useUserData.mockReturnValue({
-      userItems: { wishlist: [], tradelist: [] },
-    });
-    mocks.useUserItems.mockReturnValue([[], vi.fn()]);
+    mocks.useUserItems.mockReturnValue({ data: [] });
     rerender(<List type={ListTypeEnum.Wishlist} />);
 
     fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));

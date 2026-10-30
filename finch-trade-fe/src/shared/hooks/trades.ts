@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   deleteItem,
   finishGifting,
   finishTrade,
   requestTrade,
 } from '../../api/api';
-import { useTrades, useUserItems } from '../context/UserProvider';
+import { useUser, userDataQueryKeys } from '../context/UserProvider';
 import { ChosenItem } from '../types';
 
 export interface ChosenItems {
@@ -14,10 +14,79 @@ export interface ChosenItems {
 }
 
 export const useManageTrade = () => {
-  const [, getUserItems] = useUserItems();
-  const { getTrades: refetchTrades } = useTrades();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const user = useUser();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async ({
+      action,
+      payload,
+    }: {
+      action: 'request' | 'finish-trade' | 'finish-gifting';
+      payload: {
+        tradeId?: number;
+        traderId?: number;
+        itemId?: number;
+        colorId?: number;
+        chosenItems?: ChosenItems;
+        giftedBy?: number;
+        giftedTo?: number;
+      };
+    }) => {
+      if (action === 'request') {
+        if (!payload.traderId || !payload.chosenItems) return false;
+        await requestTrade(payload.traderId, payload.chosenItems);
+      }
+      if (action === 'finish-trade') {
+        if (!payload.tradeId && payload.chosenItems?.my) {
+          await deleteItem(
+            payload.chosenItems.my.id,
+            payload.chosenItems.my.colorId,
+            'tradelist',
+          );
+        } else if (payload.tradeId) {
+          await finishTrade(payload.tradeId);
+        } else {
+          return false;
+        }
+      }
+      if (action === 'finish-gifting') {
+        if (
+          !payload.itemId ||
+          !payload.colorId ||
+          !payload.giftedBy ||
+          !payload.giftedTo
+        ) {
+          return false;
+        }
+        await finishGifting(
+          payload.giftedBy,
+          payload.giftedTo,
+          payload.itemId,
+          payload.colorId,
+        );
+      }
+      return true;
+    },
+    onSuccess: async (didMutate, { action }) => {
+      if (!didMutate || !user?.id) return;
+      const invalidations = [
+        queryClient.invalidateQueries({
+          queryKey: userDataQueryKeys.trades(user.id),
+        }),
+      ];
+      if (action !== 'request') {
+        invalidations.push(
+          queryClient.invalidateQueries({
+            queryKey: userDataQueryKeys.items(user.id),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: userDataQueryKeys.pastTrades(user.id),
+          }),
+        );
+      }
+      await Promise.all(invalidations);
+    },
+  });
 
   const handleTrade = async (
     action: 'request' | 'finish-trade' | 'finish-gifting',
@@ -30,48 +99,12 @@ export const useManageTrade = () => {
       giftedBy?: number;
       giftedTo?: number;
     },
-  ) => {
-    setLoading(true);
-    setError(null);
-
+  ): Promise<boolean> => {
+    mutation.reset();
     try {
-      if (action === 'request') {
-        if (!payload.traderId || !payload.chosenItems) return;
-        await requestTrade(payload.traderId, payload.chosenItems);
-      }
-      if (action === 'finish-trade') {
-        if (!payload.tradeId && payload.chosenItems && payload.chosenItems.my) {
-          await deleteItem(
-            payload.chosenItems.my.id,
-            payload.chosenItems.my.colorId,
-            'tradelist',
-          );
-        } else {
-          await finishTrade(payload.tradeId!);
-        }
-      }
-      if (action === 'finish-gifting') {
-        if (
-          payload.itemId &&
-          payload.colorId &&
-          payload.giftedBy &&
-          payload.giftedTo
-        ) {
-          await finishGifting(
-            payload.giftedBy,
-            payload.giftedTo,
-            payload.itemId,
-            payload.colorId,
-          );
-        }
-      }
-
-      await refetchTrades();
-      await getUserItems();
-    } catch (e: unknown) {
-      setError(e instanceof Error ? e?.message : `Failed to ${action} trade`);
-    } finally {
-      setLoading(false);
+      return await mutation.mutateAsync({ action, payload });
+    } catch {
+      return false;
     }
   };
 
@@ -88,14 +121,18 @@ export const useManageTrade = () => {
     colorId: number,
   ) => handleTrade('finish-gifting', { giftedBy, giftedTo, itemId, colorId });
 
-  const clearError = () => setError(null);
+  const error =
+    mutation.error instanceof Error
+      ? mutation.error.message
+      : mutation.error
+        ? 'Failed to update trade'
+        : null;
 
   return {
     requestTrade: handleRequestTrade,
     finishTrade: handleFinishTrade,
     finishGifting: handleFinishGifting,
-    clearError,
     error,
-    loading,
+    loading: mutation.isPending,
   };
 };
