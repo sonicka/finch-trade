@@ -44,7 +44,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="size-fit m-auto pt-6">
+    <div className="size-fit m-auto py-6">
       <Card simple>
         <form
           onSubmit={handleSubmit}

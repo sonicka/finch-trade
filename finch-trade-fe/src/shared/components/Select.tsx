@@ -52,7 +52,7 @@ const Select = <T extends { id: number }>({
         ${
           isOpen || !noValue
             ? '-top-2.5 left-2 text-xs text-darkBeige'
-            : 'top-2.5 text-base text-mediumBeige'
+            : 'top-2 text-base text-mediumBeige'
         }`}
           >
             {placeholder}
