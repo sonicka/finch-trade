@@ -5,6 +5,9 @@ import { queryOne, runQuery } from '../utils.js';
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET must be configured');
+}
 
 export const signUp = async (req, res) => {
   const { email, username, birbName, friendCode, password } = req.body;
@@ -158,6 +161,7 @@ export const editUser = async (req, res) => {
       updatedId: userId,
     });
   } catch (err) {
-    return res.status(500).json({ message: err.message });
+    console.error('Error updating user:', err);
+    return res.status(500).json({ message: 'Failed to update user' });
   }
 };

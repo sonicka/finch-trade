@@ -122,6 +122,33 @@ test('trade request validates required data before opening a transaction', async
   assert.equal(calls.transactions.length, 0);
 });
 
+test('trade request rejects self-trades and invalid item ids', async () => {
+  const cases = [
+    { userId2: '1', itemId: 2 },
+    { userId2: '2', itemId: 0 },
+  ];
+
+  for (const { userId2, itemId } of cases) {
+    const response = createResponse();
+    await postRequestTrade(
+      {
+        userId: '1',
+        query: { userId2 },
+        body: {
+          chosenItems: {
+            my: { id: itemId, colorId: 6 },
+            their: { id: 1, colorId: 11 },
+          },
+        },
+      },
+      response,
+    );
+
+    assert.equal(response.statusCode, 400);
+  }
+  assert.equal(calls.transactions.length, 0);
+});
+
 test('trade request creates a pending trade and locks the user pair', async () => {
   const response = createResponse();
 
@@ -208,7 +235,7 @@ test('reciprocal trade request rejects changed item selections', async () => {
     response,
   );
 
-  assert.equal(response.statusCode, 500);
+  assert.equal(response.statusCode, 400);
   assert.match(response.body.message, /Trade items do not match/);
   assert.equal(calls.updateTrade.length, 0);
 });
@@ -273,9 +300,45 @@ test('gifting rejects users who are not one of the gift participants', async () 
 
   assert.equal(response.statusCode, 403);
   assert.deepEqual(response.body, {
-    message: 'You are not a party to this gift.',
+    message: 'Only the gift giver can complete this gift.',
   });
   assert.equal(calls.transactions.length, 0);
+});
+
+test('gifting rejects a recipient attempting to complete the gift', async () => {
+  const response = createResponse();
+
+  await postFinishGifting(
+    {
+      userId: '2',
+      body: { giftedBy: 1, giftedTo: 2, itemId: 9, colorId: 4 },
+    },
+    response,
+  );
+
+  assert.equal(response.statusCode, 403);
+  assert.equal(calls.transactions.length, 0);
+});
+
+test('gift completion only removes the giver offer and recipient wish', async () => {
+  const response = createResponse();
+
+  await postFinishGifting(
+    {
+      userId: '1',
+      body: { giftedBy: 1, giftedTo: 2, itemId: 9, colorId: 4 },
+    },
+    response,
+  );
+
+  assert.equal(response.statusCode, 200);
+  assert.deepEqual(
+    calls.deleteItem.map((args) => args.slice(0, 3).concat(args[5])),
+    [
+      [2, 9, 4, 'wishlist'],
+      [1, 9, 4, 'tradelist'],
+    ],
+  );
 });
 
 test('item creation rejects missing fields and any-color tradelist entries', async () => {
@@ -293,6 +356,18 @@ test('item creation rejects missing fields and any-color tradelist entries', asy
   );
   assert.equal(anyColorResponse.statusCode, 400);
   assert.match(anyColorResponse.body.message, /specific color/);
+  assert.equal(calls.runQuery.length, 0);
+});
+
+test('item creation rejects an invalid list type before database access', async () => {
+  const response = createResponse();
+
+  await postItemToDB(
+    { userId: '1', body: { name: 'Leaf', color: 4, listType: 'other' } },
+    response,
+  );
+
+  assert.equal(response.statusCode, 400);
   assert.equal(calls.runQuery.length, 0);
 });
 

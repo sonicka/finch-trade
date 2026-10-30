@@ -53,9 +53,7 @@ const updateExistingTrade = async (
     !sameItem(chosenItems.my, existingItems.my) ||
     !sameItem(chosenItems.their, existingItems.their)
   ) {
-    throw new Error(
-      'Trade items do not match. Please review the trade details.',
-    );
+    return { invalidSelection: true };
   }
 
   const requestedBy = addRequester(trade.requested_by, userId1, userId2);
@@ -97,7 +95,17 @@ export const postRequestTrade = async (req, res) => {
   const { userId2 } = req.query;
   const { chosenItems } = req.body;
 
-  if (!userId2 || !chosenItems?.my || !chosenItems?.their) {
+  const isPositiveInteger = (value) => Number.isSafeInteger(value) && value > 0;
+  if (
+    !isPositiveInteger(Number(userId2)) ||
+    Number(userId2) === Number(userId1) ||
+    !chosenItems?.my ||
+    !chosenItems?.their ||
+    !isPositiveInteger(chosenItems.my.id) ||
+    !isPositiveInteger(chosenItems.my.colorId) ||
+    !isPositiveInteger(chosenItems.their.id) ||
+    !isPositiveInteger(chosenItems.their.colorId)
+  ) {
     return res.status(400).json({ message: 'Missing required trade data' });
   }
 
@@ -107,14 +115,20 @@ export const postRequestTrade = async (req, res) => {
       return requestTrade(userId1, userId2, chosenItems, client);
     });
 
+    if (result.invalidSelection) {
+      return res.status(400).json({
+        message: 'Trade items do not match. Please review the trade details.',
+      });
+    }
+
     return res.status(result.created ? 201 : 200).json({
       message: result.created ? 'Trade created' : 'Trade updated',
       tradeId: result.tradeId,
       status: result.status,
     });
   } catch (err) {
-    console.error('Error processing trade:', err.message);
-    return res.status(500).json({ message: err.message });
+    console.error('Error processing trade:', err);
+    return res.status(500).json({ message: 'Failed to process trade' });
   }
 };
 
@@ -217,14 +231,22 @@ export const getPastTradesFromDB = async (req, res) => {
 export const postFinishGifting = async (req, res) => {
   const { giftedBy, giftedTo, itemId, colorId } = req.body;
 
-  if (!itemId || !colorId || !giftedTo || !giftedBy) {
+  const isPositiveInteger = (value) =>
+    Number.isSafeInteger(Number(value)) && Number(value) > 0;
+  if (
+    !isPositiveInteger(itemId) ||
+    !isPositiveInteger(colorId) ||
+    !isPositiveInteger(giftedTo) ||
+    !isPositiveInteger(giftedBy) ||
+    Number(giftedBy) === Number(giftedTo)
+  ) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
-  if (![String(giftedBy), String(giftedTo)].includes(req.userId)) {
+  if (String(giftedBy) !== req.userId) {
     return res
       .status(403)
-      .json({ message: 'You are not a party to this gift.' });
+      .json({ message: 'Only the gift giver can complete this gift.' });
   }
 
   try {
@@ -235,17 +257,17 @@ export const postFinishGifting = async (req, res) => {
         client,
       );
 
-      await deleteItem(giftedTo, itemId, colorId, true, client);
-      await deleteItem(giftedBy, itemId, colorId, false, client);
+      await deleteItem(giftedTo, itemId, colorId, true, client, 'wishlist');
+      await deleteItem(giftedBy, itemId, colorId, false, client, 'tradelist');
     });
 
     return res.status(200).json({
       message: 'Gifting archived and items successfully deleted.',
     });
   } catch (err) {
-    console.error('Error finishing gifting:', err.message);
+    console.error('Error finishing gifting:', err);
     return res.status(500).json({
-      message: `Failed to finish gifting: ${err.message}`,
+      message: 'Failed to finish gifting',
     });
   }
 };

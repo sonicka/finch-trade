@@ -12,13 +12,22 @@ export const getColorsFromDB = async (req, res) => {
 export const postItemToDB = async (req, res) => {
   const userId = req.userId;
   const { color, name, listType } = req.body;
+  const colorId = Number(color);
   const normalizedName = typeof name === 'string' ? name.trim() : '';
 
   if (!color || !normalizedName) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
-  if (listType === 'tradelist' && color === 1) {
+  if (
+    !Number.isSafeInteger(colorId) ||
+    colorId < 1 ||
+    !['wishlist', 'tradelist'].includes(listType)
+  ) {
+    return res.status(400).json({ message: 'Invalid item color or list type' });
+  }
+
+  if (listType === 'tradelist' && colorId === 1) {
     return res
       .status(400)
       .json({ message: 'Tradelist items must have a specific color.' });
@@ -34,7 +43,7 @@ export const postItemToDB = async (req, res) => {
     const itemId = result.lastID;
 
     const existingUserItem = await queryOne(
-      color === 1
+      colorId === 1
         ? `SELECT list_type, color_id
            FROM user_items
            WHERE user_id = $1 AND item_id = $2
@@ -45,7 +54,7 @@ export const postItemToDB = async (req, res) => {
              AND (color_id = $3 OR color_id = 1)
            ORDER BY CASE WHEN color_id = $3 THEN 0 ELSE 1 END
            LIMIT 1`,
-      color === 1 ? [userId, itemId] : [userId, itemId, color],
+      colorId === 1 ? [userId, itemId] : [userId, itemId, colorId],
     );
 
     if (existingUserItem) {
@@ -72,7 +81,7 @@ export const postItemToDB = async (req, res) => {
 
     const insertResult = await runQuery(
       'INSERT INTO user_items (user_id, item_id, color_id, list_type) VALUES ($1, $2, $3, $4)',
-      [userId, itemId, color, listType],
+      [userId, itemId, colorId, listType],
     );
 
     return res.status(201).json({
@@ -81,7 +90,7 @@ export const postItemToDB = async (req, res) => {
     });
   } catch (err) {
     console.error('Unexpected error:', err);
-    res.status(500).json({ message: `Something went wrong: ${err.message}` });
+    res.status(500).json({ message: 'Something went wrong' });
   }
 };
 
@@ -130,7 +139,13 @@ export const deleteItemFromDB = async (req, res) => {
   const userId = req.userId;
   const { itemId, colorId, listType } = req.body;
 
-  if (!itemId || !colorId || !listType) {
+  if (
+    !Number.isSafeInteger(Number(itemId)) ||
+    Number(itemId) < 1 ||
+    !Number.isSafeInteger(Number(colorId)) ||
+    Number(colorId) < 1 ||
+    !['wishlist', 'tradelist'].includes(listType)
+  ) {
     return res.status(400).json({ message: 'Missing required parameters' });
   }
 
