@@ -6,6 +6,7 @@ import Card from '../../shared/components/Card';
 import FormInput from '../../shared/components/FormInput';
 import { logIn, signUp } from '../../api/api';
 import { useUserData } from '../../shared/context/UserProvider';
+import Spinner from '../../shared/components/Spinner';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // todo nicer validation
   const isFormValid = isLogin
@@ -31,28 +33,29 @@ const Login: React.FC = () => {
       !!passwordAgain &&
       password === passwordAgain;
 
-  const clearForm = () => {
-    setEmail('');
-    setUsername('');
-    setBirbName('');
-    setFriendCode('');
-    setPassword('');
-    setError('');
-  };
-
   const clearError = () => {
     setError('');
   };
 
   useEffect(() => {
     if (user) navigate('/');
-  }, [user]);
+  }, [user, navigate]);
 
-  useEffect(clearForm, [isLogin]);
+  useEffect(() => {
+    setEmail('');
+    setUsername('');
+    setBirbName('');
+    setFriendCode('');
+    setPassword('');
+    setPasswordAgain('');
+    setError('');
+  }, [isLogin]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     clearError();
+    setIsSubmitting(true);
     try {
       const token = isLogin
         ? await logIn({ email, password })
@@ -60,9 +63,13 @@ const Login: React.FC = () => {
 
       login(token);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      }
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Unable to authenticate. Try again.',
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -158,9 +165,19 @@ const Login: React.FC = () => {
             <div className="py-4 gap-6 flex flex-col">
               <div className="self-center">
                 <Button
-                  label={isLogin ? 'Log in' : 'Sign up'}
+                  label={
+                    <span className="flex items-center justify-center gap-2">
+                      {isLogin ? 'Log in' : 'Sign up'}
+                      {isSubmitting && (
+                        <Spinner
+                          size={18}
+                          label={isLogin ? 'Logging in' : 'Signing up'}
+                        />
+                      )}
+                    </span>
+                  }
                   buttonProps={{ type: 'submit' }}
-                  disabled={!isFormValid}
+                  disabled={!isFormValid || isSubmitting}
                 />
               </div>
               {error && <InlineAlert type="error" message={error} />}
@@ -170,6 +187,7 @@ const Login: React.FC = () => {
                     Don't have an account yet?
                     <br />
                     <button
+                      type="button"
                       onClick={() => {
                         clearError();
                         setIsLogin(false);
@@ -185,6 +203,7 @@ const Login: React.FC = () => {
                     Already have an account?
                     <br />
                     <button
+                      type="button"
                       onClick={() => {
                         clearError();
                         setIsLogin(true);

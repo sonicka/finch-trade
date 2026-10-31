@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import ItemAdd from './ItemAdd';
 import { ListTypeEnum } from '../../shared/types';
@@ -12,7 +12,10 @@ const colors = [
   { id: 4, color: 'white' },
 ];
 
-const renderItemAdd = (handleSubmit = vi.fn(), isAdding = false) =>
+const renderItemAdd = (
+  handleSubmit = vi.fn().mockResolvedValue(true),
+  isAdding = false,
+) =>
   render(
     <ItemAdd
       items={items}
@@ -20,6 +23,7 @@ const renderItemAdd = (handleSubmit = vi.fn(), isAdding = false) =>
       userItems={{ wishlist: [], tradelist: [] }}
       type={ListTypeEnum.Wishlist}
       isAdding={isAdding}
+      isCatalogLoading={false}
       handleSubmit={handleSubmit}
       clearError={vi.fn()}
     />,
@@ -76,9 +80,10 @@ describe('ItemAdd', () => {
 
   it('submits the selected item and color through the form', () => {
     let submittedData: FormData | undefined;
-    const handleSubmit = vi.fn((event: SubmitEvent) => {
+    const handleSubmit = vi.fn(async (event: SubmitEvent) => {
       event.preventDefault();
       submittedData = new FormData(event.currentTarget as HTMLFormElement);
+      return true;
     });
     renderItemAdd(handleSubmit);
 
@@ -93,6 +98,39 @@ describe('ItemAdd', () => {
     expect(handleSubmit).toHaveBeenCalledOnce();
     expect(submittedData?.get('itemName')).toBe('Leaf');
     expect(submittedData?.get('itemColor')).toBe('4');
+  });
+
+  it('keeps form values when adding an item fails', async () => {
+    const handleSubmit = vi.fn().mockResolvedValue(false);
+    renderItemAdd(handleSubmit);
+
+    fireEvent.change(screen.getByLabelText('Item name'), {
+      target: { value: 'Leaf' },
+    });
+    fireEvent.click(screen.getByRole('option', { name: 'Leaf' }));
+    fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
+    fireEvent.click(screen.getByRole('option', { name: 'white' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    await waitFor(() => expect(handleSubmit).toHaveBeenCalledOnce());
+    expect(screen.getByLabelText('Item name')).toHaveValue('Leaf');
+  });
+
+  it('clears form values after an item is added successfully', async () => {
+    const handleSubmit = vi.fn().mockResolvedValue(true);
+    renderItemAdd(handleSubmit);
+
+    fireEvent.change(screen.getByLabelText('Item name'), {
+      target: { value: 'Leaf' },
+    });
+    fireEvent.click(screen.getByRole('option', { name: 'Leaf' }));
+    fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
+    fireEvent.click(screen.getByRole('option', { name: 'white' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Confirm' }));
+
+    await waitFor(() =>
+      expect(screen.getByLabelText('Item name')).toHaveValue(''),
+    );
   });
 
   it('does not offer colors already in the list, but offers them back when the list is cleared', () => {
@@ -114,6 +152,7 @@ describe('ItemAdd', () => {
         }}
         type={ListTypeEnum.Wishlist}
         isAdding={false}
+        isCatalogLoading={false}
         handleSubmit={vi.fn()}
         clearError={vi.fn()}
       />,
@@ -136,6 +175,7 @@ describe('ItemAdd', () => {
         userItems={{ wishlist: [], tradelist: [] }}
         type={ListTypeEnum.Wishlist}
         isAdding={false}
+        isCatalogLoading={false}
         handleSubmit={vi.fn()}
         clearError={vi.fn()}
       />,

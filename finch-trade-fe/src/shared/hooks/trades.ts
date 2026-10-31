@@ -143,5 +143,6 @@ export const useManageTrade = () => {
     cancelTrade: handleCancelTrade,
     error,
     loading: mutation.isPending,
+    pendingAction: mutation.isPending ? mutation.variables?.action : undefined,
   };
 };

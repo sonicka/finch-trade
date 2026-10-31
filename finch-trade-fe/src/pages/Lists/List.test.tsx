@@ -6,6 +6,7 @@ import { ListTypeEnum } from '../../shared/types';
 const mocks = vi.hoisted(() => ({
   useItems: vi.fn(),
   useColors: vi.fn(),
+  useCatalogStatus: vi.fn(),
   useUserItems: vi.fn(),
   useManageItem: vi.fn(),
   removeItem: vi.fn(),
@@ -21,6 +22,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('../../shared/context/DataProvider', () => ({
   useItems: mocks.useItems,
   useColors: mocks.useColors,
+  useCatalogStatus: mocks.useCatalogStatus,
 }));
 
 vi.mock('../../shared/context/UserProvider', () => ({
@@ -75,6 +77,7 @@ describe('List item removal integration', () => {
     mocks.successes = [];
     mocks.useItems.mockReturnValue([items, vi.fn()]);
     mocks.useColors.mockReturnValue(colors);
+    mocks.useCatalogStatus.mockReturnValue({ isLoading: false, error: null });
     mocks.useUserItems.mockImplementation((type) => ({
       data: type === 'wishlist' ? [leaf] : [],
     }));

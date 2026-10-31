@@ -85,6 +85,8 @@ describe('Login', () => {
     renderLogin();
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
 
+    expect(logIn).not.toHaveBeenCalled();
+    expect(signUp).not.toHaveBeenCalled();
     expect(
       screen.getByRole('heading', { name: 'Sign Up' }),
     ).toBeInTheDocument();

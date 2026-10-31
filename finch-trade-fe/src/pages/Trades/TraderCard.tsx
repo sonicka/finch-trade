@@ -31,8 +31,23 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
     if (gifting) updatePendingGift({ item: items.my });
     else setTradeChosenItems(items);
   };
-  const { requestTrade, finishTrade, finishGifting, cancelTrade, error } =
-    useManageTrade();
+  const {
+    requestTrade,
+    finishTrade,
+    finishGifting,
+    cancelTrade,
+    error,
+    loading,
+    pendingAction,
+  } = useManageTrade();
+  const loadingButtonId =
+    pendingAction === 'request'
+      ? 'trade-request'
+      : pendingAction === 'cancel-trade'
+        ? 'cancel-trade'
+        : pendingAction === 'finish-trade' || pendingAction === 'finish-gifting'
+          ? 'finish-trade'
+          : undefined;
   const friendCodeShown = pendingGift.friendCodeShown;
   const { requestedByMe, requestedByThem, tradeAccepted, showAlert } =
     getTradeStatus(traderData, friendCodeShown);
@@ -91,6 +106,8 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
         )}
         {error && <InlineAlert message={error} type="error" />}
         <TradeButtons
+          isPending={loading}
+          pendingButtonId={loadingButtonId}
           buttons={[
             {
               id: 'show-friend-code',
