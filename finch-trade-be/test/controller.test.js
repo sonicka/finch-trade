@@ -81,12 +81,16 @@ mockModule('../src/helpers/itemHelpers.js', { deleteItem });
 
 const {
   deletePendingTrade,
+  getPastTradesFromDB,
   postFinishGifting,
   postFinishTrade,
   postRequestTrade,
 } = await import('../src/controllers/tradeController.js');
 const { deleteItemFromDB, postItemToDB } =
   await import('../src/controllers/itemController.js');
+process.env.JWT_SECRET = 'backend-test-secret';
+const { editUser, signUp } =
+  await import('../src/controllers/userController.js');
 
 const createResponse = () => ({
   statusCode: 200,
@@ -248,6 +252,36 @@ test('reciprocal trade request rejects changed item selections', async () => {
   assert.equal(calls.updateTrade.length, 0);
 });
 
+test('trade request returns conflict when an item is already reserved', async () => {
+  behavior.insertItemTransaction = async () => {
+    const error = new Error('Trade item is no longer available.');
+    error.code = 'TRADE_ITEM_UNAVAILABLE';
+    throw error;
+  };
+  const response = createResponse();
+  let forwardedError;
+
+  await postRequestTrade(
+    {
+      userId: '1',
+      query: { userId2: '2' },
+      body: {
+        chosenItems: {
+          my: { id: 2, colorId: 6 },
+          their: { id: 1, colorId: 11 },
+        },
+      },
+    },
+    response,
+    (error) => {
+      forwardedError = error;
+    },
+  );
+
+  assert.equal(forwardedError.statusCode, 409);
+  assert.equal(forwardedError.code, 'TRADE_ITEM_UNAVAILABLE');
+});
+
 test('either trade participant can cancel a pending trade and release its items', async () => {
   const trade = pendingTrade();
   behavior.queryOne = async () => trade;
@@ -343,7 +377,7 @@ test('only trade participants can mark a confirmed trade complete', async () => 
 
   assert.equal(response.statusCode, 403);
   assert.deepEqual(response.body, {
-    error: 'You are not a party to this trade.',
+    message: 'You are not a party to this trade.',
   });
   assert.equal(calls.runQuery.length, 0);
   assert.equal(calls.deleteItem.length, 0);
@@ -380,6 +414,76 @@ test('first trade completion waits; second completion archives and removes items
   assert.equal(calls.deleteItem.length, 4);
   assert.equal(calls.archiveTrade.length, 1);
   assert.equal(calls.deleteTrade.length, 1);
+});
+
+test('past trade history validates limits and returns cursor pages', async () => {
+  const firstGift = {
+    id: 12,
+    trade_id: null,
+    user_id1: 1,
+    user_id2: 2,
+    status: 'archived',
+    item_id1: 3,
+    color_id1: 4,
+    item_id2: null,
+    color_id2: null,
+    archived_at: new Date('2026-10-30T12:00:00.000Z'),
+  };
+  const secondTrade = {
+    ...firstGift,
+    id: 11,
+    trade_id: 7,
+    status: 'archived',
+    item_id2: 8,
+    color_id2: 9,
+    archived_at: new Date('2026-10-29T12:00:00.000Z'),
+  };
+  behavior.queryAll = async () => [firstGift, secondTrade];
+  const firstResponse = createResponse();
+
+  await getPastTradesFromDB(
+    { userId: '1', query: { limit: '1' } },
+    firstResponse,
+  );
+
+  assert.equal(firstResponse.statusCode, 200);
+  assert.deepEqual(firstResponse.body.data[0], {
+    id: 12,
+    itemId: 3,
+    colorId: 4,
+    archivedAt: '2026-10-30T12:00:00.000Z',
+    type: 'giftGiven',
+    userId: 2,
+  });
+  assert.ok(firstResponse.body.nextCursor);
+  assert.match(calls.queryAll[0][0], /ORDER BY archived_at DESC, id DESC/);
+  assert.equal(calls.queryAll[0][1][3], 2);
+
+  behavior.queryAll = async () => [secondTrade];
+  const secondResponse = createResponse();
+  await getPastTradesFromDB(
+    {
+      userId: '1',
+      query: { limit: '1', cursor: firstResponse.body.nextCursor },
+    },
+    secondResponse,
+  );
+
+  assert.equal(secondResponse.body.data[0].type, 'trade');
+  assert.equal(secondResponse.body.nextCursor, null);
+  assert.deepEqual(calls.queryAll[1][1].slice(1, 3), [
+    '2026-10-30T12:00:00.000Z',
+    12,
+  ]);
+});
+
+test('past trade history rejects invalid pagination before querying', async () => {
+  const response = createResponse();
+
+  await getPastTradesFromDB({ userId: '1', query: { limit: '101' } }, response);
+
+  assert.equal(response.statusCode, 400);
+  assert.equal(calls.queryAll.length, 0);
 });
 
 test('gifting rejects users who are not one of the gift participants', async () => {
@@ -495,4 +599,105 @@ test('item deletion reports a missing item', async () => {
 
   assert.equal(response.statusCode, 404);
   assert.deepEqual(response.body, { message: 'Item not found' });
+});
+
+test('signup validates account fields before database access', async () => {
+  const response = createResponse();
+
+  await signUp(
+    {
+      body: {
+        email: 'invalid-email',
+        username: 'Finch',
+        birbName: 'Pip',
+        friendCode: 'PIP123',
+        password: 'short',
+      },
+    },
+    response,
+    (error) => {
+      throw error;
+    },
+  );
+
+  assert.equal(response.statusCode, 400);
+  assert.equal(calls.queryOne.length, 0);
+  assert.equal(calls.runQuery.length, 0);
+});
+
+test('signup maps unique-constraint races to a safe conflict', async () => {
+  behavior.runQuery = async () => {
+    const error = new Error('duplicate key value');
+    error.code = '23505';
+    throw error;
+  };
+  const response = createResponse();
+  let forwardedError;
+
+  await signUp(
+    {
+      body: {
+        email: 'NEW@EXAMPLE.COM',
+        username: 'Finch',
+        birbName: 'Pip',
+        friendCode: 'PIP123',
+        password: 'secure-password',
+      },
+    },
+    response,
+    (error) => {
+      forwardedError = error;
+    },
+  );
+
+  assert.equal(forwardedError.statusCode, 409);
+  assert.equal(forwardedError.code, 'ACCOUNT_CONFLICT');
+  assert.equal(calls.runQuery[0][1][0], 'new@example.com');
+});
+
+test('account edits validate passwords and map duplicate emails to conflict', async () => {
+  const invalidResponse = createResponse();
+  await editUser(
+    {
+      userId: '1',
+      params: { userId: '1' },
+      body: { password: 'short', passwordAgain: 'short' },
+    },
+    invalidResponse,
+    (error) => {
+      throw error;
+    },
+  );
+  assert.equal(invalidResponse.statusCode, 400);
+  assert.equal(calls.queryOne.length, 0);
+
+  behavior.queryOne = async (query) =>
+    query.includes('LOWER(email)')
+      ? null
+      : {
+          id: 1,
+          email: 'user@example.com',
+          password: 'existing-hash',
+        };
+  behavior.runQuery = async () => {
+    const error = new Error('duplicate key value');
+    error.code = '23505';
+    throw error;
+  };
+  const response = createResponse();
+  let forwardedError;
+  await editUser(
+    {
+      userId: '1',
+      params: { userId: '1' },
+      body: { email: 'taken@example.com' },
+    },
+    response,
+    (error) => {
+      forwardedError = error;
+    },
+  );
+
+  assert.equal(forwardedError.statusCode, 409);
+  assert.equal(forwardedError.code, 'EMAIL_CONFLICT');
 });

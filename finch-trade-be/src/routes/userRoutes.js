@@ -6,10 +6,14 @@ import {
   editUser,
 } from '../controllers/userController.js';
 import { requireAuth } from '../../middleware/auth.js';
+import {
+  loginRateLimit,
+  signUpRateLimit,
+} from '../../middleware/rateLimits.js';
 const router = Router();
 
-router.post('/signup', signUp);
-router.post('/login', login);
+router.post('/signup', signUpRateLimit, signUp);
+router.post('/login', loginRateLimit, login);
 
 // :userId identifies whose profile to view, e.g. when looking at a
 // potential trader's public info - any logged-in user can view it

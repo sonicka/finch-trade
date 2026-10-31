@@ -5,7 +5,7 @@ import {
   ItemData,
   ListType,
   LoginCredentials,
-  PastTrades,
+  PastTradesPage,
   SignUpData,
   Trader,
   User,
@@ -93,8 +93,12 @@ export const fetchTrades = async (): Promise<Trader[]> => {
   return (await apiFetch('/api/trades')) as Trader[];
 };
 
-export const fetchPastTrades = async (): Promise<PastTrades> => {
-  return (await apiFetch('/api/trades/past')) as PastTrades;
+export const fetchPastTrades = async (
+  cursor: string | null,
+): Promise<PastTradesPage> => {
+  const params = new URLSearchParams({ limit: '50' });
+  if (cursor) params.set('cursor', cursor);
+  return (await apiFetch(`/api/trades/past?${params}`)) as PastTradesPage;
 };
 
 // userId1 ("me") is implicit from the token; userId2 is the other party.

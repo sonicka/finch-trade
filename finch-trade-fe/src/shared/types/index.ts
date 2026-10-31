@@ -119,3 +119,8 @@ export interface PastTrade {
 }
 
 export type PastTrades = (PastGift | PastTrade)[];
+
+export interface PastTradesPage {
+  data: PastTrades;
+  nextCursor: string | null;
+}

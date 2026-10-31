@@ -16,7 +16,7 @@ const Profile = () => {
   const { edit: editUser, error, success } = useEditUser();
   const edited =
     (!!newEmail && newEmail !== email) ||
-    (!!password && password === passwordAgain);
+    (password.length >= 8 && password === passwordAgain);
 
   const handleEditField = <T,>(
     setter: React.Dispatch<React.SetStateAction<T>>,
@@ -35,7 +35,7 @@ const Profile = () => {
     setShowAlert(false);
     if (
       (!!newEmail && newEmail !== email) ||
-      (!!password && !!passwordAgain && password === passwordAgain)
+      (password.length >= 8 && !!passwordAgain && password === passwordAgain)
     ) {
       if (id) {
         await editUser(id, { email: newEmail, password, passwordAgain });
@@ -76,6 +76,7 @@ const Profile = () => {
             type="email"
             id="email"
             required
+            maxLength={254}
           />
           <FormInput
             label="New Password"
@@ -83,6 +84,7 @@ const Profile = () => {
             setValue={(value: string) => handleEditField(setPassword, value)}
             type="password"
             id="password"
+            minLength={8}
           />
           <FormInput
             label="New password again"
@@ -92,6 +94,7 @@ const Profile = () => {
             }
             type="password"
             id="passwordAgain"
+            minLength={8}
           />
           <div className="pt-4">
             <Button

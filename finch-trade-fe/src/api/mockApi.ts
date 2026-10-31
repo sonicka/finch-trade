@@ -3,6 +3,7 @@ import {
   Item,
   ListType,
   PastTrades,
+  PastTradesPage,
   Trader,
   User,
   UserItem,
@@ -376,32 +377,57 @@ export const mockApiFetch = async (
   if (path === '/api/users/login' && method === 'POST') {
     const user = state.users.find(
       (candidate) =>
-        candidate.email === body.email && candidate.password === body.password,
+        candidate.email.toLowerCase() ===
+          String(body.email).trim().toLowerCase() &&
+        candidate.password === body.password,
     );
     if (!user) throw new Error('Invalid email or password');
     return { token: createToken(user) };
   }
 
   if (path === '/api/users/signup' && method === 'POST') {
+    const email = String(body.email ?? '')
+      .trim()
+      .toLowerCase();
+    const username = String(body.username ?? '').trim();
+    const birbName = String(body.birbName ?? '').trim();
+    const friendCode = String(body.friendCode ?? '').trim();
     if (
-      !body.email ||
-      !body.password ||
-      !body.username ||
-      !body.birbName ||
-      !body.friendCode
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      email.length > 254 ||
+      !username ||
+      username.length > 64 ||
+      !birbName ||
+      birbName.length > 64 ||
+      !friendCode ||
+      friendCode.length > 64
     ) {
-      throw new Error('All fields are required');
+      throw new Error('Enter a valid email and profile details.');
     }
-    if (state.users.some((user) => user.email === body.email)) {
-      throw new Error('Email already taken');
+    if (
+      typeof body.password !== 'string' ||
+      body.password.length < 8 ||
+      new TextEncoder().encode(body.password).length > 72
+    ) {
+      throw new Error(
+        'Password must be at least 8 characters and no more than 72 bytes.',
+      );
+    }
+    if (
+      state.users.some(
+        (user) =>
+          user.email.toLowerCase() === email || user.friendCode === friendCode,
+      )
+    ) {
+      throw new Error('Email or friend code is already in use.');
     }
     const user: DemoUser = {
       id: Math.max(...state.users.map(({ id }) => id), 0) + 1,
-      email: body.email,
+      email,
       password: body.password,
-      username: body.username,
-      birbName: body.birbName,
-      friendCode: body.friendCode,
+      username,
+      birbName,
+      friendCode,
     };
     state.users.push(user);
     save();
@@ -517,8 +543,25 @@ export const mockApiFetch = async (
       ...getPotentialTrades(userId),
     ];
   }
-  if (path === '/api/trades/past' && method === 'GET') {
+  if (path.startsWith('/api/trades/past') && method === 'GET') {
     const userId = getUserId();
+    const [pathname, query = ''] = path.split('?');
+    const params = new URLSearchParams(query);
+    const rawLimit = params.get('limit');
+    const limit = rawLimit ? Number(rawLimit) : 50;
+    const rawCursor = params.get('cursor');
+    const offset = rawCursor ? Number(rawCursor) : 0;
+    if (
+      pathname !== '/api/trades/past' ||
+      !Number.isSafeInteger(limit) ||
+      limit < 1 ||
+      limit > 100 ||
+      !Number.isSafeInteger(offset) ||
+      offset < 0
+    ) {
+      throw new Error('Invalid past-trade pagination parameters');
+    }
+
     const pastGifts = state.gifts.map((gift) => ({
       id: gift.id,
       itemId: gift.itemId,
@@ -530,11 +573,17 @@ export const mockApiFetch = async (
           : ('giftReceived' as const),
       userId: gift.giftedBy === userId ? gift.giftedTo : gift.giftedBy,
     }));
-    return [...state.pastTrades, ...pastGifts].sort(
+    const allPastTrades = [...state.pastTrades, ...pastGifts].sort(
       (first, second) =>
         new Date(second.archivedAt).getTime() -
-        new Date(first.archivedAt).getTime(),
+          new Date(first.archivedAt).getTime() || second.id - first.id,
     );
+    const data = allPastTrades.slice(offset, offset + limit);
+    const nextOffset = offset + data.length;
+    return {
+      data,
+      nextCursor: nextOffset < allPastTrades.length ? String(nextOffset) : null,
+    } satisfies PastTradesPage;
   }
 
   const requestMatch = path.match(

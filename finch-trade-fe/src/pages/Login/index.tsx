@@ -27,7 +27,7 @@ const Login: React.FC = () => {
       !!username &&
       !!birbName &&
       !!friendCode &&
-      !!password &&
+      password.length >= 8 &&
       !!passwordAgain &&
       password === passwordAgain;
 
@@ -91,6 +91,7 @@ const Login: React.FC = () => {
               type="email"
               id="email"
               required
+              maxLength={254}
             />
             {!isLogin && (
               <>
@@ -103,6 +104,7 @@ const Login: React.FC = () => {
                   }}
                   id="username"
                   required
+                  maxLength={64}
                 />
                 <FormInput
                   label="Birb name"
@@ -113,6 +115,7 @@ const Login: React.FC = () => {
                   }}
                   id="birbname"
                   required
+                  maxLength={64}
                 />
                 <FormInput
                   label="Friend code"
@@ -123,6 +126,7 @@ const Login: React.FC = () => {
                   }}
                   id="friendCode"
                   required
+                  maxLength={64}
                 />
               </>
             )}
@@ -136,6 +140,7 @@ const Login: React.FC = () => {
               type="password"
               id="password"
               required
+              minLength={isLogin ? undefined : 8}
             />
             {!isLogin && (
               <FormInput

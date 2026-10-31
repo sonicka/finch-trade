@@ -8,7 +8,13 @@ import { PastGift, PastTrade, Trader } from '../../shared/types';
 
 const Trades: FC = () => {
   const user = useUser();
-  const { trades, pastTrades } = useTrades();
+  const {
+    trades,
+    pastTrades,
+    hasMorePastTrades,
+    isLoadingMorePastTrades,
+    loadMorePastTrades,
+  } = useTrades();
   const [isPastTradesOpen, setIsPastTradesOpen] = useState(true);
 
   if (!user) return null;
@@ -60,7 +66,7 @@ const Trades: FC = () => {
             id="past-trades-list"
             className={`overflow-hidden transition-all duration-300 ease-in-out ${
               isPastTradesOpen
-                ? 'max-h-[2000px] opacity-100 translate-y-0'
+                ? 'max-h-[80vh] overflow-y-auto opacity-100 translate-y-0'
                 : 'max-h-0 opacity-0 -translate-y-2'
             }`}
           >
@@ -77,6 +83,16 @@ const Trades: FC = () => {
                 )}
               </div>
             ))}
+            {hasMorePastTrades && isPastTradesOpen ? (
+              <button
+                type="button"
+                className="my-4 w-full rounded-xl border-2 border-darkBeige px-4 py-2 font-semibold text-darkBeige hover:bg-beige disabled:cursor-not-allowed disabled:opacity-60"
+                onClick={loadMorePastTrades}
+                disabled={isLoadingMorePastTrades}
+              >
+                {isLoadingMorePastTrades ? 'Loading...' : 'Load more'}
+              </button>
+            ) : null}
           </div>
         </div>
       ) : null}

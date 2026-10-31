@@ -8,6 +8,8 @@ interface Props {
   setValue?: (value: string) => void;
   required?: boolean;
   disabled?: boolean;
+  minLength?: number;
+  maxLength?: number;
 }
 
 const FormInput: FC<Props> = ({
@@ -18,6 +20,8 @@ const FormInput: FC<Props> = ({
   setValue = () => {},
   required = false,
   disabled = false,
+  minLength,
+  maxLength,
 }) => {
   return (
     <div>
@@ -34,6 +38,8 @@ const FormInput: FC<Props> = ({
         onChange={(e) => setValue(e.target.value)}
         required={required}
         disabled={disabled}
+        minLength={minLength}
+        maxLength={maxLength}
         className={`w-full p-2 border-2 rounded-xl flex justify-between items-center
                    ${disabled && 'text-greyBeige border-greyBeige'}
                    ${!disabled && 'cursor-pointer text-darkBeige border-darkBeige'}`}

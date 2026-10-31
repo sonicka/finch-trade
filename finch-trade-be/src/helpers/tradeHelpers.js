@@ -257,14 +257,39 @@ export const insertItemTransaction = async (
 
   const insertTransaction = async (client) => {
     const itemUpdates = [
-      [myItem.id, myItem.colorId, myItem.userId, theirItem.userId],
-      [theirItem.id, theirItem.colorId, theirItem.userId, myItem.userId],
-      [myItem.id, myItem.colorId, theirItem.userId, myItem.userId],
-      [theirItem.id, theirItem.colorId, myItem.userId, theirItem.userId],
+      [myItem.id, myItem.colorId, myItem.userId, theirItem.userId, 'tradelist'],
+      [
+        theirItem.id,
+        theirItem.colorId,
+        theirItem.userId,
+        myItem.userId,
+        'tradelist',
+      ],
+      [myItem.id, myItem.colorId, theirItem.userId, myItem.userId, 'wishlist'],
+      [
+        theirItem.id,
+        theirItem.colorId,
+        myItem.userId,
+        theirItem.userId,
+        'wishlist',
+      ],
     ];
 
-    for (const [itemId, colorId, userId, inTradeWithUser] of itemUpdates) {
-      await updateInTradeItem(itemId, colorId, userId, inTradeWithUser, client);
+    for (const [
+      itemId,
+      colorId,
+      userId,
+      inTradeWithUser,
+      listType,
+    ] of itemUpdates) {
+      await updateInTradeItem(
+        itemId,
+        colorId,
+        userId,
+        inTradeWithUser,
+        listType,
+        client,
+      );
     }
 
     return runQuery(
@@ -284,26 +309,33 @@ const updateInTradeItem = async (
   colorId,
   userId,
   inTradeWithUser,
+  listType,
   client,
 ) => {
   let result = await runQuery(
-    `UPDATE user_items SET in_trade_with_user = $1 WHERE item_id = $2 AND user_id = $3 AND color_id = $4`,
-    [inTradeWithUser, itemId, userId, colorId],
+    `UPDATE user_items
+     SET in_trade_with_user = $1
+     WHERE item_id = $2 AND user_id = $3 AND color_id = $4
+       AND list_type = $5 AND in_trade_with_user IS NULL`,
+    [inTradeWithUser, itemId, userId, colorId, listType],
     client,
   );
 
-  if (result.changes === 0) {
+  if (result.changes === 0 && listType === 'wishlist' && colorId !== 1) {
     result = await runQuery(
-      `UPDATE user_items SET in_trade_with_user = $1 WHERE item_id = $2 AND user_id = $3 AND color_id = 1`,
-      [inTradeWithUser, itemId, userId],
+      `UPDATE user_items
+       SET in_trade_with_user = $1
+       WHERE item_id = $2 AND user_id = $3 AND color_id = 1
+         AND list_type = $4 AND in_trade_with_user IS NULL`,
+      [inTradeWithUser, itemId, userId, listType],
       client,
     );
   }
 
   if (result.changes === 0) {
-    throw new Error(
-      `Failed to update item: itemId=${itemId}, userId=${userId}`,
-    );
+    const error = new Error('Trade item is no longer available.');
+    error.code = 'TRADE_ITEM_UNAVAILABLE';
+    throw error;
   }
 };
 
@@ -317,20 +349,44 @@ export const updateTrade = (tradeId, newStatus, requestedBy, executor) => {
 
 export const releaseTradeItems = (trade, executor) => {
   const items = [
-    [trade.user_id1, trade.item_id1, trade.color_id1, trade.user_id2],
-    [trade.user_id2, trade.item_id2, trade.color_id2, trade.user_id1],
-    [trade.user_id1, trade.item_id2, trade.color_id2, trade.user_id2],
-    [trade.user_id2, trade.item_id1, trade.color_id1, trade.user_id1],
+    [
+      trade.user_id1,
+      trade.item_id1,
+      trade.color_id1,
+      trade.user_id2,
+      'tradelist',
+    ],
+    [
+      trade.user_id2,
+      trade.item_id2,
+      trade.color_id2,
+      trade.user_id1,
+      'tradelist',
+    ],
+    [
+      trade.user_id1,
+      trade.item_id2,
+      trade.color_id2,
+      trade.user_id2,
+      'wishlist',
+    ],
+    [
+      trade.user_id2,
+      trade.item_id1,
+      trade.color_id1,
+      trade.user_id1,
+      'wishlist',
+    ],
   ];
 
   return Promise.all(
-    items.map(([userId, itemId, colorId, inTradeWithUser]) =>
+    items.map(([userId, itemId, colorId, inTradeWithUser, listType]) =>
       runQuery(
         `UPDATE user_items
          SET in_trade_with_user = NULL
          WHERE user_id = $1 AND item_id = $2 AND color_id IN ($3, 1)
-           AND in_trade_with_user = $4`,
-        [userId, itemId, colorId, inTradeWithUser],
+           AND in_trade_with_user = $4 AND list_type = $5`,
+        [userId, itemId, colorId, inTradeWithUser, listType],
         executor,
       ),
     ),
