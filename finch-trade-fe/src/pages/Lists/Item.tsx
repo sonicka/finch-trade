@@ -9,10 +9,22 @@ interface Props {
   text: string;
   itemId: number;
   isInTrade: boolean;
-  handleRemove: (itemId: number, colorId: number) => Promise<void>;
+  isRemoving: boolean;
+  handleRemove: (
+    itemId: number,
+    name: string,
+    colorId: number,
+  ) => Promise<void>;
 }
 
-const Item: FC<Props> = ({ color, text, itemId, isInTrade, handleRemove }) => {
+const Item: FC<Props> = ({
+  color,
+  text,
+  itemId,
+  isInTrade,
+  isRemoving,
+  handleRemove,
+}) => {
   return (
     <Card simple>
       <div className="w-full flex justify-between p-4 rounded-lg">
@@ -41,8 +53,12 @@ const Item: FC<Props> = ({ color, text, itemId, isInTrade, handleRemove }) => {
               clipRule="evenodd"
             />
           }
-          onClick={() => handleRemove(itemId, color.id)}
-          buttonProps={{ 'aria-label': 'Remove' }}
+          onClick={() => handleRemove(itemId, text, color.id)}
+          loading={isRemoving}
+          loadingLabel="Removing item"
+          buttonProps={{
+            'aria-label': isRemoving ? 'Removing item' : 'Remove',
+          }}
           className="border-none"
           disabled={isInTrade}
         />

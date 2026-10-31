@@ -11,6 +11,11 @@ const mocks = vi.hoisted(() => ({
   removeItem: vi.fn(),
   addNewItem: vi.fn(),
   clearMessage: vi.fn(),
+  successes: [] as {
+    id: number;
+    message: string;
+    undo?: { name: string; colorId: number; type: string };
+  }[],
 }));
 
 vi.mock('../../shared/context/DataProvider', () => ({
@@ -27,7 +32,18 @@ vi.mock('../../shared/hooks/items', () => ({
 }));
 
 vi.mock('../../shared/components/Alert', () => ({
-  default: () => null,
+  default: ({
+    action,
+    autoHide,
+  }: {
+    action?: { label: string; onClick: () => Promise<boolean> };
+    autoHide?: boolean;
+  }) =>
+    action ? (
+      <button data-auto-hide={autoHide} onClick={() => void action.onClick()}>
+        {action.label}
+      </button>
+    ) : null,
 }));
 
 const items = [{ id: 1, name: 'Leaf' }];
@@ -35,7 +51,13 @@ const colors = [
   { id: 1, color: 'any' },
   { id: 4, color: 'white' },
 ];
-const leaf = { user_id: 1, item_id: 1, color: 4, name: 'Leaf' };
+const leaf = {
+  user_id: 1,
+  item_id: 1,
+  color: 4,
+  name: 'Leaf',
+  isInTrade: false,
+};
 
 const renderList = () => render(<List type={ListTypeEnum.Wishlist} />);
 
@@ -50,6 +72,7 @@ const selectLeaf = () => {
 describe('List item removal integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.successes = [];
     mocks.useItems.mockReturnValue([items, vi.fn()]);
     mocks.useColors.mockReturnValue(colors);
     mocks.useUserItems.mockImplementation((type) => ({
@@ -59,13 +82,15 @@ describe('List item removal integration', () => {
       addNewItem: mocks.addNewItem,
       removeItem: mocks.removeItem,
       error: null,
-      successes: [],
+      successes: mocks.successes,
       clearMessage: mocks.clearMessage,
+      removingItem: undefined,
     });
     mocks.removeItem.mockResolvedValue(undefined);
+    mocks.addNewItem.mockResolvedValue(true);
   });
 
-  it('removes an item through the X button and makes its color available again', () => {
+  it('removes an item with its name and makes its color available again', () => {
     const { rerender } = renderList();
 
     selectLeaf();
@@ -76,12 +101,44 @@ describe('List item removal integration', () => {
     fireEvent.keyDown(document, { key: 'Escape' });
     fireEvent.click(screen.getByRole('button', { name: 'Remove' }));
 
-    expect(mocks.removeItem).toHaveBeenCalledWith(1, 4, 'wishlist');
+    expect(mocks.removeItem).toHaveBeenCalledWith(1, 'Leaf', 4, 'wishlist');
 
     mocks.useUserItems.mockReturnValue({ data: [] });
     rerender(<List type={ListTypeEnum.Wishlist} />);
 
     fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
     expect(screen.getByRole('option', { name: 'white' })).toBeInTheDocument();
+  });
+
+  it('shows a spinner in place of the remove button for the item being deleted', () => {
+    mocks.useManageItem.mockReturnValue({
+      addNewItem: mocks.addNewItem,
+      removeItem: mocks.removeItem,
+      error: null,
+      successes: mocks.successes,
+      clearMessage: mocks.clearMessage,
+      removingItem: { itemId: 1, colorId: 4 },
+    });
+
+    renderList();
+
+    expect(
+      screen.getByRole('button', { name: 'Removing item' }),
+    ).toBeDisabled();
+    expect(screen.getByRole('status', { name: 'Removing item' })).toBeVisible();
+  });
+
+  it('restores a removed item using its success alert action', () => {
+    mocks.successes.push({
+      id: 1,
+      message: 'Item removed',
+      undo: { name: 'Leaf', colorId: 4, type: 'wishlist' },
+    });
+    renderList();
+
+    const undoButton = screen.getByRole('button', { name: 'Undo' });
+    fireEvent.click(undoButton);
+
+    expect(mocks.addNewItem).toHaveBeenCalledWith('Leaf', 4, 'wishlist');
   });
 });

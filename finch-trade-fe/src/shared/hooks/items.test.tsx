@@ -40,7 +40,7 @@ const createWrapper = () => {
 describe('useManageItem', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(addItem).mockResolvedValue({ message: 'Item added' });
+    vi.mocked(addItem).mockResolvedValue({ message: 'Item added', itemId: 1 });
     vi.mocked(deleteItem).mockResolvedValue({ message: 'Item removed' });
     mocks.getAllItems.mockResolvedValue(undefined);
   });
@@ -70,10 +70,12 @@ describe('useManageItem', () => {
     const { result } = renderHook(() => useManageItem(), {
       wrapper: createWrapper(),
     });
-    vi.mocked(deleteItem).mockRejectedValueOnce(new Error('Could not remove item'));
+    vi.mocked(deleteItem).mockRejectedValueOnce(
+      new Error('Could not remove item'),
+    );
 
     await act(async () => {
-      await result.current.removeItem(1, 4, 'wishlist');
+      await result.current.removeItem(1, 'Leaf', 4, 'wishlist');
     });
 
     await waitFor(() =>
@@ -83,5 +85,23 @@ describe('useManageItem', () => {
     act(() => result.current.clearMessage());
 
     expect(result.current.error).toBeNull();
+  });
+
+  it('keeps the removed item details with the success message for undo', async () => {
+    const { result } = renderHook(() => useManageItem(), {
+      wrapper: createWrapper(),
+    });
+
+    await act(async () => {
+      await result.current.removeItem(1, 'Leaf', 4, 'wishlist');
+    });
+
+    expect(result.current.successes).toEqual([
+      {
+        id: expect.any(Number),
+        message: 'Item removed',
+        undo: { name: 'Leaf', colorId: 4, type: 'wishlist' },
+      },
+    ]);
   });
 });

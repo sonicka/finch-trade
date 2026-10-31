@@ -20,8 +20,15 @@ const List: React.FC<Props> = ({ type }) => {
   const { data: tradelist = [] } = useUserItems('tradelist');
   const allUserItems = { wishlist, tradelist };
   const userItems = allUserItems[type];
-  const { addNewItem, removeItem, error, successes, clearMessage } =
-    useManageItem();
+  const {
+    addNewItem,
+    removeItem,
+    error,
+    successes,
+    clearMessage,
+    isAdding,
+    removingItem,
+  } = useManageItem();
   const colors = useColors();
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
@@ -36,9 +43,10 @@ const List: React.FC<Props> = ({ type }) => {
 
   const handleRemove = async (
     itemId: number,
+    name: string,
     colorId: number,
   ): Promise<void> => {
-    await removeItem(itemId, colorId, type);
+    await removeItem(itemId, name, colorId, type);
   };
 
   return (
@@ -50,6 +58,7 @@ const List: React.FC<Props> = ({ type }) => {
           colors={colors}
           userItems={allUserItems}
           type={type}
+          isAdding={isAdding}
           clearError={clearMessage}
         />
       </div>
@@ -59,8 +68,22 @@ const List: React.FC<Props> = ({ type }) => {
       >
         <div className="pt-6">
           <div className="absolute -mt-6 -pt-8 w-full inset-x-0 h-6 bg-gradient-to-b from-beige via-transparent to-transparent to-80% z-10" />
-          {successes.map(({ id, message }) => (
-            <Alert key={id} type="success" message={message} autoHide />
+          {successes.map(({ id, message, undo }) => (
+            <Alert
+              key={id}
+              type="success"
+              message={message}
+              autoHide
+              action={
+                undo
+                  ? {
+                      label: 'Undo',
+                      onClick: () =>
+                        addNewItem(undo.name, undo.colorId, undo.type),
+                    }
+                  : undefined
+              }
+            />
           ))}
           {error && <Alert type="error" message={error} />}
           {userItems?.map((item: UserItem) => (
@@ -74,6 +97,10 @@ const List: React.FC<Props> = ({ type }) => {
                 }}
                 text={item.name}
                 isInTrade={item.isInTrade}
+                isRemoving={
+                  removingItem?.itemId === item.item_id &&
+                  removingItem?.colorId === item.color
+                }
                 handleRemove={handleRemove}
               />
             </div>

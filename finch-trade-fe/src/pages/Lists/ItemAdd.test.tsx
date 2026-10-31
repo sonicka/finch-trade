@@ -12,13 +12,14 @@ const colors = [
   { id: 4, color: 'white' },
 ];
 
-const renderItemAdd = (handleSubmit = vi.fn()) =>
+const renderItemAdd = (handleSubmit = vi.fn(), isAdding = false) =>
   render(
     <ItemAdd
       items={items}
       colors={colors}
       userItems={{ wishlist: [], tradelist: [] }}
       type={ListTypeEnum.Wishlist}
+      isAdding={isAdding}
       handleSubmit={handleSubmit}
       clearError={vi.fn()}
     />,
@@ -30,6 +31,13 @@ describe('ItemAdd', () => {
     const confirm = screen.getByRole('button', { name: 'Confirm' });
 
     expect(confirm).toBeDisabled();
+  });
+
+  it('shows a spinner and disables confirmation while adding', () => {
+    renderItemAdd(vi.fn(), true);
+
+    expect(screen.getByRole('button', { name: 'Adding item' })).toBeDisabled();
+    expect(screen.getByRole('status', { name: 'Adding item' })).toBeVisible();
   });
 
   it('shows item options when the item name field is focused', () => {
@@ -93,10 +101,19 @@ describe('ItemAdd', () => {
         items={items}
         colors={colors}
         userItems={{
-          wishlist: [{ user_id: 1, item_id: 1, color: 4, name: 'Leaf' }],
+          wishlist: [
+            {
+              user_id: 1,
+              item_id: 1,
+              color: 4,
+              name: 'Leaf',
+              isInTrade: false,
+            },
+          ],
           tradelist: [],
         }}
         type={ListTypeEnum.Wishlist}
+        isAdding={false}
         handleSubmit={vi.fn()}
         clearError={vi.fn()}
       />,
@@ -118,6 +135,7 @@ describe('ItemAdd', () => {
         colors={colors}
         userItems={{ wishlist: [], tradelist: [] }}
         type={ListTypeEnum.Wishlist}
+        isAdding={false}
         handleSubmit={vi.fn()}
         clearError={vi.fn()}
       />,

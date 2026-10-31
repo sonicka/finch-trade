@@ -10,6 +10,7 @@ interface Props {
   colors: Color[];
   userItems: UserItems;
   type: ListType;
+  isAdding: boolean;
   handleSubmit: SubmitEventHandler<HTMLFormElement>;
   clearError: () => void;
 }
@@ -19,6 +20,7 @@ const ItemAdd: FC<Props> = ({
   colors,
   userItems,
   type,
+  isAdding,
   handleSubmit,
   clearError,
 }) => {
@@ -36,7 +38,8 @@ const ItemAdd: FC<Props> = ({
     return name.trim().length > 0 && name.trim().length <= 40;
   };
 
-  const disabled = !selectedColor || !nameValue || !isValidItemName(nameValue);
+  const disabled =
+    isAdding || !selectedColor || !nameValue || !isValidItemName(nameValue);
   const itemsWithAnyColor = new Set(
     [...userItems.wishlist, ...userItems.tradelist]
       .filter((item) => item.color === 1)
@@ -133,8 +136,13 @@ const ItemAdd: FC<Props> = ({
               d="m4.5 12.75 6 6 9-13.5"
             />
           }
+          loading={isAdding}
+          loadingLabel="Adding item"
           disabled={disabled}
-          buttonProps={{ 'aria-label': 'Confirm', type: 'submit' }}
+          buttonProps={{
+            'aria-label': isAdding ? 'Adding item' : 'Confirm',
+            type: 'submit',
+          }}
           size="h-10 w-10"
         />
       </form>

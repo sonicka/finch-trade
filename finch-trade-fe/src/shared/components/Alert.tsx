@@ -10,12 +10,17 @@ import {
   useState,
 } from 'react';
 import IconButton from './IconButton';
+import Spinner from './Spinner';
 import { alertColors, getAlertMessage } from './alertUtils';
 
 export interface AlertProps {
   message: string;
   type?: 'error' | 'success' | 'info';
   autoHide?: boolean;
+  action?: {
+    label: string;
+    onClick: () => Promise<boolean>;
+  };
 }
 
 interface AlertEntry extends AlertProps {
@@ -34,14 +39,16 @@ const AlertMessage: FC<AlertEntry & { onClose: () => void }> = ({
   message,
   type = 'info',
   autoHide,
+  action,
   onClose,
 }) => {
   const [visible, setVisible] = useState(true);
+  const [actionPending, setActionPending] = useState(false);
   const shouldAutoHide = autoHide ?? type !== 'error';
 
   useEffect(() => {
     setVisible(true);
-    if (!shouldAutoHide) return;
+    if (!shouldAutoHide || actionPending) return;
 
     const fadeTimer = setTimeout(() => setVisible(false), 2500);
     const removeTimer = setTimeout(onClose, 3000);
@@ -50,7 +57,16 @@ const AlertMessage: FC<AlertEntry & { onClose: () => void }> = ({
       clearTimeout(fadeTimer);
       clearTimeout(removeTimer);
     };
-  }, [shouldAutoHide]);
+  }, [shouldAutoHide, actionPending]);
+
+  const handleAction = async () => {
+    setActionPending(true);
+    try {
+      if (await action?.onClick()) onClose();
+    } finally {
+      setActionPending(false);
+    }
+  };
 
   return (
     <div
@@ -60,6 +76,24 @@ const AlertMessage: FC<AlertEntry & { onClose: () => void }> = ({
       <span className="min-w-0 flex-1 break-words">
         {getAlertMessage(message, type)}
       </span>
+      {action && (
+        <button
+          type="button"
+          className="shrink-0 cursor-pointer font-semibold underline underline-offset-2 disabled:cursor-wait disabled:opacity-60"
+          onClick={() => void handleAction()}
+          disabled={actionPending}
+        >
+          {actionPending ? (
+            <Spinner
+              size={24}
+              label="Loading"
+              className="shrink-0 border-current border-t-transparent"
+            />
+          ) : (
+            action.label
+          )}
+        </button>
+      )}
       {!shouldAutoHide && (
         <IconButton
           color={
@@ -136,12 +170,12 @@ const Alert: FC<AlertProps> = (props) => {
   }
 
   useEffect(() => {
-    const alertKey = `${props.message}\u0000${props.type ?? ''}\u0000${props.autoHide ?? ''}`;
+    const alertKey = `${props.message}\u0000${props.type ?? ''}\u0000${props.autoHide ?? ''}\u0000${props.action?.label ?? ''}`;
     if (lastAlertKey.current === alertKey) return;
 
     context.register({ ...props, id: alertId });
     lastAlertKey.current = alertKey;
-  }, [context, props.message, props.type, props.autoHide]);
+  }, [context, props.message, props.type, props.autoHide, props.action]);
 
   useEffect(() => {
     return () => {

@@ -1,9 +1,12 @@
 import { FC, MouseEventHandler, ReactNode } from 'react';
+import Spinner from './Spinner';
 
 interface Props {
   icon: string | ReactNode;
   color?: 'beige' | 'red' | 'green';
   disabled?: boolean;
+  loading?: boolean;
+  loadingLabel?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   buttonProps?: object;
   className?: string;
@@ -14,6 +17,8 @@ const IconButton: FC<Props> = ({
   icon,
   color = 'beige',
   disabled = false,
+  loading = false,
+  loadingLabel = 'Loading',
   onClick,
   buttonProps,
   className,
@@ -31,19 +36,27 @@ const IconButton: FC<Props> = ({
       className={`${size} my-auto flex flex-none items-center justify-center rounded-full border-2 outline-none focus:ring-2 focus:ring-darkBeige focus:ring-offset-1
         ${colorClasses[color]} disabled:cursor-not-allowed disabled:border-grey disabled:text-grey disabled:hover:bg-inherit
         ${className}`}
-      disabled={disabled}
+      disabled={disabled || loading}
       {...buttonProps}
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="currentColor"
-        className="size-6"
-      >
-        {icon}
-      </svg>
+      {loading ? (
+        <Spinner
+          size={24}
+          label={loadingLabel}
+          className="border-current border-t-transparent"
+        />
+      ) : (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="size-6"
+        >
+          {icon}
+        </svg>
+      )}
     </button>
   );
 };
