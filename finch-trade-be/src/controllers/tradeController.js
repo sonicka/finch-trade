@@ -6,6 +6,7 @@ import {
   findTrades,
   getTradeByUsers,
   insertItemTransaction,
+  releaseTradeItems,
   updateTrade,
 } from '../helpers/tradeHelpers.js';
 import { deleteItem } from '../helpers/itemHelpers.js';
@@ -156,7 +157,7 @@ const finishTrade = async (trade, userId, client) => {
   const finishedBy = addRequester(trade.finished_by, userId);
   await runQuery(
     `UPDATE trades
-     SET status = $1, finished_by = $2, valid_until = NOW() + INTERVAL '24 hours'
+     SET status = $1, finished_by = $2
      WHERE id = $3`,
     [trade.status, JSON.stringify(finishedBy), trade.id],
     client,
@@ -318,5 +319,77 @@ export const postFinishTrade = async (req, res) => {
   } catch (err) {
     console.error('Error finishing trade:', err.message);
     return res.status(500).json({ error: err.message });
+  }
+};
+
+export const deletePendingTrade = async (req, res) => {
+  const { tradeId } = req.params;
+
+  try {
+    const result = await db.transaction(async (client) => {
+      const currentTrade = await queryOne(
+        'SELECT * FROM trades WHERE id = $1',
+        [tradeId],
+        (row) => row,
+        client,
+      );
+
+      if (!currentTrade) return { notFound: true };
+
+      if (
+        ![
+          String(currentTrade.user_id1),
+          String(currentTrade.user_id2),
+        ].includes(req.userId)
+      ) {
+        return { forbidden: true };
+      }
+
+      if (currentTrade.status !== 'pending') {
+        return { alreadyAccepted: currentTrade.status === 'confirmed' };
+      }
+
+      await lockUserPair(client, currentTrade.user_id1, currentTrade.user_id2);
+      const trade = await queryOne(
+        'SELECT * FROM trades WHERE id = $1 FOR UPDATE',
+        [tradeId],
+        (row) => row,
+        client,
+      );
+
+      if (!trade) return { notFound: true };
+      if (trade.status !== 'pending') {
+        return { alreadyAccepted: trade.status === 'confirmed' };
+      }
+
+      await releaseTradeItems(trade, client);
+      await deleteTrade(trade.id, client);
+      return { cancelled: true };
+    });
+
+    if (result.notFound) {
+      return res.status(404).json({
+        message:
+          'This trade no longer exists; it may already have been cancelled.',
+      });
+    }
+
+    if (result.alreadyAccepted) {
+      return res.status(409).json({
+        message:
+          'This trade has already been accepted and cannot be cancelled.',
+      });
+    }
+
+    if (result.forbidden) {
+      return res
+        .status(403)
+        .json({ message: 'Only trade participants can cancel this trade.' });
+    }
+
+    return res.status(200).json({ message: 'Pending trade cancelled' });
+  } catch (error) {
+    console.error('Error cancelling pending trade:', error);
+    return res.status(500).json({ message: 'Failed to cancel pending trade' });
   }
 };

@@ -114,6 +114,12 @@ export const finishTrade = async (tradeId: number) => {
   });
 };
 
+export const cancelTrade = async (tradeId: number) => {
+  return apiFetch(`/api/trades/${tradeId}`, {
+    method: 'DELETE',
+  });
+};
+
 export const finishGifting = async (
   giftedBy: number,
   giftedTo: number,

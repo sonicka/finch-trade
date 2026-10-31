@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
+  cancelTrade,
   deleteItem,
   finishGifting,
   finishTrade,
@@ -21,7 +22,7 @@ export const useManageTrade = () => {
       action,
       payload,
     }: {
-      action: 'request' | 'finish-trade' | 'finish-gifting';
+      action: 'request' | 'finish-trade' | 'finish-gifting' | 'cancel-trade';
       payload: {
         tradeId?: number;
         traderId?: number;
@@ -65,6 +66,10 @@ export const useManageTrade = () => {
           payload.colorId,
         );
       }
+      if (action === 'cancel-trade') {
+        if (!payload.tradeId) return false;
+        await cancelTrade(payload.tradeId);
+      }
       return true;
     },
     onSuccess: async (didMutate, { action }) => {
@@ -89,7 +94,7 @@ export const useManageTrade = () => {
   });
 
   const handleTrade = async (
-    action: 'request' | 'finish-trade' | 'finish-gifting',
+    action: 'request' | 'finish-trade' | 'finish-gifting' | 'cancel-trade',
     payload: {
       tradeId?: number;
       traderId?: number;
@@ -121,6 +126,9 @@ export const useManageTrade = () => {
     colorId: number,
   ) => handleTrade('finish-gifting', { giftedBy, giftedTo, itemId, colorId });
 
+  const handleCancelTrade = (tradeId: number) =>
+    handleTrade('cancel-trade', { tradeId });
+
   const error =
     mutation.error instanceof Error
       ? mutation.error.message
@@ -132,6 +140,7 @@ export const useManageTrade = () => {
     requestTrade: handleRequestTrade,
     finishTrade: handleFinishTrade,
     finishGifting: handleFinishGifting,
+    cancelTrade: handleCancelTrade,
     error,
     loading: mutation.isPending,
   };

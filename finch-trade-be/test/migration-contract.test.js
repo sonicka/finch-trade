@@ -21,6 +21,7 @@ test('migrations are numbered and include the current schema fixes', async () =>
     '004_unique_item_names.sql',
     '005_enforce_required_columns.sql',
     '006_use_timezone_aware_timestamps.sql',
+    '007_remove_unused_trade_valid_until.sql',
   ]);
 });
 
@@ -60,6 +61,30 @@ test('database migrations protect active trades and item names', async () => {
   assert.match(activeTrades, /WHERE status IN \('pending', 'confirmed'\)/);
   assert.match(itemNames, /CREATE UNIQUE INDEX/);
   assert.match(timestamps, /TYPE TIMESTAMPTZ/);
+});
+
+test('unused trade valid_until column is removed without writing it', async () => {
+  const migration = await readBackendFile(
+    'migrations/007_remove_unused_trade_valid_until.sql',
+  );
+  const tradeController = await readBackendFile(
+    'src/controllers/tradeController.js',
+  );
+
+  assert.match(
+    migration,
+    /ALTER TABLE trades\s+DROP COLUMN IF EXISTS valid_until/,
+  );
+  assert.doesNotMatch(tradeController, /valid_until/);
+});
+
+test('potential trade matching excludes wishlist items reserved by active trades', async () => {
+  const tradeHelpers = await readBackendFile('src/helpers/tradeHelpers.js');
+
+  assert.match(
+    tradeHelpers,
+    /const getWishItems = \(userId\) =>\s*queryAll\([\s\S]*?WHERE user_id = \$1\s+AND list_type = 'wishlist'\s+AND in_trade_with_user IS NULL/,
+  );
 });
 
 test('seed data creates a realistic local demo pair with matching trade potential', async () => {

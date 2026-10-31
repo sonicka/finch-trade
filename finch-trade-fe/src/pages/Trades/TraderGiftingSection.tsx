@@ -9,7 +9,7 @@ interface Props {
   trader: User;
   traderData: Trader;
   chosenItems: ChosenItems;
-  setChosenItems: React.Dispatch<React.SetStateAction<ChosenItems>>;
+  setChosenItems: (chosenItems: ChosenItems) => void;
 }
 
 const TraderGiftingSection: FC<Props> = ({
@@ -32,9 +32,7 @@ const TraderGiftingSection: FC<Props> = ({
             key={item.itemId + item.colorId}
             className="flex justify-center text-gray-600 mt-4"
           >
-            <label
-              className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded ? '' : 'cursor-pointer'}`}
-            >
+            <label className="flex items-center space-x-2 gap-2 cursor-pointer">
               <input
                 type="radio"
                 name="theirTradeItem"
@@ -49,7 +47,6 @@ const TraderGiftingSection: FC<Props> = ({
                     my: { id: item.itemId, colorId: item.colorId },
                   })
                 }
-                disabled={traderData.recentlyTraded}
               />
               <ColorCircle colors={colors} colorId={item.colorId} />
               {getItemName(items, item.itemId)}

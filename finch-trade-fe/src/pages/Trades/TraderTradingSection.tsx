@@ -9,7 +9,7 @@ interface Props {
   trader: User;
   traderData: Trader;
   chosenItems: ChosenItems;
-  setChosenItems: React.Dispatch<React.SetStateAction<ChosenItems>>;
+  setChosenItems: (chosenItems: ChosenItems) => void;
 }
 
 const TraderTradingSection: FC<Props> = ({
@@ -42,7 +42,7 @@ const TraderTradingSection: FC<Props> = ({
             className="flex justify-center text-gray-600 mt-4"
           >
             <label
-              className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded || isTradeOngoing ? '' : 'cursor-pointer'}`}
+              className={`flex items-center space-x-2 gap-2 ${isTradeOngoing ? '' : 'cursor-pointer'}`}
             >
               <input
                 type="radio"
@@ -58,7 +58,7 @@ const TraderTradingSection: FC<Props> = ({
                     my: { id: item.itemId, colorId: item.colorId },
                   })
                 }
-                disabled={isTradeOngoing || traderData.recentlyTraded}
+                disabled={isTradeOngoing}
               />
               <ColorCircle colors={colors} colorId={item.colorId} />
               {getItemName(items, item.itemId)}
@@ -74,7 +74,7 @@ const TraderTradingSection: FC<Props> = ({
             className="flex justify-center text-gray-600 mt-4"
           >
             <label
-              className={`flex items-center space-x-2 gap-2 ${traderData.recentlyTraded || isTradeOngoing ? '' : 'cursor-pointer'}`}
+              className={`flex items-center space-x-2 gap-2 ${isTradeOngoing ? '' : 'cursor-pointer'}`}
             >
               <input
                 type="radio"
@@ -90,7 +90,7 @@ const TraderTradingSection: FC<Props> = ({
                     their: { id: item.itemId, colorId: item.colorId },
                   })
                 }
-                disabled={isTradeOngoing || traderData.recentlyTraded}
+                disabled={isTradeOngoing}
               />
               <>
                 <div className="pr-1">

@@ -23,7 +23,7 @@ const TradeAlert: FC<Props> = ({ friendCodeShown, trader, traderData }) => {
       return `Trade successfully requested! Once ${trader?.username} accepts, you'll see each other's friend codes!`;
     }
     if (friendCodeShown) {
-      return `${trader?.username}'s friend code: ${trader?.friendCode}. Don't forget to confirm sending the item by clicking the button above.`;
+      return `${trader?.username}'s friend code: ${trader?.friendCode}. Confirm sending the item by clicking the button above.`;
     }
     return '';
   };

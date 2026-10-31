@@ -4,13 +4,11 @@ import { queryOne, queryAll, runQuery } from '../utils.js';
 export const findTrades = async (userId) => {
   try {
     const colors = await getNonAnyColors();
-    const [existingTrades, recentlyTradedWith, wishItems, tradeItems] =
-      await Promise.all([
-        getTradeByUser(userId),
-        getRecentlyTradedUsers(userId),
-        getWishItems(userId),
-        getTradeItems(userId),
-      ]);
+    const [existingTrades, wishItems, tradeItems] = await Promise.all([
+      getTradeByUser(userId),
+      getWishItems(userId),
+      getTradeItems(userId),
+    ]);
 
     const inTradeWithUsers = extractUsersFromTrades(
       existingTrades ?? [],
@@ -39,7 +37,6 @@ export const findTrades = async (userId) => {
         userId: traderId,
         wants: traderWants,
         has: traderOffers,
-        recentlyTraded: recentlyTradedWith.includes(traderId),
       });
     }
 
@@ -53,31 +50,6 @@ export const findTrades = async (userId) => {
 // helpers for findTrades
 const getNonAnyColors = () =>
   queryAll(`SELECT * FROM colors WHERE color != $1`, ['any']);
-
-const getRecentlyTradedUsers = (currentUserId) => {
-  return new Promise((resolve, reject) => {
-    db.all(
-      `SELECT user_id1, user_id2 FROM trades_history
-        WHERE archived_at >= NOW() - INTERVAL '24 hours'
-          AND (user_id1 = $1 OR user_id2 = $2)`,
-      [currentUserId, currentUserId],
-      (err, rows) => {
-        if (err) return reject(err);
-        const userIds = new Set();
-        rows.forEach((row) => {
-          // Add the *other* user to the Set
-          const otherUser =
-            row.user_id1 === Number(currentUserId)
-              ? row.user_id2
-              : row.user_id1;
-          userIds.add(otherUser);
-        });
-
-        resolve([...userIds]);
-      },
-    );
-  });
-};
 
 const getTradeByUser = (userId) => {
   return new Promise((resolve, reject) => {
@@ -132,7 +104,10 @@ export const getTradeByUsers = (userId1, userId2, executor) => {
 
 const getWishItems = (userId) =>
   queryAll(
-    `SELECT item_id, color_id FROM user_items WHERE user_id = $1 AND list_type = 'wishlist'`,
+    `SELECT item_id, color_id FROM user_items
+     WHERE user_id = $1
+       AND list_type = 'wishlist'
+       AND in_trade_with_user IS NULL`,
     [userId],
   );
 
@@ -337,6 +312,28 @@ export const updateTrade = (tradeId, newStatus, requestedBy, executor) => {
     'UPDATE trades SET status = $1, requested_by = $2 WHERE id = $3',
     [newStatus, JSON.stringify(requestedBy), tradeId],
     executor,
+  );
+};
+
+export const releaseTradeItems = (trade, executor) => {
+  const items = [
+    [trade.user_id1, trade.item_id1, trade.color_id1, trade.user_id2],
+    [trade.user_id2, trade.item_id2, trade.color_id2, trade.user_id1],
+    [trade.user_id1, trade.item_id2, trade.color_id2, trade.user_id2],
+    [trade.user_id2, trade.item_id1, trade.color_id1, trade.user_id1],
+  ];
+
+  return Promise.all(
+    items.map(([userId, itemId, colorId, inTradeWithUser]) =>
+      runQuery(
+        `UPDATE user_items
+         SET in_trade_with_user = NULL
+         WHERE user_id = $1 AND item_id = $2 AND color_id IN ($3, 1)
+           AND in_trade_with_user = $4`,
+        [userId, itemId, colorId, inTradeWithUser],
+        executor,
+      ),
+    ),
   );
 };
 

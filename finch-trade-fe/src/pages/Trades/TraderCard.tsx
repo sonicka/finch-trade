@@ -3,6 +3,7 @@ import TraderTradingSection from './TraderTradingSection';
 import TraderGiftingSection from './TraderGiftingSection';
 import TradeButtons from './TradeButtons';
 import TradeAlert from './TradeAlert';
+import { usePendingGift } from '../../shared/context/PendingGiftProvider';
 import InlineAlert from '../../shared/components/InlineAlert';
 import Card from '../../shared/components/Card';
 import { useManageTrade, ChosenItems } from '../../shared/hooks/trades';
@@ -16,13 +17,34 @@ interface Props {
 
 const TraderCard: FC<Props> = ({ traderData, userId }) => {
   const trader = useUserById(traderData.userId);
-  const { chosenItems, setChosenItems } = useChosenItems(traderData);
-  const { requestTrade, finishTrade, finishGifting, error } = useManageTrade();
-  const [friendCodeShown, setFriendCodeShown] = useState<boolean>(false);
-  const { gifting, requestedByMe, requestedByThem, tradeAccepted, showAlert } =
+  const { chosenItems: tradeChosenItems, setChosenItems: setTradeChosenItems } =
+    useChosenItems(traderData);
+  const { pendingGift, updatePendingGift, clearPendingGift } = usePendingGift(
+    userId,
+    traderData.userId,
+  );
+  const gifting = traderData.has.length === 0;
+  const chosenItems = gifting
+    ? { my: pendingGift.item, their: null }
+    : tradeChosenItems;
+  const setChosenItems = (items: ChosenItems) => {
+    if (gifting) updatePendingGift({ item: items.my });
+    else setTradeChosenItems(items);
+  };
+  const { requestTrade, finishTrade, finishGifting, cancelTrade, error } =
+    useManageTrade();
+  const friendCodeShown = pendingGift.friendCodeShown;
+  const { requestedByMe, requestedByThem, tradeAccepted, showAlert } =
     getTradeStatus(traderData, friendCodeShown);
 
-  const handleShowFriendCode = () => setFriendCodeShown(true);
+  useEffect(() => {
+    if (!gifting && (pendingGift.item || pendingGift.friendCodeShown)) {
+      clearPendingGift();
+    }
+  }, [gifting, pendingGift, clearPendingGift]);
+
+  const handleShowFriendCode = () =>
+    updatePendingGift({ friendCodeShown: true });
 
   const handleRequestTrade = () => requestTrade(traderData.userId, chosenItems);
 
@@ -37,8 +59,8 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
       );
     else didFinish = await finishTrade(traderData.tradeId, chosenItems);
     if (!didFinish) return;
-    setFriendCodeShown(false);
-    setChosenItems({ my: null, their: null });
+    if (gifting) clearPendingGift();
+    else setTradeChosenItems({ my: null, their: null });
   };
 
   if (!trader) return null;
@@ -51,7 +73,6 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
           <br />
           <b>{`${trader?.birbName} & ${trader?.username}!`}</b>
         </h2>
-        {error && <InlineAlert message={error} type="error" />}
         {gifting && (
           <TraderGiftingSection
             trader={trader}
@@ -68,40 +89,42 @@ const TraderCard: FC<Props> = ({ traderData, userId }) => {
             setChosenItems={setChosenItems}
           />
         )}
-        {traderData.recentlyTraded ? (
-          <InlineAlert message="You’ve already made a trade with this user in the past 24 hours. Come back tomorrow to trade again!" />
-        ) : (
-          <TradeButtons
-            buttons={[
-              {
-                id: 'show-friend-code',
-                label: 'Show friend code',
-                onClick: handleShowFriendCode,
-                disabled: !chosenItems.my?.id && !chosenItems.my?.colorId,
-                shown: gifting && !friendCodeShown,
-              },
-              {
-                id: 'trade-request',
-                label: requestedByMe
-                  ? 'Trade requested'
-                  : requestedByThem
-                    ? 'Accept trade request'
-                    : 'Request trade',
-                onClick: handleRequestTrade,
-                disabled:
-                  requestedByMe || !chosenItems.my || !chosenItems.their,
-                shown: !gifting && !tradeAccepted,
-              },
-              {
-                id: 'finish-trade',
-                label: gifting ? 'Finish gifting' : 'Finish trade',
-                onClick: handleFinishTrade,
-                disabled: traderData.finishedByMe,
-                shown: tradeAccepted || (gifting && friendCodeShown),
-              },
-            ]}
-          />
-        )}
+        {error && <InlineAlert message={error} type="error" />}
+        <TradeButtons
+          buttons={[
+            {
+              id: 'show-friend-code',
+              label: 'Show friend code',
+              onClick: handleShowFriendCode,
+              disabled: !chosenItems.my?.id && !chosenItems.my?.colorId,
+              shown: gifting && !friendCodeShown,
+            },
+            {
+              id: 'trade-request',
+              label: requestedByMe
+                ? 'Trade requested'
+                : requestedByThem
+                  ? 'Accept trade request'
+                  : 'Request trade',
+              onClick: handleRequestTrade,
+              disabled: requestedByMe || !chosenItems.my || !chosenItems.their,
+              shown: !gifting && !tradeAccepted,
+            },
+            {
+              id: 'cancel-trade',
+              label: 'Cancel trade',
+              onClick: () => cancelTrade(traderData.tradeId),
+              shown: !gifting && traderData.status === 'pending',
+            },
+            {
+              id: 'finish-trade',
+              label: gifting ? 'Finish gifting' : 'Finish trade',
+              onClick: handleFinishTrade,
+              disabled: traderData.finishedByMe,
+              shown: tradeAccepted || (gifting && friendCodeShown),
+            },
+          ]}
+        />
         {showAlert && (
           <TradeAlert
             friendCodeShown={friendCodeShown}

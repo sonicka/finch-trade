@@ -1,8 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-} from 'react';
+import { createContext, ReactNode, useContext } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -87,6 +83,7 @@ export const useTrades = () => {
     queryFn: fetchTrades,
     enabled: Boolean(user?.id),
     refetchInterval: 5 * 60 * 1000,
+    refetchOnMount: 'always',
   });
   const pastTradesQuery = useQuery({
     queryKey: user

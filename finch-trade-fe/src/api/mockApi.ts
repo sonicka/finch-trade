@@ -9,8 +9,6 @@ import {
 } from '../shared/types';
 
 const STORAGE_KEY = 'finch-trade-demo-state';
-const IGNORE_RECENT_TRADE_LIMIT =
-  import.meta.env.VITE_DEMO_IGNORE_RECENT_TRADE_LIMIT === 'true';
 
 interface DemoUser extends User {
   email: string;
@@ -255,28 +253,6 @@ const toTradeItem = (item: UserItem) => ({
   colorId: item.color,
 });
 
-const getRecentlyTradedUserIds = (userId: number) => {
-  if (IGNORE_RECENT_TRADE_LIMIT) return new Set<number>();
-
-  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
-  const recentUserIds = new Set<number>();
-
-  state.pastTrades.forEach((trade) => {
-    if (new Date(trade.archivedAt).getTime() < cutoff) return;
-    if (trade.type !== 'trade') return;
-    if (trade.userId1 === userId) recentUserIds.add(trade.userId2);
-    if (trade.userId2 === userId) recentUserIds.add(trade.userId1);
-  });
-
-  state.gifts.forEach((gift) => {
-    if (new Date(gift.archivedAt).getTime() < cutoff) return;
-    if (gift.giftedBy === userId) recentUserIds.add(gift.giftedTo);
-    if (gift.giftedTo === userId) recentUserIds.add(gift.giftedBy);
-  });
-
-  return recentUserIds;
-};
-
 const getPotentialTrades = (userId: number): Trader[] => {
   const myWishlist = getUserItems(userId, 'wishlist');
   const myTradelist = getUserItems(userId, 'tradelist');
@@ -291,8 +267,6 @@ const getPotentialTrades = (userId: number): Trader[] => {
         return [];
       }),
   );
-  const recentlyTradedUserIds = getRecentlyTradedUserIds(userId);
-
   return state.users
     .filter(
       (candidate) =>
@@ -344,7 +318,6 @@ const getPotentialTrades = (userId: number): Trader[] => {
               )?.color ?? item.color,
             ),
           })),
-          recentlyTraded: recentlyTradedUserIds.has(candidate.id),
         },
       ];
     });
@@ -379,7 +352,6 @@ const formatTrade = (trade: DemoTrade, userId: number): Trader => {
     userId: isUser1 ? trade.userId2 : trade.userId1,
     wants: [myItem],
     has: [theirItem],
-    recentlyTraded: false,
     status: trade.status,
     requestedByMe: trade.requestedBy.includes(userId),
     finishedByMe: trade.finishedBy.includes(userId),
@@ -643,6 +615,22 @@ export const mockApiFetch = async (
       tradeId: trade.id,
       status: trade.status,
     };
+  }
+
+  const cancelMatch = path.match(/^\/api\/trades\/(\d+)$/);
+  if (cancelMatch && method === 'DELETE') {
+    const userId = getUserId();
+    const trade = state.trades.find(({ id }) => id === Number(cancelMatch[1]));
+    if (!trade || trade.status !== 'pending') {
+      throw new Error('Pending trade not found');
+    }
+    if (trade.userId1 !== userId && trade.userId2 !== userId) {
+      throw new Error('Only trade participants can cancel this trade.');
+    }
+
+    state.trades.splice(state.trades.indexOf(trade), 1);
+    save();
+    return { message: 'Pending trade cancelled' };
   }
 
   if (path === '/api/trades/finishGifting' && method === 'POST') {

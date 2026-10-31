@@ -1,9 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Trades from './index';
+import { PendingGiftProvider } from '../../shared/context/PendingGiftProvider';
 import { PastGift, Trader, User } from '../../shared/types';
 
 const mocks = vi.hoisted(() => ({
+  cancelTrade: vi.fn(),
   finishGifting: vi.fn(),
   finishTrade: vi.fn(),
   pastTrades: [] as PastGift[],
@@ -48,6 +50,7 @@ vi.mock('../../shared/hooks/users', () => ({
 
 vi.mock('../../shared/hooks/trades', () => ({
   useManageTrade: () => ({
+    cancelTrade: mocks.cancelTrade,
     requestTrade: mocks.requestTrade,
     finishTrade: mocks.finishTrade,
     finishGifting: mocks.finishGifting,
@@ -67,11 +70,15 @@ const makeTrader = (overrides: Partial<Trader> = {}): Trader => ({
   userId: 2,
   wants: [{ userId: 1, itemId: 1, colorId: 4 }],
   has: [{ userId: 2, itemId: 2, colorId: 6 }],
-  recentlyTraded: false,
   ...overrides,
 });
 
-const renderTrades = () => render(<Trades />);
+const renderTrades = () =>
+  render(
+    <PendingGiftProvider>
+      <Trades />
+    </PendingGiftProvider>,
+  );
 
 describe('Trades page', () => {
   beforeEach(() => {
@@ -110,6 +117,31 @@ describe('Trades page', () => {
         their: { id: 2, colorId: 6 },
       }),
     );
+  });
+
+  it('shows cancellation beside an incoming request and cancels that trade', async () => {
+    mocks.trades = [
+      makeTrader({
+        status: 'pending',
+        requestedByMe: false,
+        requestedTrade: {
+          userId1: 1,
+          itemId1: 2,
+          colorId1: 6,
+          userId2: 2,
+          itemId2: 1,
+          colorId2: 4,
+        },
+      }),
+    ];
+    renderTrades();
+
+    expect(
+      screen.getByRole('button', { name: 'Accept trade request' }),
+    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Cancel trade' }));
+
+    await waitFor(() => expect(mocks.cancelTrade).toHaveBeenCalledWith(42));
   });
 
   it('finishes an accepted trade and refreshes past trades', async () => {
@@ -153,6 +185,52 @@ describe('Trades page', () => {
     await waitFor(() => {
       expect(mocks.finishGifting).toHaveBeenCalledWith(1, 2, 1, 4);
     });
+  });
+
+  it('keeps a pending gift and friend code visible after leaving and returning', () => {
+    mocks.trades = [makeTrader({ has: [] })];
+    const { rerender } = renderTrades();
+
+    fireEvent.click(screen.getByRole('radio', { name: /Leaf/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Show friend code' }));
+
+    rerender(
+      <PendingGiftProvider>
+        <div />
+      </PendingGiftProvider>,
+    );
+    rerender(
+      <PendingGiftProvider>
+        <Trades />
+      </PendingGiftProvider>,
+    );
+
+    expect(screen.getByRole('radio', { name: /Leaf/ })).toBeChecked();
+    expect(screen.getByText(/NOAH456/)).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Finish gifting' }),
+    ).toBeInTheDocument();
+  });
+
+  it('shows a regular trade if tradelist items become available after selecting a gift', () => {
+    mocks.trades = [makeTrader({ has: [] })];
+    const { rerender } = renderTrades();
+
+    fireEvent.click(screen.getByRole('radio', { name: /Leaf/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Show friend code' }));
+
+    mocks.trades = [makeTrader()];
+    rerender(
+      <PendingGiftProvider>
+        <Trades />
+      </PendingGiftProvider>,
+    );
+
+    expect(screen.getByText('Juniper can give you:')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Request trade' }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/NOAH456/)).not.toBeInTheDocument();
   });
 
   it('renders trade mutation errors in the relevant trader card', () => {

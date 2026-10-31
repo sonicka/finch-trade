@@ -10,6 +10,7 @@ const calls = {
   insertItemTransaction: [],
   queryAll: [],
   queryOne: [],
+  releaseTradeItems: [],
   runQuery: [],
   transactions: [],
   updateTrade: [],
@@ -30,6 +31,7 @@ const defaults = {
   insertItemTransaction: async () => ({ lastID: 42 }),
   queryAll: async () => [],
   queryOne: async () => null,
+  releaseTradeItems: async () => {},
   runQuery: async () => ({ lastID: 42, changes: 1 }),
   transaction: async (callback) => callback(client),
   updateTrade: async () => {},
@@ -43,6 +45,7 @@ const record = (name, args) => {
 
 const queryAll = (...args) => record('queryAll', args);
 const queryOne = (...args) => record('queryOne', args);
+const releaseTradeItems = (...args) => record('releaseTradeItems', args);
 const runQuery = (...args) => record('runQuery', args);
 const archiveTrade = (...args) => record('archiveTrade', args);
 const deleteTrade = (...args) => record('deleteTrade', args);
@@ -71,12 +74,17 @@ mockModule('../src/helpers/tradeHelpers.js', {
   findTrades: async () => [],
   getTradeByUsers,
   insertItemTransaction,
+  releaseTradeItems,
   updateTrade,
 });
 mockModule('../src/helpers/itemHelpers.js', { deleteItem });
 
-const { postFinishGifting, postFinishTrade, postRequestTrade } =
-  await import('../src/controllers/tradeController.js');
+const {
+  deletePendingTrade,
+  postFinishGifting,
+  postFinishTrade,
+  postRequestTrade,
+} = await import('../src/controllers/tradeController.js');
 const { deleteItemFromDB, postItemToDB } =
   await import('../src/controllers/itemController.js');
 
@@ -238,6 +246,93 @@ test('reciprocal trade request rejects changed item selections', async () => {
   assert.equal(response.statusCode, 400);
   assert.match(response.body.message, /Trade items do not match/);
   assert.equal(calls.updateTrade.length, 0);
+});
+
+test('either trade participant can cancel a pending trade and release its items', async () => {
+  const trade = pendingTrade();
+  behavior.queryOne = async () => trade;
+
+  for (const userId of ['1', '2']) {
+    const response = createResponse();
+    await deletePendingTrade({ userId, params: { tradeId: '42' } }, response);
+
+    assert.equal(response.statusCode, 200);
+    assert.deepEqual(response.body, { message: 'Pending trade cancelled' });
+  }
+
+  assert.equal(calls.transactions.length, 2);
+  assert.match(
+    calls.queryOne[1][0],
+    /SELECT \* FROM trades WHERE id = \$1 FOR UPDATE/,
+  );
+  assert.deepEqual(calls.releaseTradeItems[0], [trade, client]);
+  assert.deepEqual(calls.deleteTrade[0], [42, client]);
+  assert.deepEqual(calls.releaseTradeItems[1], [trade, client]);
+  assert.deepEqual(calls.deleteTrade[1], [42, client]);
+});
+
+test('pending trade cancellation rejects non-participants', async () => {
+  behavior.queryOne = async () => pendingTrade();
+  const response = createResponse();
+
+  await deletePendingTrade(
+    { userId: '3', params: { tradeId: '42' } },
+    response,
+  );
+
+  assert.equal(response.statusCode, 403);
+  assert.equal(calls.releaseTradeItems.length, 0);
+  assert.equal(calls.deleteTrade.length, 0);
+});
+
+test('pending trade cancellation returns not found when the trade is gone', async () => {
+  const response = createResponse();
+
+  await deletePendingTrade(
+    { userId: '1', params: { tradeId: '42' } },
+    response,
+  );
+
+  assert.equal(response.statusCode, 404);
+  assert.equal(calls.releaseTradeItems.length, 0);
+  assert.equal(calls.deleteTrade.length, 0);
+});
+
+test('pending trade cancellation explains when the trade was already accepted', async () => {
+  behavior.queryOne = async () => confirmedTrade();
+  const response = createResponse();
+
+  await deletePendingTrade(
+    { userId: '1', params: { tradeId: '42' } },
+    response,
+  );
+
+  assert.equal(response.statusCode, 409);
+  assert.deepEqual(response.body, {
+    message: 'This trade has already been accepted and cannot be cancelled.',
+  });
+  assert.equal(calls.clientQuery.length, 0);
+  assert.equal(calls.releaseTradeItems.length, 0);
+  assert.equal(calls.deleteTrade.length, 0);
+});
+
+test('pending trade cancellation detects acceptance while waiting for the pair lock', async () => {
+  let queryCount = 0;
+  behavior.queryOne = async () => {
+    queryCount += 1;
+    return queryCount === 1 ? pendingTrade() : confirmedTrade();
+  };
+  const response = createResponse();
+
+  await deletePendingTrade(
+    { userId: '1', params: { tradeId: '42' } },
+    response,
+  );
+
+  assert.equal(response.statusCode, 409);
+  assert.match(response.body.message, /already been accepted/);
+  assert.equal(calls.releaseTradeItems.length, 0);
+  assert.equal(calls.deleteTrade.length, 0);
 });
 
 test('only trade participants can mark a confirmed trade complete', async () => {

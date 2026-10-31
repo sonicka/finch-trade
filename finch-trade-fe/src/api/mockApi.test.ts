@@ -17,9 +17,6 @@ describe('mock trade flow', () => {
     };
 
     await login('demo1@finchtrade.local');
-    const requesterTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
-    expect(requesterTrade.recentlyTraded).toBe(false);
-
     await login('demo2@finchtrade.local');
     const noahTradelist = (await mockApiFetch(
       '/api/items/tradelist',
@@ -34,9 +31,6 @@ describe('mock trade flow', () => {
       ]),
     );
     expect(noahTradelist.some((item) => item.color === 1)).toBe(false);
-    const recipientTrade = ((await mockApiFetch('/api/trades')) as Trader[])[0];
-    expect(recipientTrade.recentlyTraded).toBe(false);
-
     await mockApiFetch('/api/trades/requestTrade?userId2=1', {
       method: 'POST',
       body: JSON.stringify({
@@ -75,6 +69,36 @@ describe('mock trade flow', () => {
       ),
     ).toBe(false);
     expect(await mockApiFetch('/api/trades/past')).toHaveLength(1);
+  });
+
+  it('lets either participant cancel a pending trade', async () => {
+    const login = async (email: string) => {
+      const response = (await mockApiFetch('/api/users/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password: 'demo123' }),
+      })) as { token: string };
+      localStorage.setItem('authToken', response.token);
+    };
+
+    await login('demo1@finchtrade.local');
+    await mockApiFetch('/api/trades/requestTrade?userId2=2', {
+      method: 'POST',
+      body: JSON.stringify({
+        chosenItems: {
+          my: { id: 2, colorId: 6 },
+          their: { id: 1, colorId: 11 },
+        },
+      }),
+    });
+
+    await login('demo2@finchtrade.local');
+    await mockApiFetch('/api/trades/1', { method: 'DELETE' });
+
+    expect(
+      ((await mockApiFetch('/api/trades')) as Trader[]).some(
+        ({ tradeId }) => tradeId === 1,
+      ),
+    ).toBe(false);
   });
 
   it('allows different colors for the same item', async () => {
@@ -250,7 +274,6 @@ describe('mock trade flow', () => {
     expect(reciprocalTrade).toMatchObject({
       userId: 3,
       tradeId: 0,
-      recentlyTraded: false,
     });
     expect(reciprocalTrade?.wants).toEqual([
       { userId: 3, itemId: 9, colorId: 2 },
@@ -302,7 +325,6 @@ describe('mock trade flow', () => {
     expect(giftingOpportunity).toMatchObject({
       tradeId: 0,
       has: [],
-      recentlyTraded: false,
     });
     expect(giftingOpportunity?.wants).toEqual([
       { userId: 3, itemId: 9, colorId: 2 },

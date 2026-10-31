@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useManageTrade } from './trades';
 import {
+  cancelTrade,
   deleteItem,
   finishGifting,
   finishTrade,
@@ -11,6 +12,7 @@ import {
 } from '../../api/api';
 
 vi.mock('../../api/api', () => ({
+  cancelTrade: vi.fn(),
   deleteItem: vi.fn(),
   finishGifting: vi.fn(),
   finishTrade: vi.fn(),
@@ -36,6 +38,7 @@ const createWrapper = () => {
 describe('useManageTrade', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(cancelTrade).mockResolvedValue({});
     vi.mocked(requestTrade).mockResolvedValue({});
     vi.mocked(finishTrade).mockResolvedValue({});
     vi.mocked(finishGifting).mockResolvedValue({});
@@ -49,6 +52,23 @@ describe('useManageTrade', () => {
 
     await act(async () => {
       await result.current.requestTrade(7, chosenItems);
+    });
+
+    it('cancels a pending trade and refreshes the trade and item queries', async () => {
+      const { wrapper, invalidateQueries } = createWrapper();
+      const { result } = renderHook(() => useManageTrade(), { wrapper });
+
+      await act(async () => {
+        await result.current.cancelTrade(42);
+      });
+
+      expect(cancelTrade).toHaveBeenCalledWith(42);
+      expect(invalidateQueries).toHaveBeenCalledWith({
+        queryKey: ['userData', 1, 'trades'],
+      });
+      expect(invalidateQueries).toHaveBeenCalledWith({
+        queryKey: ['userData', 1, 'items'],
+      });
     });
 
     expect(requestTrade).toHaveBeenCalledWith(7, chosenItems);

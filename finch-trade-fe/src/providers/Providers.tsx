@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DataProvider } from '../shared/context/DataProvider';
 import { UserProvider } from '../shared/context/UserProvider';
 import { AlertProvider } from '../shared/components/Alert';
+import { PendingGiftProvider } from '../shared/context/PendingGiftProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,7 +23,9 @@ export const Providers = ({ children }: Props) => {
     <QueryClientProvider client={queryClient}>
       <AlertProvider>
         <UserProvider>
-          <DataProvider>{children}</DataProvider>
+          <PendingGiftProvider>
+            <DataProvider>{children}</DataProvider>
+          </PendingGiftProvider>
         </UserProvider>
       </AlertProvider>
     </QueryClientProvider>
