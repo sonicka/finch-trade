@@ -54,28 +54,28 @@ describe('useManageTrade', () => {
       await result.current.requestTrade(7, chosenItems);
     });
 
-    it('cancels a pending trade and refreshes the trade and item queries', async () => {
-      const { wrapper, invalidateQueries } = createWrapper();
-      const { result } = renderHook(() => useManageTrade(), { wrapper });
-
-      await act(async () => {
-        await result.current.cancelTrade(42);
-      });
-
-      expect(cancelTrade).toHaveBeenCalledWith(42);
-      expect(invalidateQueries).toHaveBeenCalledWith({
-        queryKey: ['userData', 1, 'trades'],
-      });
-      expect(invalidateQueries).toHaveBeenCalledWith({
-        queryKey: ['userData', 1, 'items'],
-      });
-    });
-
     expect(requestTrade).toHaveBeenCalledWith(7, chosenItems);
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: ['userData', 1, 'trades'],
     });
     expect(result.current.error).toBeNull();
+  });
+
+  it('cancels a pending trade and refreshes the trade and item queries', async () => {
+    const { wrapper, invalidateQueries } = createWrapper();
+    const { result } = renderHook(() => useManageTrade(), { wrapper });
+
+    await act(async () => {
+      await result.current.cancelTrade(42);
+    });
+
+    expect(cancelTrade).toHaveBeenCalledWith(42);
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['userData', 1, 'trades'],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: ['userData', 1, 'items'],
+    });
   });
 
   it('finishes a gift with all gift details', async () => {
