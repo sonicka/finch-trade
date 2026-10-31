@@ -1,5 +1,6 @@
 import { ChangeEvent, SubmitEvent, useRef, useState } from 'react';
 import { ScreenshotData, useUseroFeedback } from '@usero/sdk/headless/react';
+import Button from './Button';
 
 const ratingOptions = [
   { value: 1 as const, emoji: '😞', label: 'Needs work' },
@@ -76,15 +77,15 @@ const FeedbackButton = () => {
 
   return (
     <div className="relative">
-      <button
-        type="button"
-        className="rounded-xl border-2 border-mediumBeige bg-lightBeige px-4 py-2 text-sm font-semibold text-darkBeige shadow-sm outline-none transition hover:bg-beige focus:ring-1 focus:ring-darkBeige focus:ring-offset-1"
-        aria-expanded={isOpen}
-        aria-controls="feedback-panel"
+      <Button
+        label="Send feedback"
+        buttonProps={{
+          type: 'button',
+          'aria-expanded': isOpen,
+          'aria-controls': 'feedback-panel',
+        }}
         onClick={() => setIsOpen((open) => !open)}
-      >
-        Send feedback
-      </button>
+      />
 
       {isOpen && (
         <div
