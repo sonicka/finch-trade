@@ -4,6 +4,9 @@
   "main": "src/server.js",
   "type": "module",
   "license": "MIT",
+  "engines": {
+    "node": "^22.13.0 || >=24.0.0"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",

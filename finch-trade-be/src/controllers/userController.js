@@ -57,7 +57,9 @@ export const login = async (req, res) => {
 
   try {
     // Get user by email
-    const user = await queryOne('SELECT * FROM users WHERE email = $1', [email]);
+    const user = await queryOne('SELECT * FROM users WHERE email = $1', [
+      email,
+    ]);
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
