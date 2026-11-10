@@ -75,12 +75,15 @@ export interface TradeItem {
   colorId: number;
 }
 
+export type ActiveTradeStatus = 'pending' | 'confirmed';
+export type ArchivedTradeStatus = 'archived';
+
 export interface Trader {
   tradeId: number;
   userId: number;
   wants: TradeItem[];
   has: TradeItem[];
-  status?: string;
+  status?: ActiveTradeStatus;
   requestedByMe?: boolean;
   finishedByMe?: boolean;
   requestedTrade?: RequestedTrade;
@@ -114,7 +117,7 @@ export interface PastTrade {
   itemId2: number;
   colorId2: number;
   archivedAt: string;
-  status: string;
+  status: ArchivedTradeStatus;
   type: 'trade';
 }
 

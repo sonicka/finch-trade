@@ -86,10 +86,6 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 
 ### TODO Frontend / UI / UX
 
-- [ ] Build a component for confirmation actions (delete, etc.)
-- [ ] Integrate **TanStack Query** to handle requests, caching and loading/error states
-- [ ] Handle **Loading / Error / Success** states properly across all views
-
 ### TODO Backend
 
 - [ ] Tie color options to each item separately (dynamic color sets)

@@ -1,5 +1,6 @@
 import {
   Color,
+  ActiveTradeStatus,
   Item,
   ListType,
   PastTrades,
@@ -24,7 +25,7 @@ interface DemoTrade {
   userId2: number;
   itemId2: number;
   colorId2: number;
-  status: 'pending' | 'confirmed'; // todo check
+  status: ActiveTradeStatus;
   requestedBy: number[];
   finishedBy: number[];
 }
@@ -638,7 +639,9 @@ export const mockApiFetch = async (
     if (!trade || trade.status !== 'confirmed')
       throw new Error('Trade not found or not confirmed');
     trade.finishedBy = [...new Set([...trade.finishedBy, userId])];
-    if (trade.finishedBy.length === 2) {
+    // Match the backend response: the final participant completion archives the trade.
+    const archived = trade.finishedBy.length === 2;
+    if (archived) {
       removeTradeItem(trade.userId1, trade.itemId1, trade.colorId1, true);
       removeTradeItem(trade.userId2, trade.itemId2, trade.colorId2, true);
       removeTradeItem(trade.userId1, trade.itemId2, trade.colorId2, false);
@@ -653,16 +656,18 @@ export const mockApiFetch = async (
         itemId2: trade.itemId2,
         colorId2: trade.colorId2,
         archivedAt: new Date().toISOString(),
-        status: 'archived', // todo check
+        status: 'archived',
         type: 'trade',
       });
       state.trades.splice(state.trades.indexOf(trade), 1);
     }
     save();
     return {
-      message: 'Trade updated',
+      message: archived
+        ? 'Trade archived and items successfully deleted.'
+        : 'Trade updated',
       tradeId: trade.id,
-      status: trade.status,
+      status: archived ? 'archived' : trade.status,
     };
   }
 
