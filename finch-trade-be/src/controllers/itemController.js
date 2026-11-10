@@ -7,10 +7,13 @@ const isPositiveInteger = (value) =>
 const isRecord = (value) =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
 
+// Returns the available colors.
 export const getColorsFromDB = asyncHandler(async (_req, res) =>
   res.json(await queryAll('SELECT id, color FROM colors ORDER BY id')),
 );
 
+// Adds an item to the authenticated user's list, rejecting duplicate or
+// conflicting entries for the same item and color.
 export const postItemToDB = asyncHandler(async (req, res) => {
   const userId = req.userId;
   const body = isRecord(req.body) ? req.body : {};
@@ -98,12 +101,14 @@ export const postItemToDB = asyncHandler(async (req, res) => {
   });
 });
 
+// Returns the item catalog in stable alphabetical order.
 export const getAllItemsFromDB = asyncHandler(async (_req, res) =>
   res.json(
     await queryAll('SELECT id, name FROM items ORDER BY LOWER(name), id'),
   ),
 );
 
+// Returns the authenticated user's items from the requested list.
 export const getUserItemsFromDB = asyncHandler(async (req, res) => {
   const { type } = req.params;
   const userId = req.userId;
@@ -127,6 +132,7 @@ export const getUserItemsFromDB = asyncHandler(async (req, res) => {
   return res.json(await queryAll(query, [type, userId]));
 });
 
+// Removes one item/color entry from the authenticated user's list.
 export const deleteItemFromDB = asyncHandler(async (req, res) => {
   const userId = req.userId;
   const body = isRecord(req.body) ? req.body : {};
@@ -148,7 +154,7 @@ export const deleteItemFromDB = asyncHandler(async (req, res) => {
   }
   return res.status(200).json({ message: `Item removed from ${listType}` });
 });
-
+// Looks up a catalog item by ID.
 export const getItemByIdFromDB = asyncHandler(async (req, res) => {
   const { itemId } = req.params;
   if (!isPositiveInteger(itemId)) {

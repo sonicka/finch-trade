@@ -1,12 +1,40 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import InlineAlert from '../../shared/components/InlineAlert';
 import Button from '../../shared/components/Button';
 import Card from '../../shared/components/Card';
 import FormInput from '../../shared/components/FormInput';
+import Spinner from '../../shared/components/Spinner';
 import { logIn, signUp } from '../../api/api';
 import { useUserData } from '../../shared/context/UserProvider';
-import Spinner from '../../shared/components/Spinner';
+import { LoginCredentials, SignUpData } from '../../shared/types';
+
+type AuthRequest =
+  | { mode: 'login'; data: LoginCredentials }
+  | { mode: 'signup'; data: SignUpData };
+
+const MIN_PASSWORD_LENGTH = 8;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_PROFILE_FIELD_LENGTH = 64;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const ValidationHint: React.FC<{ message: string }> = ({ message }) => {
+  return (
+    <p
+      className="absolute left-0 top-[calc(100%+2px)] z-10 flex items-center gap-1.5 text-xs leading-4 text-red-700"
+      role="status"
+    >
+      <span
+        className="flex h-3.5 w-3.5 items-center justify-center rounded-full border border-current text-[9px] font-semibold leading-none"
+        aria-hidden="true"
+      >
+        !
+      </span>
+      {message}
+    </p>
+  );
+};
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -19,23 +47,27 @@ const Login: React.FC = () => {
   const [friendCode, setFriendCode] = useState('');
   const [password, setPassword] = useState('');
   const [passwordAgain, setPasswordAgain] = useState('');
-  const [error, setError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // todo nicer validation
+  const isEmailValid =
+    email.trim().length <= MAX_EMAIL_LENGTH && EMAIL_PATTERN.test(email.trim());
+
   const isFormValid = isLogin
-    ? !!email && !!password
-    : !!email &&
-      !!username &&
-      !!birbName &&
-      !!friendCode &&
-      password.length >= 8 &&
+    ? isEmailValid && !!password
+    : isEmailValid &&
+      !!username.trim() &&
+      !!birbName.trim() &&
+      !!friendCode.trim() &&
+      password.length >= MIN_PASSWORD_LENGTH &&
       !!passwordAgain &&
       password === passwordAgain;
 
-  const clearError = () => {
-    setError('');
-  };
+  const { mutate, isPending, isError, error, reset } = useMutation({
+    mutationFn: (request: AuthRequest) =>
+      request.mode === 'login' ? logIn(request.data) : signUp(request.data),
+    onSuccess: (token) => login(token),
+  });
+
+  const clearError = () => reset();
 
   useEffect(() => {
     if (user) navigate('/');
@@ -48,29 +80,26 @@ const Login: React.FC = () => {
     setFriendCode('');
     setPassword('');
     setPasswordAgain('');
-    setError('');
   }, [isLogin]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
-    clearError();
-    setIsSubmitting(true);
-    try {
-      const token = isLogin
-        ? await logIn({ email, password })
-        : await signUp({ email, username, birbName, friendCode, password });
+    if (isPending || !isFormValid) return;
 
-      login(token);
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : 'Unable to authenticate. Try again.',
-      );
-    } finally {
-      setIsSubmitting(false);
-    }
+    mutate(
+      isLogin
+        ? { mode: 'login', data: { email: email.trim(), password } }
+        : {
+            mode: 'signup',
+            data: {
+              email: email.trim(),
+              username: username.trim(),
+              birbName: birbName.trim(),
+              friendCode: friendCode.trim(),
+              password,
+            },
+          },
+    );
   };
 
   return (
@@ -87,19 +116,24 @@ const Login: React.FC = () => {
           <h1 className="text-2xl font-semibold text-center pt-3">
             {isLogin ? 'Login' : 'Sign Up'}
           </h1>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <FormInput
-              label="Email"
-              value={email}
-              setValue={(value) => {
-                clearError();
-                setEmail(value);
-              }}
-              type="email"
-              id="email"
-              required
-              maxLength={254}
-            />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="relative">
+              <FormInput
+                label="Email"
+                value={email}
+                setValue={(value) => {
+                  clearError();
+                  setEmail(value);
+                }}
+                type="email"
+                id="email"
+                required
+                maxLength={MAX_EMAIL_LENGTH}
+              />
+              {email.trim() && !isEmailValid && (
+                <ValidationHint message="Enter a valid email address." />
+              )}
+            </div>
             {!isLogin && (
               <>
                 <FormInput
@@ -111,7 +145,7 @@ const Login: React.FC = () => {
                   }}
                   id="username"
                   required
-                  maxLength={64}
+                  maxLength={MAX_PROFILE_FIELD_LENGTH}
                 />
                 <FormInput
                   label="Birb name"
@@ -122,7 +156,7 @@ const Login: React.FC = () => {
                   }}
                   id="birbname"
                   required
-                  maxLength={64}
+                  maxLength={MAX_PROFILE_FIELD_LENGTH}
                 />
                 <FormInput
                   label="Friend code"
@@ -133,34 +167,48 @@ const Login: React.FC = () => {
                   }}
                   id="friendCode"
                   required
-                  maxLength={64}
+                  maxLength={MAX_PROFILE_FIELD_LENGTH}
                 />
               </>
             )}
-            <FormInput
-              label="Password"
-              value={password}
-              setValue={(value) => {
-                clearError();
-                setPassword(value);
-              }}
-              type="password"
-              id="password"
-              required
-              minLength={isLogin ? undefined : 8}
-            />
-            {!isLogin && (
+            <div className="relative">
               <FormInput
-                label="Password again"
-                value={passwordAgain}
+                label="Password"
+                value={password}
                 setValue={(value) => {
                   clearError();
-                  setPasswordAgain(value);
+                  setPassword(value);
                 }}
                 type="password"
-                id="passwordAgain"
+                id="password"
                 required
+                minLength={isLogin ? undefined : MIN_PASSWORD_LENGTH}
               />
+              {!isLogin &&
+                password.length > 0 &&
+                password.length < MIN_PASSWORD_LENGTH && (
+                  <ValidationHint
+                    message={`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`}
+                  />
+                )}
+            </div>
+            {!isLogin && (
+              <div className="relative">
+                <FormInput
+                  label="Password again"
+                  value={passwordAgain}
+                  setValue={(value) => {
+                    clearError();
+                    setPasswordAgain(value);
+                  }}
+                  type="password"
+                  id="passwordAgain"
+                  required
+                />
+                {passwordAgain && password !== passwordAgain && (
+                  <ValidationHint message="Passwords do not match." />
+                )}
+              </div>
             )}
             <div className="py-4 gap-6 flex flex-col">
               <div className="self-center">
@@ -168,7 +216,7 @@ const Login: React.FC = () => {
                   label={
                     <span className="flex items-center justify-center gap-2">
                       {isLogin ? 'Log in' : 'Sign up'}
-                      {isSubmitting && (
+                      {isPending && (
                         <Spinner
                           size={18}
                           label={isLogin ? 'Logging in' : 'Signing up'}
@@ -177,10 +225,19 @@ const Login: React.FC = () => {
                     </span>
                   }
                   buttonProps={{ type: 'submit' }}
-                  disabled={!isFormValid || isSubmitting}
+                  disabled={!isFormValid || isPending}
                 />
               </div>
-              {error && <InlineAlert type="error" message={error} />}
+              {isError && (
+                <InlineAlert
+                  type="error"
+                  message={
+                    error instanceof Error
+                      ? error.message
+                      : 'Unable to authenticate. Try again.'
+                  }
+                />
+              )}
               <div className="w-full text-center">
                 {isLogin && (
                   <span className="mt-4">

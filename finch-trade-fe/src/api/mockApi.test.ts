@@ -62,7 +62,10 @@ describe('mock trade flow', () => {
     expect(waitingTrade.finishedByMe).toBe(true);
 
     await login('demo1@finchtrade.local');
-    await mockApiFetch('/api/trades/finishTrade/1', { method: 'POST' });
+    const archivedTrade = (await mockApiFetch('/api/trades/finishTrade/1', {
+      method: 'POST',
+    })) as { status: string };
+    expect(archivedTrade.status).toBe('archived');
     expect(
       ((await mockApiFetch('/api/trades')) as Trader[]).some(
         (trade) => trade.tradeId === 1,

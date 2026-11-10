@@ -54,35 +54,33 @@ const getNonAnyColors = () =>
 const getTradeByUser = (userId) => {
   return new Promise((resolve, reject) => {
     db.all(
-      `SELECT * FROM trades WHERE user_id1 = $1 OR user_id2 = $2`,
+      `SELECT * FROM trades
+       WHERE (user_id1 = $1 OR user_id2 = $1)
+         AND status IN ('pending', 'confirmed')`,
       [userId, userId],
       (err, rows) => {
         if (err) return reject(err);
         if (!rows || rows.length === 0) return resolve([]);
 
         const currentUserIdStr = userId.toString();
-        const processed = rows
-          .filter(
-            (row) => row.status === 'pending' || row.status === 'confirmed',
-          )
-          .map((row) => {
-            const finishedBy = JSON.parse(row.finished_by || '[]');
+        const processed = rows.map((row) => {
+          const finishedBy = JSON.parse(row.finished_by || '[]');
 
-            return {
-              tradeId: row.id,
-              status: row.status,
-              requestedByMe: currentUserIdStr === row.user_id1.toString(),
-              finishedByMe: finishedBy.includes(currentUserIdStr),
-              requestedTrade: {
-                userId1: row.user_id1,
-                itemId1: row.item_id1,
-                colorId1: row.color_id1,
-                userId2: row.user_id2,
-                itemId2: row.item_id2,
-                colorId2: row.color_id2,
-              },
-            };
-          });
+          return {
+            tradeId: row.id,
+            status: row.status,
+            requestedByMe: currentUserIdStr === row.user_id1.toString(),
+            finishedByMe: finishedBy.includes(currentUserIdStr),
+            requestedTrade: {
+              userId1: row.user_id1,
+              itemId1: row.item_id1,
+              colorId1: row.color_id1,
+              userId2: row.user_id2,
+              itemId2: row.item_id2,
+              colorId2: row.color_id2,
+            },
+          };
+        });
 
         resolve(processed);
       },
@@ -120,12 +118,10 @@ const getTradeItems = (userId) =>
 const extractUsersFromTrades = (trades, userId) => {
   const currentId = Number(userId);
 
-  return trades
-    .filter((trade) => trade.status !== 'finished')
-    .map((trade) => {
-      const { userId1, userId2 } = trade.requestedTrade;
-      return userId1 === currentId ? userId2 : userId1;
-    });
+  return trades.map((trade) => {
+    const { userId1, userId2 } = trade.requestedTrade;
+    return userId1 === currentId ? userId2 : userId1;
+  });
 };
 
 const expandAnyColor = (items, colors) =>
@@ -197,40 +193,38 @@ const findMatchingOffers = (userId, wishItems) => {
 };
 
 const mapExistingTrades = (trades, currentUserId) =>
-  trades
-    .filter((trade) => trade.status !== 'finished')
-    .map((trade) => {
-      const { requestedByMe, requestedTrade } = trade;
+  trades.map((trade) => {
+    const { requestedByMe, requestedTrade } = trade;
 
-      const otherUserId = requestedByMe
-        ? requestedTrade.userId2
-        : requestedTrade.userId1;
+    const otherUserId = requestedByMe
+      ? requestedTrade.userId2
+      : requestedTrade.userId1;
 
-      const myItem = requestedByMe
-        ? { itemId: requestedTrade.itemId1, colorId: requestedTrade.colorId1 }
-        : { itemId: requestedTrade.itemId2, colorId: requestedTrade.colorId2 };
+    const myItem = requestedByMe
+      ? { itemId: requestedTrade.itemId1, colorId: requestedTrade.colorId1 }
+      : { itemId: requestedTrade.itemId2, colorId: requestedTrade.colorId2 };
 
-      const theirItem = requestedByMe
-        ? { itemId: requestedTrade.itemId2, colorId: requestedTrade.colorId2 }
-        : { itemId: requestedTrade.itemId1, colorId: requestedTrade.colorId1 };
+    const theirItem = requestedByMe
+      ? { itemId: requestedTrade.itemId2, colorId: requestedTrade.colorId2 }
+      : { itemId: requestedTrade.itemId1, colorId: requestedTrade.colorId1 };
 
-      return {
-        ...trade,
-        userId: otherUserId,
-        wants: [
-          {
-            userId: currentUserId,
-            ...myItem,
-          },
-        ],
-        has: [
-          {
-            userId: currentUserId,
-            ...theirItem,
-          },
-        ],
-      };
-    });
+    return {
+      ...trade,
+      userId: otherUserId,
+      wants: [
+        {
+          userId: currentUserId,
+          ...myItem,
+        },
+      ],
+      has: [
+        {
+          userId: currentUserId,
+          ...theirItem,
+        },
+      ],
+    };
+  });
 
 export const insertItemTransaction = async (
   userId1,
