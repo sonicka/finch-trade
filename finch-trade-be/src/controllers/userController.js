@@ -9,6 +9,8 @@ if (!JWT_SECRET) {
   throw new Error('JWT_SECRET must be configured');
 }
 
+// Validates signup details, prevents duplicate accounts, hashes the password,
+// and returns a signed token for the new user.
 export const signUp = async (req, res) => {
   const { email, username, birbName, friendCode, password } = req.body;
 
@@ -48,6 +50,8 @@ export const signUp = async (req, res) => {
   }
 };
 
+// Authenticates credentials and returns a token without disclosing which
+// credential was invalid.
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -91,6 +95,7 @@ export const login = async (req, res) => {
   }
 };
 
+// Returns the public profile fields for the user identified by the route ID.
 export const getUserFromDB = async (req, res) => {
   const { userId } = req.params;
 
@@ -109,6 +114,7 @@ export const getUserFromDB = async (req, res) => {
   }
 };
 
+// Allows an authenticated user to update their own email and/or password.
 export const editUser = async (req, res) => {
   const { userId } = req.params;
   const { email, password, passwordAgain } = req.body;

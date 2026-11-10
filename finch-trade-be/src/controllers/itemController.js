@@ -1,5 +1,6 @@
 import { queryAll, queryOne, runQuery } from '../utils.js';
 
+// Returns the available colors.
 export const getColorsFromDB = async (req, res) => {
   try {
     res.json(await queryAll('SELECT * FROM colors'));
@@ -9,6 +10,8 @@ export const getColorsFromDB = async (req, res) => {
   }
 };
 
+// Adds an item to the authenticated user's list, rejecting duplicate or
+// conflicting entries for the same item and color.
 export const postItemToDB = async (req, res) => {
   const userId = req.userId;
   const { color, name, listType } = req.body;
@@ -94,6 +97,7 @@ export const postItemToDB = async (req, res) => {
   }
 };
 
+// Returns the item catalog in stable alphabetical order.
 export const getAllItemsFromDB = async (req, res) => {
   try {
     res.json(await queryAll('SELECT * FROM items ORDER BY LOWER(name), id'));
@@ -103,6 +107,7 @@ export const getAllItemsFromDB = async (req, res) => {
   }
 };
 
+// Returns the authenticated user's items from the requested list.
 export const getUserItemsFromDB = async (req, res) => {
   const { type } = req.params;
   const userId = req.userId;
@@ -135,6 +140,7 @@ export const getUserItemsFromDB = async (req, res) => {
   }
 };
 
+// Removes one item/color entry from the authenticated user's list.
 export const deleteItemFromDB = async (req, res) => {
   const userId = req.userId;
   const { itemId, colorId, listType } = req.body;
@@ -164,6 +170,7 @@ export const deleteItemFromDB = async (req, res) => {
   }
 };
 
+// Looks up a catalog item by ID.
 export const getItemByIdFromDB = async (req, res) => {
   const { itemId } = req.params;
 
