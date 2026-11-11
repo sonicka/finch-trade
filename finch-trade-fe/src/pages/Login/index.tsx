@@ -77,7 +77,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (user) navigate('/');
-  }, [user]);
+  }, [user, navigate]);
 
   useEffect(() => {
     setEmail('');
@@ -255,6 +255,7 @@ const Login: React.FC = () => {
                     Don't have an account yet?
                     <br />
                     <button
+                      type="button"
                       onClick={() => {
                         clearError();
                         setIsLogin(false);
@@ -270,6 +271,7 @@ const Login: React.FC = () => {
                     Already have an account?
                     <br />
                     <button
+                      type="button"
                       onClick={() => {
                         clearError();
                         setIsLogin(true);

@@ -1,4 +1,4 @@
-import { FC, SubmitEventHandler, useEffect, useRef, useState } from 'react';
+import { FC, FormEvent, useEffect, useRef, useState } from 'react';
 import AutocompleteSelect from '../../shared/components/AutocompleteSelect';
 import Select from '../../shared/components/Select';
 import Card from '../../shared/components/Card';
@@ -12,7 +12,8 @@ interface Props {
   userItems: UserItems;
   type: ListType;
   isAdding: boolean;
-  handleSubmit: SubmitEventHandler<HTMLFormElement>;
+  isCatalogLoading: boolean;
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => Promise<boolean>;
   clearError: () => void;
 }
 
@@ -22,6 +23,7 @@ const ItemAdd: FC<Props> = ({
   userItems,
   type,
   isAdding,
+  isCatalogLoading,
   handleSubmit,
   clearError,
 }) => {
@@ -40,7 +42,11 @@ const ItemAdd: FC<Props> = ({
   };
 
   const disabled =
-    isAdding || !selectedColor || !nameValue || !isValidItemName(nameValue);
+    isAdding ||
+    isCatalogLoading ||
+    !selectedColor ||
+    !nameValue ||
+    !isValidItemName(nameValue);
   const itemsWithAnyColor = new Set(
     [...userItems.wishlist, ...userItems.tradelist]
       .filter((item) => item.color === 1)
@@ -91,17 +97,17 @@ const ItemAdd: FC<Props> = ({
     setSelectedColor(color);
   };
 
-  const handleFormSubmit: SubmitEventHandler<HTMLFormElement> = (e) => {
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
     clearError();
     e.preventDefault();
-    if (selectedColor && isValidItemName(nameValue)) {
-      handleSubmit(e);
-      setNameValue('');
-      setSelectedItem(undefined);
-      setSelectedColor(undefined);
-      setFilteredOptions(items);
-      itemNameInputRef.current?.focus();
-    }
+    if (!selectedColor || !isValidItemName(nameValue)) return;
+    if (!(await handleSubmit(e))) return;
+
+    setNameValue('');
+    setSelectedItem(undefined);
+    setSelectedColor(undefined);
+    setFilteredOptions(items);
+    itemNameInputRef.current?.focus();
   };
 
   return (
@@ -137,8 +143,8 @@ const ItemAdd: FC<Props> = ({
               d="m4.5 12.75 6 6 9-13.5"
             />
           }
-          loading={isAdding}
-          loadingLabel="Adding item"
+          loading={isAdding || isCatalogLoading}
+          loadingLabel={isAdding ? 'Adding item' : 'Loading item catalog'}
           disabled={disabled}
           buttonProps={{
             'aria-label': isAdding ? 'Adding item' : 'Confirm',

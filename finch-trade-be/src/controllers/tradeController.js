@@ -53,6 +53,7 @@ const createHistoryCursor = (row) =>
     }),
   ).toString('base64url');
 
+// Returns active and potential trades involving the authenticated user.
 export const getTradesFromDB = asyncHandler(async (req, res) =>
   res.json(await findTrades(req.userId)),
 );
@@ -134,6 +135,8 @@ const lockUserPair = (client, userId1, userId2) => {
   return client.query('SELECT pg_advisory_xact_lock($1, $2)', orderedUserIds);
 };
 
+// Validates and creates or updates a trade request inside a transaction, then
+// returns its ID and current pending/confirmed status.
 export const postRequestTrade = asyncHandler(async (req, res) => {
   const userId1 = req.userId;
   const { userId2 } = req.query ?? {};
@@ -225,6 +228,8 @@ const finishTrade = async (trade, userId, client) => {
   return { tradeId: trade.id, status: 'archived' };
 };
 
+// Returns the authenticated user's archived trades and gifts in newest-first
+// order, formatted to match the history API response.
 export const getPastTradesFromDB = asyncHandler(async (req, res) => {
   const rawPageSize = req.query.limit;
   const pageSize =
@@ -294,6 +299,8 @@ export const getPastTradesFromDB = asyncHandler(async (req, res) => {
   });
 });
 
+// Records a completed gift and removes its item from both users' lists in one
+// transaction; only the giver may submit it.
 export const postFinishGifting = asyncHandler(async (req, res) => {
   const { giftedBy, giftedTo, itemId, colorId } = req.body ?? {};
 
@@ -331,6 +338,8 @@ export const postFinishGifting = asyncHandler(async (req, res) => {
   });
 });
 
+// Marks the authenticated participant's confirmed trade as complete, archiving
+// it and removing reserved items after both participants finish.
 export const postFinishTrade = asyncHandler(async (req, res) => {
   const { tradeId } = req.params;
   const userId = req.userId;
@@ -379,6 +388,8 @@ export const postFinishTrade = asyncHandler(async (req, res) => {
   });
 });
 
+// Cancels a pending trade and releases its reserved items, locking both users
+// to avoid a race with trade acceptance.
 export const deletePendingTrade = asyncHandler(async (req, res) => {
   const { tradeId } = req.params;
 

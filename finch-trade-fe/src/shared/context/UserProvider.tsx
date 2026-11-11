@@ -102,13 +102,38 @@ export const useTrades = () => {
   return {
     trades: tradesQuery.data ?? [],
     pastTrades: pastTradesQuery.data?.pages.flatMap((page) => page.data) ?? [],
+    tradesLoading: tradesQuery.isPending,
+    tradesError: tradesQuery.isError
+      ? getQueryErrorMessage(tradesQuery.error, 'Could not load trades.')
+      : null,
+    retryTrades: () => {
+      void tradesQuery.refetch();
+    },
+    pastTradesLoading: pastTradesQuery.isPending,
+    pastTradesError:
+      pastTradesQuery.isError || pastTradesQuery.isFetchNextPageError
+        ? getQueryErrorMessage(
+            pastTradesQuery.error,
+            'Could not load past trades.',
+          )
+        : null,
     hasMorePastTrades: Boolean(pastTradesQuery.hasNextPage),
     isLoadingMorePastTrades: pastTradesQuery.isFetchingNextPage,
     loadMorePastTrades: () => {
       void pastTradesQuery.fetchNextPage();
     },
+    retryPastTrades: () => {
+      if (pastTradesQuery.isFetchNextPageError) {
+        void pastTradesQuery.fetchNextPage();
+      } else {
+        void pastTradesQuery.refetch();
+      }
+    },
   };
 };
+
+const getQueryErrorMessage = (error: unknown, fallback: string) =>
+  error instanceof Error ? error.message : fallback;
 
 export const UserProvider = ({ children }: Props) => {
   const navigate = useNavigate();

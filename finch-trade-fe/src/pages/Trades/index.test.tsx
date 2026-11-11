@@ -11,6 +11,19 @@ const mocks = vi.hoisted(() => ({
   hasMorePastTrades: false,
   isLoadingMorePastTrades: false,
   loadMorePastTrades: vi.fn(),
+  tradesLoading: false,
+  tradesError: null as string | null,
+  retryTrades: vi.fn(),
+  pastTradesLoading: false,
+  pastTradesError: null as string | null,
+  retryPastTrades: vi.fn(),
+  tradeLoading: false,
+  pendingAction: undefined as
+    | 'request'
+    | 'finish-trade'
+    | 'finish-gifting'
+    | 'cancel-trade'
+    | undefined,
   pastTrades: [] as PastGift[],
   requestTrade: vi.fn(),
   tradeError: null as string | null,
@@ -30,6 +43,12 @@ vi.mock('../../shared/context/UserProvider', () => ({
   useTrades: () => ({
     trades: mocks.trades,
     pastTrades: mocks.pastTrades,
+    tradesLoading: mocks.tradesLoading,
+    tradesError: mocks.tradesError,
+    retryTrades: mocks.retryTrades,
+    pastTradesLoading: mocks.pastTradesLoading,
+    pastTradesError: mocks.pastTradesError,
+    retryPastTrades: mocks.retryPastTrades,
     hasMorePastTrades: mocks.hasMorePastTrades,
     isLoadingMorePastTrades: mocks.isLoadingMorePastTrades,
     loadMorePastTrades: mocks.loadMorePastTrades,
@@ -37,6 +56,7 @@ vi.mock('../../shared/context/UserProvider', () => ({
 }));
 
 vi.mock('../../shared/context/DataProvider', () => ({
+  useCatalogStatus: () => ({ isLoading: false, error: null }),
   useColors: () => [
     { id: 4, color: 'white' },
     { id: 6, color: 'orange' },
@@ -61,6 +81,8 @@ vi.mock('../../shared/hooks/trades', () => ({
     finishTrade: mocks.finishTrade,
     finishGifting: mocks.finishGifting,
     error: mocks.tradeError,
+    loading: mocks.tradeLoading,
+    pendingAction: mocks.pendingAction,
   }),
 }));
 
@@ -92,6 +114,14 @@ describe('Trades page', () => {
     mocks.pastTrades = [];
     mocks.hasMorePastTrades = false;
     mocks.isLoadingMorePastTrades = false;
+    mocks.tradesLoading = false;
+    mocks.tradesError = null;
+    mocks.retryTrades = vi.fn();
+    mocks.pastTradesLoading = false;
+    mocks.pastTradesError = null;
+    mocks.retryPastTrades = vi.fn();
+    mocks.tradeLoading = false;
+    mocks.pendingAction = undefined;
     mocks.trader = traderProfile;
     mocks.trades = [makeTrader()];
     mocks.tradeError = null;
@@ -246,6 +276,83 @@ describe('Trades page', () => {
     renderTrades();
 
     expect(screen.getByText('Could not finish the trade.')).toBeInTheDocument();
+  });
+
+  it('shows loading and retry states instead of a false empty-trades message', () => {
+    mocks.tradesLoading = true;
+    const { rerender } = renderTrades();
+
+    expect(
+      screen.getByRole('status', { name: 'Loading trades' }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText('No trades available at the moment.'),
+    ).not.toBeInTheDocument();
+
+    mocks.tradesLoading = false;
+    mocks.tradesError = 'Could not load trades.';
+    rerender(
+      <PendingGiftProvider>
+        <Trades />
+      </PendingGiftProvider>,
+    );
+
+    expect(screen.getByText('Could not load trades.')).toBeInTheDocument();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Retry loading trades' }),
+    );
+    expect(mocks.retryTrades).toHaveBeenCalledOnce();
+    expect(
+      screen.queryByText('No trades available at the moment.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('does not show the empty-trades message while initial past trades are loading', () => {
+    mocks.trades = [];
+    mocks.pastTradesLoading = true;
+    renderTrades();
+
+    expect(
+      screen.getByRole('status', { name: 'Loading trades' }),
+    ).toBeVisible();
+    expect(
+      screen.queryByText('No trades available at the moment.'),
+    ).not.toBeInTheDocument();
+  });
+
+  it('disables trade actions while a request is pending', () => {
+    mocks.tradeLoading = true;
+    mocks.pendingAction = 'request';
+    renderTrades();
+
+    const requestButton = screen.getByRole('button', {
+      name: /Request trade/,
+    });
+    expect(requestButton).toBeDisabled();
+    expect(
+      screen.getByRole('status', { name: 'Updating trade' }),
+    ).toBeVisible();
+  });
+
+  it('keeps gifting radio selections independent for different traders', () => {
+    mocks.trades = [
+      makeTrader({ has: [] }),
+      makeTrader({
+        tradeId: 43,
+        userId: 3,
+        has: [],
+        wants: [{ userId: 1, itemId: 2, colorId: 6 }],
+      }),
+    ];
+    renderTrades();
+
+    const leafOption = screen.getByRole('radio', { name: /Leaf/ });
+    const mushroomOption = screen.getByRole('radio', { name: /Mushroom/ });
+    fireEvent.click(leafOption);
+    fireEvent.click(mushroomOption);
+
+    expect(leafOption).toBeChecked();
+    expect(mushroomOption).toBeChecked();
   });
 
   it('shows the empty state and toggles past trades', async () => {
