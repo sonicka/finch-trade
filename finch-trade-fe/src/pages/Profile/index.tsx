@@ -5,6 +5,11 @@ import FormInput from '../../shared/components/FormInput';
 import Button from '../../shared/components/Button';
 import Alert from '../../shared/components/Alert';
 import { useEditUser } from '../../shared/hooks/users';
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_PASSWORD_BYTES,
+  MIN_PASSWORD_LENGTH,
+} from '../../../../shared/src/constants/limits.js';
 
 const Profile = () => {
   const { user } = useUserData();
@@ -14,9 +19,13 @@ const Profile = () => {
   const [passwordAgain, setPasswordAgain] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const { edit: editUser, error, success } = useEditUser();
+  const passwordWithinByteLimit =
+    new TextEncoder().encode(password).length <= MAX_PASSWORD_BYTES;
   const edited =
     (!!newEmail && newEmail !== email) ||
-    (password.length >= 8 && password === passwordAgain);
+    (password.length >= MIN_PASSWORD_LENGTH &&
+      passwordWithinByteLimit &&
+      password === passwordAgain);
 
   const handleEditField = <T,>(
     setter: React.Dispatch<React.SetStateAction<T>>,
@@ -35,7 +44,10 @@ const Profile = () => {
     setShowAlert(false);
     if (
       (!!newEmail && newEmail !== email) ||
-      (password.length >= 8 && !!passwordAgain && password === passwordAgain)
+      (password.length >= MIN_PASSWORD_LENGTH &&
+        passwordWithinByteLimit &&
+        !!passwordAgain &&
+        password === passwordAgain)
     ) {
       if (id) {
         await editUser(id, { email: newEmail, password, passwordAgain });
@@ -76,7 +88,7 @@ const Profile = () => {
             type="email"
             id="email"
             required
-            maxLength={254}
+            maxLength={MAX_EMAIL_LENGTH}
           />
           <FormInput
             label="New Password"
@@ -84,7 +96,7 @@ const Profile = () => {
             setValue={(value: string) => handleEditField(setPassword, value)}
             type="password"
             id="password"
-            minLength={8}
+            minLength={MIN_PASSWORD_LENGTH}
           />
           <FormInput
             label="New password again"
@@ -94,7 +106,7 @@ const Profile = () => {
             }
             type="password"
             id="passwordAgain"
-            minLength={8}
+            minLength={MIN_PASSWORD_LENGTH}
           />
           <div className="pt-4">
             <Button

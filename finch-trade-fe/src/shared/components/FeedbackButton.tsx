@@ -2,6 +2,9 @@ import { ChangeEvent, SubmitEvent, useRef, useState } from 'react';
 import { ScreenshotData, useUseroFeedback } from '@usero/sdk/headless/react';
 import Button from './Button';
 
+const MAX_FEEDBACK_SCREENSHOTS = 3;
+const MAX_FEEDBACK_COMMENT_LENGTH = 1000;
+
 const ratingOptions = [
   { value: 1 as const, emoji: '😞', label: 'Needs work' },
   { value: 2 as const, emoji: '😕', label: 'Could be better' },
@@ -30,7 +33,7 @@ const FeedbackButton = () => {
   ) => {
     const file = event.target.files?.[0];
     event.target.value = '';
-    if (!file || screenshots.length >= 3) return;
+    if (!file || screenshots.length >= MAX_FEEDBACK_SCREENSHOTS) return;
 
     setIsUploading(true);
     setMessage('');
@@ -149,7 +152,7 @@ const FeedbackButton = () => {
                 id="feedback-comment"
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
-                maxLength={1000}
+                maxLength={MAX_FEEDBACK_COMMENT_LENGTH}
                 placeholder="What should we know?"
                 className="mt-2 min-h-24 w-full resize-y rounded-xl border-2 border-mediumBeige bg-lightBeige p-2 font-normal text-darkBeige outline-none focus:border-darkBeige focus:ring-1 focus:ring-darkBeige"
               />
@@ -165,7 +168,9 @@ const FeedbackButton = () => {
               />
               <button
                 type="button"
-                disabled={isUploading || screenshots.length >= 3}
+                disabled={
+                  isUploading || screenshots.length >= MAX_FEEDBACK_SCREENSHOTS
+                }
                 className="rounded-lg border border-mediumBeige px-3 py-2 text-sm font-semibold outline-none transition hover:bg-beige focus:ring-1 focus:ring-darkBeige disabled:cursor-not-allowed disabled:opacity-50"
                 onClick={() => fileInputRef.current?.click()}
               >

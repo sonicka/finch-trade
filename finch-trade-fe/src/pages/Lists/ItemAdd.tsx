@@ -4,6 +4,7 @@ import Select from '../../shared/components/Select';
 import Card from '../../shared/components/Card';
 import IconButton from '../../shared/components/IconButton';
 import { Item, Color, ListType, UserItems } from '../../shared/types';
+import { MAX_ITEM_NAME_LENGTH } from '../../../../shared/src/constants/limits.js';
 
 interface Props {
   items: Item[];
@@ -35,7 +36,7 @@ const ItemAdd: FC<Props> = ({
   }, [items]);
 
   const isValidItemName = (name: string): boolean => {
-    return name.trim().length > 0 && name.trim().length <= 40;
+    return name.trim().length > 0 && name.trim().length <= MAX_ITEM_NAME_LENGTH;
   };
 
   const disabled =
@@ -62,7 +63,7 @@ const ItemAdd: FC<Props> = ({
     clearError();
     const value = e.target.value;
     // Prevent input that exceeds max length
-    if (value.length > 40) return;
+    if (value.length > MAX_ITEM_NAME_LENGTH) return;
 
     setNameValue(value);
     setSelectedItem(undefined);

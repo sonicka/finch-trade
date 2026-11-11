@@ -9,6 +9,13 @@ import {
   User,
   UserItem,
 } from '../shared/types';
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_ITEM_NAME_LENGTH,
+  MAX_PASSWORD_BYTES,
+  MAX_PROFILE_FIELD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from '../../../shared/src/constants/limits.js';
 
 const STORAGE_KEY = 'finch-trade-demo-state';
 
@@ -395,23 +402,23 @@ export const mockApiFetch = async (
     const friendCode = String(body.friendCode ?? '').trim();
     if (
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
-      email.length > 254 ||
+      email.length > MAX_EMAIL_LENGTH ||
       !username ||
-      username.length > 64 ||
+      username.length > MAX_PROFILE_FIELD_LENGTH ||
       !birbName ||
-      birbName.length > 64 ||
+      birbName.length > MAX_PROFILE_FIELD_LENGTH ||
       !friendCode ||
-      friendCode.length > 64
+      friendCode.length > MAX_PROFILE_FIELD_LENGTH
     ) {
       throw new Error('Enter a valid email and profile details.');
     }
     if (
       typeof body.password !== 'string' ||
-      body.password.length < 8 ||
-      new TextEncoder().encode(body.password).length > 72
+      body.password.length < MIN_PASSWORD_LENGTH ||
+      new TextEncoder().encode(body.password).length > MAX_PASSWORD_BYTES
     ) {
       throw new Error(
-        'Password must be at least 8 characters and no more than 72 bytes.',
+        `Password must be at least ${MIN_PASSWORD_LENGTH} characters and no more than ${MAX_PASSWORD_BYTES} bytes.`,
       );
     }
     if (
@@ -463,6 +470,9 @@ export const mockApiFetch = async (
       throw new Error('Tradelist items must have a specific color.');
     }
     const normalizedName = String(body.name).trim();
+    if (!normalizedName || normalizedName.length > MAX_ITEM_NAME_LENGTH) {
+      throw new Error('Invalid item name.');
+    }
     let item = state.items.find(
       (candidate) =>
         candidate.name.toLowerCase() === normalizedName.toLowerCase(),

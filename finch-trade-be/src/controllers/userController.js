@@ -3,12 +3,14 @@ import jwt from 'jsonwebtoken';
 import { queryOne, runQuery } from '../utils.js';
 import { requireJwtSecret } from '../config/env.js';
 import { asyncHandler, HttpError } from '../errors.js';
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_PASSWORD_BYTES,
+  MAX_PROFILE_FIELD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from '../../../shared/src/constants/limits.js';
 
 const JWT_SECRET = requireJwtSecret();
-const MAX_EMAIL_LENGTH = 254;
-const MAX_PROFILE_FIELD_LENGTH = 64;
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_PASSWORD_BYTES = 72;
 
 const isRecord = (value) =>
   value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -54,8 +56,7 @@ export const signUp = asyncHandler(async (req, res) => {
   }
   if (!isValidPassword(body.password)) {
     return res.status(400).json({
-      message:
-        'Password must be at least 8 characters and no more than 72 bytes.',
+      message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters and no more than ${MAX_PASSWORD_BYTES} bytes.`,
     });
   }
 
@@ -172,8 +173,7 @@ export const editUser = asyncHandler(async (req, res) => {
   if (body.password !== undefined) {
     if (!isValidPassword(body.password)) {
       return res.status(400).json({
-        message:
-          'Password must be at least 8 characters and no more than 72 bytes.',
+        message: `Password must be at least ${MIN_PASSWORD_LENGTH} characters and no more than ${MAX_PASSWORD_BYTES} bytes.`,
       });
     }
     if (body.password !== body.passwordAgain) {

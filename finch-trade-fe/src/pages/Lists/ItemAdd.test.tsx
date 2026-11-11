@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import ItemAdd from './ItemAdd';
 import { ListTypeEnum } from '../../shared/types';
+import { MAX_ITEM_NAME_LENGTH } from '../../../../shared/src/constants/limits.js';
 
 const items = [
   { id: 1, name: 'Leaf' },
@@ -72,6 +73,30 @@ describe('ItemAdd', () => {
     fireEvent.click(screen.getByRole('option', { name: 'white' }));
 
     expect(confirm).toBeEnabled();
+  });
+
+  it('accepts a custom item name up to the shared length limit', () => {
+    renderItemAdd();
+    const itemName = 'a'.repeat(MAX_ITEM_NAME_LENGTH);
+
+    fireEvent.change(screen.getByLabelText('Item name'), {
+      target: { value: itemName },
+    });
+    fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
+    fireEvent.click(screen.getByRole('option', { name: 'white' }));
+
+    expect(screen.getByLabelText('Item name')).toHaveValue(itemName);
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeEnabled();
+  });
+
+  it('rejects custom item names beyond the shared length limit', () => {
+    renderItemAdd();
+
+    fireEvent.change(screen.getByLabelText('Item name'), {
+      target: { value: 'a'.repeat(MAX_ITEM_NAME_LENGTH + 1) },
+    });
+
+    expect(screen.getByLabelText('Item name')).toHaveValue('');
   });
 
   it('submits the selected item and color through the form', () => {
