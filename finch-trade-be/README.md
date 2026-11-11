@@ -23,6 +23,17 @@ limits to login (10 requests per 15 minutes) and signup (5 requests per
 When running behind a reverse proxy, set `TRUST_PROXY_HOPS` to the number of
 trusted proxy hops so rate limits use the client IP safely.
 
+Shared account and item input limits are defined in the repository-level
+`shared/src/constants/limits.js` module and used by both the backend and
+frontend.
+
+Build the backend Docker image from the repository root so the image includes
+the shared module:
+
+```sh
+docker build -f finch-trade-be/Dockerfile -t finch-trade-be .
+```
+
 Notes:
 
 - Server entry: src/server.js

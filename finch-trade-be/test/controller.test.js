@@ -91,6 +91,8 @@ const { deleteItemFromDB, postItemToDB } =
 process.env.JWT_SECRET = 'backend-test-secret';
 const { editUser, signUp } =
   await import('../src/controllers/userController.js');
+const { MAX_ITEM_NAME_LENGTH } =
+  await import('../../shared/src/constants/limits.js');
 
 const createResponse = () => ({
   statusCode: 200,
@@ -563,6 +565,25 @@ test('item creation rejects an invalid list type before database access', async 
 
   await postItemToDB(
     { userId: '1', body: { name: 'Leaf', color: 4, listType: 'other' } },
+    response,
+  );
+
+  assert.equal(response.statusCode, 400);
+  assert.equal(calls.runQuery.length, 0);
+});
+
+test('item creation enforces the shared maximum item-name length', async () => {
+  const response = createResponse();
+
+  await postItemToDB(
+    {
+      userId: '1',
+      body: {
+        name: 'a'.repeat(MAX_ITEM_NAME_LENGTH + 1),
+        color: 4,
+        listType: 'wishlist',
+      },
+    },
     response,
   );
 

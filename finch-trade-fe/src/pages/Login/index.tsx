@@ -9,14 +9,17 @@ import Spinner from '../../shared/components/Spinner';
 import { logIn, signUp } from '../../api/api';
 import { useUserData } from '../../shared/context/UserProvider';
 import { LoginCredentials, SignUpData } from '../../shared/types';
+import {
+  MAX_EMAIL_LENGTH,
+  MAX_PASSWORD_BYTES,
+  MAX_PROFILE_FIELD_LENGTH,
+  MIN_PASSWORD_LENGTH,
+} from '../../../../shared/src/constants/limits.js';
 
 type AuthRequest =
   | { mode: 'login'; data: LoginCredentials }
   | { mode: 'signup'; data: SignUpData };
 
-const MIN_PASSWORD_LENGTH = 8;
-const MAX_EMAIL_LENGTH = 254;
-const MAX_PROFILE_FIELD_LENGTH = 64;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const ValidationHint: React.FC<{ message: string }> = ({ message }) => {
@@ -50,14 +53,17 @@ const Login: React.FC = () => {
 
   const isEmailValid =
     email.trim().length <= MAX_EMAIL_LENGTH && EMAIL_PATTERN.test(email.trim());
+  const passwordWithinByteLimit =
+    new TextEncoder().encode(password).length <= MAX_PASSWORD_BYTES;
 
   const isFormValid = isLogin
-    ? isEmailValid && !!password
+    ? isEmailValid && !!password && passwordWithinByteLimit
     : isEmailValid &&
       !!username.trim() &&
       !!birbName.trim() &&
       !!friendCode.trim() &&
       password.length >= MIN_PASSWORD_LENGTH &&
+      passwordWithinByteLimit &&
       !!passwordAgain &&
       password === passwordAgain;
 
@@ -191,6 +197,11 @@ const Login: React.FC = () => {
                     message={`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`}
                   />
                 )}
+              {password && !passwordWithinByteLimit && (
+                <ValidationHint
+                  message={`Password must be no more than ${MAX_PASSWORD_BYTES} bytes.`}
+                />
+              )}
             </div>
             {!isLogin && (
               <div className="relative">

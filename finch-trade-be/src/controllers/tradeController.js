@@ -14,12 +14,13 @@ import { asyncHandler, HttpError } from '../errors.js';
 
 const DEFAULT_HISTORY_PAGE_SIZE = 50;
 const MAX_HISTORY_PAGE_SIZE = 100;
+const MAX_HISTORY_CURSOR_LENGTH = 256;
 
 const parseHistoryCursor = (value) => {
   if (value === undefined) return null;
   if (
     typeof value !== 'string' ||
-    value.length > 256 ||
+    value.length > MAX_HISTORY_CURSOR_LENGTH ||
     !/^[A-Za-z0-9_-]+$/.test(value)
   ) {
     return undefined;

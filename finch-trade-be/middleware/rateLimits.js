@@ -1,8 +1,12 @@
 import { rateLimit } from 'express-rate-limit';
 
+const AUTH_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_RATE_LIMIT = 10;
+const SIGNUP_RATE_LIMIT = 5;
+
 const createAuthRateLimit = (limit) =>
   rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: AUTH_RATE_LIMIT_WINDOW_MS,
     limit,
     standardHeaders: true,
     legacyHeaders: false,
@@ -13,5 +17,5 @@ const createAuthRateLimit = (limit) =>
       }),
   });
 
-export const loginRateLimit = createAuthRateLimit(10);
-export const signUpRateLimit = createAuthRateLimit(5);
+export const loginRateLimit = createAuthRateLimit(LOGIN_RATE_LIMIT);
+export const signUpRateLimit = createAuthRateLimit(SIGNUP_RATE_LIMIT);

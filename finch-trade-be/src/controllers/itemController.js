@@ -1,5 +1,6 @@
 import { queryAll, queryOne, runQuery } from '../utils.js';
 import { asyncHandler } from '../errors.js';
+import { MAX_ITEM_NAME_LENGTH } from '../../../shared/src/constants/limits.js';
 
 const isPositiveInteger = (value) =>
   Number.isSafeInteger(Number(value)) && Number(value) > 0;
@@ -26,7 +27,7 @@ export const postItemToDB = asyncHandler(async (req, res) => {
   }
 
   if (
-    normalizedName.length > 200 ||
+    normalizedName.length > MAX_ITEM_NAME_LENGTH ||
     !isPositiveInteger(colorId) ||
     !['wishlist', 'tradelist'].includes(listType)
   ) {
