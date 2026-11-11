@@ -57,7 +57,7 @@ const getTradeByUser = (userId) => {
       `SELECT * FROM trades
        WHERE (user_id1 = $1 OR user_id2 = $1)
          AND status IN ('pending', 'confirmed')`,
-      [userId, userId],
+      [userId],
       (err, rows) => {
         if (err) return reject(err);
         if (!rows || rows.length === 0) return resolve([]);
