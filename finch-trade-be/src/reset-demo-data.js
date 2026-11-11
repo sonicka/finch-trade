@@ -1,14 +1,8 @@
 import pg from 'pg';
-import 'dotenv/config';
+import { getDatabaseConnectionString } from './config/env.js';
 
 const { Client } = pg;
-const connectionString = (
-  process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL
-)?.replace(/([?&]sslmode=)require\b/, '$1verify-full');
-
-if (!connectionString) {
-  throw new Error('DATABASE_URL_UNPOOLED or DATABASE_URL must be configured');
-}
+const connectionString = getDatabaseConnectionString({ preferUnpooled: true });
 
 const client = new Client({
   connectionString,

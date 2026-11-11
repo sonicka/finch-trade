@@ -22,6 +22,7 @@ test('migrations are numbered and include the current schema fixes', async () =>
     '005_enforce_required_columns.sql',
     '006_use_timezone_aware_timestamps.sql',
     '007_remove_unused_trade_valid_until.sql',
+    '008_index_trade_history_pagination.sql',
   ]);
 });
 
@@ -30,6 +31,18 @@ test('database adapter passes PostgreSQL queries through without rewriting', asy
 
   assert.doesNotMatch(source, /toPostgresQuery|replace\(\/\\\\\?\//);
   assert.match(source, /executor\.query\(text, params\)/);
+});
+
+test('server security and error middleware are configured before routes', async () => {
+  const server = await readBackendFile('src/server.js');
+  const routes = await readBackendFile('src/routes/userRoutes.js');
+
+  assert.match(server, /app\.use\(helmet\(\)\)/);
+  assert.match(server, /json\(\{ limit: config\.jsonBodyLimit \}\)/);
+  assert.match(server, /await db\.waitUntilReady\(\)/);
+  assert.match(server, /app\.use\(errorHandler\)/);
+  assert.match(routes, /router\.post\('\/signup', signUpRateLimit, signUp\)/);
+  assert.match(routes, /router\.post\('\/login', loginRateLimit, login\)/);
 });
 
 test('API aliases preserve camelCase and item creation is conflict-safe', async () => {
@@ -76,6 +89,21 @@ test('unused trade valid_until column is removed without writing it', async () =
     /ALTER TABLE trades\s+DROP COLUMN IF EXISTS valid_until/,
   );
   assert.doesNotMatch(tradeController, /valid_until/);
+});
+
+test('trade-history cursor queries have participant indexes', async () => {
+  const migration = await readBackendFile(
+    'migrations/008_index_trade_history_pagination.sql',
+  );
+
+  assert.match(
+    migration,
+    /ON trades_history \(user_id1, archived_at DESC, id DESC\)/,
+  );
+  assert.match(
+    migration,
+    /ON trades_history \(user_id2, archived_at DESC, id DESC\)/,
+  );
 });
 
 test('potential trade matching excludes wishlist items reserved by active trades', async () => {

@@ -71,7 +71,9 @@ describe('mock trade flow', () => {
         (trade) => trade.tradeId === 1,
       ),
     ).toBe(false);
-    expect(await mockApiFetch('/api/trades/past')).toHaveLength(1);
+    expect(
+      (await mockApiFetch('/api/trades/past')) as { data: unknown[] },
+    ).toMatchObject({ data: expect.any(Array), nextCursor: null });
   });
 
   it('lets either participant cancel a pending trade', async () => {
@@ -221,8 +223,10 @@ describe('mock trade flow', () => {
           email,
           username: email.split('@')[0],
           birbName: 'Demo birb',
-          friendCode: 'DEMO123',
-          password: 'demo123',
+          friendCode: email.startsWith('potential1')
+            ? 'POTENTIAL1'
+            : 'POTENTIAL2',
+          password: 'demo1234',
         }),
       })) as { token: string };
       localStorage.setItem('authToken', response.token);
@@ -294,8 +298,8 @@ describe('mock trade flow', () => {
           email,
           username,
           birbName: 'Demo birb',
-          friendCode: 'GIFT123',
-          password: 'demo123',
+          friendCode: username === 'recipient' ? 'RECIPIENT' : 'GIFTING',
+          password: 'demo1234',
         }),
       })) as { token: string };
       localStorage.setItem('authToken', response.token);
@@ -343,12 +347,14 @@ describe('mock trade flow', () => {
       }),
     });
 
-    const pastTrades = (await mockApiFetch('/api/trades/past')) as Array<{
-      itemId?: number;
-      type: string;
-      userId?: number;
-    }>;
-    expect(pastTrades).toContainEqual(
+    const pastTrades = (await mockApiFetch('/api/trades/past')) as {
+      data: Array<{
+        itemId?: number;
+        type: string;
+        userId?: number;
+      }>;
+    };
+    expect(pastTrades.data).toContainEqual(
       expect.objectContaining({
         itemId: 9,
         type: 'giftGiven',

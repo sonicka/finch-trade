@@ -1,5 +1,9 @@
 import { createContext, ReactNode, useContext } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import { fetchPastTrades, fetchTrades, fetchUserItems } from '../../api/api';
@@ -85,17 +89,24 @@ export const useTrades = () => {
     refetchInterval: 5 * 60 * 1000,
     refetchOnMount: 'always',
   });
-  const pastTradesQuery = useQuery({
+  const pastTradesQuery = useInfiniteQuery({
     queryKey: user
       ? userDataQueryKeys.pastTrades(user.id)
       : [...userDataQueryKeys.all, 'anonymous', 'pastTrades'],
-    queryFn: fetchPastTrades,
+    queryFn: ({ pageParam }) => fetchPastTrades(pageParam),
+    initialPageParam: null as string | null,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
     enabled: Boolean(user?.id),
   });
 
   return {
     trades: tradesQuery.data ?? [],
-    pastTrades: pastTradesQuery.data ?? [],
+    pastTrades: pastTradesQuery.data?.pages.flatMap((page) => page.data) ?? [],
+    hasMorePastTrades: Boolean(pastTradesQuery.hasNextPage),
+    isLoadingMorePastTrades: pastTradesQuery.isFetchingNextPage,
+    loadMorePastTrades: () => {
+      void pastTradesQuery.fetchNextPage();
+    },
   };
 };
 

@@ -2,10 +2,11 @@ Finch-trade backend
 
 Quickstart:
 
-1. cp .env.example .env && fill values
-2. npm install
-3. npm run migrate
-4. npm run dev
+1. Use Node.js 22.13+ or 24+ (`nvm use` from the repository root).
+2. cp .env.example .env && fill values
+3. npm install
+4. npm run migrate
+5. npm run dev
 
 `npm run migrate` applies pending files from `migrations/` and records them in
 the `schema_migrations` table. It uses `DATABASE_URL_UNPOOLED` when configured,
@@ -15,6 +16,12 @@ database schema.
 
 Use `npm run migrate:status` to see which migration files are applied or
 pending. Both commands use the direct database URL when it is configured.
+
+The API limits JSON request bodies to 100 KB, and applies separate per-IP
+limits to login (10 requests per 15 minutes) and signup (5 requests per
+15 minutes). Configure `CORS_ORIGIN` as a comma-separated origin allowlist.
+When running behind a reverse proxy, set `TRUST_PROXY_HOPS` to the number of
+trusted proxy hops so rate limits use the client IP safely.
 
 Notes:
 

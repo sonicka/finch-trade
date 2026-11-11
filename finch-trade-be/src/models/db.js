@@ -1,21 +1,16 @@
 import pg from 'pg';
-import 'dotenv/config';
 import { runTransaction } from './transaction.js';
+import { config, getDatabaseConnectionString } from '../config/env.js';
 
 const { Pool } = pg;
-const connectionString = process.env.DATABASE_URL?.replace(
-  /([?&]sslmode=)require\b/,
-  '$1verify-full',
-);
+const connectionString = getDatabaseConnectionString();
 
 const pool = new Pool({
   connectionString,
   ssl: { rejectUnauthorized: true },
-  max: Number.parseInt(process.env.DB_POOL_MAX, 10) || 10,
-  idleTimeoutMillis:
-    Number.parseInt(process.env.DB_IDLE_TIMEOUT_MS, 10) || 30000,
-  connectionTimeoutMillis:
-    Number.parseInt(process.env.DB_CONNECTION_TIMEOUT_MS, 10) || 10000,
+  max: config.databasePoolMax,
+  idleTimeoutMillis: config.databaseIdleTimeoutMs,
+  connectionTimeoutMillis: config.databaseConnectionTimeoutMs,
 });
 
 pool.on('error', (error) => {
@@ -23,7 +18,7 @@ pool.on('error', (error) => {
 });
 
 const ready = pool.query('SELECT 1').then(() => {
-  console.log('Database connected to Neon');
+  console.log('Database connected');
 });
 const query = (text, params = [], executor = pool) =>
   ready.then(() => executor.query(text, params));

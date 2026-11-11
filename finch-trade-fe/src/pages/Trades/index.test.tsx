@@ -8,6 +8,9 @@ const mocks = vi.hoisted(() => ({
   cancelTrade: vi.fn(),
   finishGifting: vi.fn(),
   finishTrade: vi.fn(),
+  hasMorePastTrades: false,
+  isLoadingMorePastTrades: false,
+  loadMorePastTrades: vi.fn(),
   pastTrades: [] as PastGift[],
   requestTrade: vi.fn(),
   tradeError: null as string | null,
@@ -27,6 +30,9 @@ vi.mock('../../shared/context/UserProvider', () => ({
   useTrades: () => ({
     trades: mocks.trades,
     pastTrades: mocks.pastTrades,
+    hasMorePastTrades: mocks.hasMorePastTrades,
+    isLoadingMorePastTrades: mocks.isLoadingMorePastTrades,
+    loadMorePastTrades: mocks.loadMorePastTrades,
   }),
 }));
 
@@ -84,6 +90,8 @@ describe('Trades page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.pastTrades = [];
+    mocks.hasMorePastTrades = false;
+    mocks.isLoadingMorePastTrades = false;
     mocks.trader = traderProfile;
     mocks.trades = [makeTrader()];
     mocks.tradeError = null;
@@ -265,5 +273,25 @@ describe('Trades page', () => {
     expect(pastTradesButton).toHaveAttribute('aria-expanded', 'true');
     fireEvent.click(pastTradesButton);
     expect(pastTradesButton).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('loads the next past-trade page on demand', () => {
+    mocks.trades = [];
+    mocks.hasMorePastTrades = true;
+    mocks.pastTrades = [
+      {
+        id: 8,
+        userId: 2,
+        itemId: 1,
+        colorId: 4,
+        archivedAt: '2026-10-01T12:00:00.000Z',
+        type: 'giftGiven',
+      },
+    ];
+    renderTrades();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Load more' }));
+
+    expect(mocks.loadMorePastTrades).toHaveBeenCalledOnce();
   });
 });

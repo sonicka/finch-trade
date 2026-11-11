@@ -1,11 +1,7 @@
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
+import { requireJwtSecret } from '../src/config/env.js';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET must be configured');
-}
+const JWT_SECRET = requireJwtSecret();
 
 /**
  * Verifies the Authorization: Bearer <token> header and attaches the
@@ -24,8 +20,12 @@ export const requireAuth = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    if (!decoded.id) {
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
+    if (
+      typeof decoded !== 'object' ||
+      !Number.isSafeInteger(Number(decoded.id)) ||
+      Number(decoded.id) < 1
+    ) {
       return res.status(401).json({ message: 'Invalid token payload' });
     }
     req.user = decoded;

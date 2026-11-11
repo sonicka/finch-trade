@@ -144,6 +144,7 @@ const Login: React.FC = () => {
                   }}
                   id="username"
                   required
+                  maxLength={64}
                 />
                 <FormInput
                   label="Birb name"
@@ -154,6 +155,7 @@ const Login: React.FC = () => {
                   }}
                   id="birbname"
                   required
+                  maxLength={64}
                 />
                 <FormInput
                   label="Friend code"
@@ -164,6 +166,7 @@ const Login: React.FC = () => {
                   }}
                   id="friendCode"
                   required
+                  maxLength={64}
                 />
               </>
             )}

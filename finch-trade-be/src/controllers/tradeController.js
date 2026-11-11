@@ -10,16 +10,51 @@ import {
   updateTrade,
 } from '../helpers/tradeHelpers.js';
 import { deleteItem } from '../helpers/itemHelpers.js';
+import { asyncHandler, HttpError } from '../errors.js';
 
-// Returns active and potential trades involving the authenticated user.
-export const getTradesFromDB = async (req, res) => {
+const DEFAULT_HISTORY_PAGE_SIZE = 50;
+const MAX_HISTORY_PAGE_SIZE = 100;
+
+const parseHistoryCursor = (value) => {
+  if (value === undefined) return null;
+  if (
+    typeof value !== 'string' ||
+    value.length > 256 ||
+    !/^[A-Za-z0-9_-]+$/.test(value)
+  ) {
+    return undefined;
+  }
+
   try {
-    res.json(await findTrades(req.userId));
-  } catch (error) {
-    console.error('Error finding trades:', error);
-    res.status(500).json({ message: 'Error finding trades' });
+    const cursor = JSON.parse(Buffer.from(value, 'base64url').toString('utf8'));
+    if (
+      typeof cursor.archivedAt !== 'string' ||
+      Number.isNaN(Date.parse(cursor.archivedAt)) ||
+      !Number.isSafeInteger(cursor.id) ||
+      cursor.id < 1
+    ) {
+      return undefined;
+    }
+    return {
+      archivedAt: new Date(cursor.archivedAt).toISOString(),
+      id: cursor.id,
+    };
+  } catch {
+    return undefined;
   }
 };
+
+const createHistoryCursor = (row) =>
+  Buffer.from(
+    JSON.stringify({
+      archivedAt: new Date(row.archived_at).toISOString(),
+      id: row.id,
+    }),
+  ).toString('base64url');
+
+export const getTradesFromDB = asyncHandler(async (req, res) =>
+  res.json(await findTrades(req.userId)),
+);
 
 const getTradeItemsForUser = (trade, userId) => {
   const isUser1 = trade.user_id1 === Number(userId);
@@ -98,12 +133,10 @@ const lockUserPair = (client, userId1, userId2) => {
   return client.query('SELECT pg_advisory_xact_lock($1, $2)', orderedUserIds);
 };
 
-// Validates and creates or updates a trade request inside a transaction, then
-// returns its ID and current pending/confirmed status.
-export const postRequestTrade = async (req, res) => {
+export const postRequestTrade = asyncHandler(async (req, res) => {
   const userId1 = req.userId;
-  const { userId2 } = req.query;
-  const { chosenItems } = req.body;
+  const { userId2 } = req.query ?? {};
+  const { chosenItems } = req.body ?? {};
 
   const isPositiveInteger = (value) => Number.isSafeInteger(value) && value > 0;
   if (
@@ -119,42 +152,49 @@ export const postRequestTrade = async (req, res) => {
     return res.status(400).json({ message: 'Missing required trade data' });
   }
 
+  let result;
   try {
-    const result = await db.transaction(async (client) => {
+    result = await db.transaction(async (client) => {
       await lockUserPair(client, userId1, userId2);
       return requestTrade(userId1, userId2, chosenItems, client);
     });
-
-    if (result.invalidSelection) {
-      return res.status(400).json({
-        message: 'Trade items do not match. Please review the trade details.',
-      });
+  } catch (error) {
+    if (error.code === 'TRADE_ITEM_UNAVAILABLE') {
+      throw new HttpError(
+        409,
+        'TRADE_ITEM_UNAVAILABLE',
+        'One or more selected items are no longer available for this trade.',
+      );
     }
-
-    return res.status(result.created ? 201 : 200).json({
-      message: result.created ? 'Trade created' : 'Trade updated',
-      tradeId: result.tradeId,
-      status: result.status,
-    });
-  } catch (err) {
-    console.error('Error processing trade:', err);
-    return res.status(500).json({ message: 'Failed to process trade' });
+    throw error;
   }
-};
+
+  if (result.invalidSelection) {
+    return res.status(400).json({
+      message: 'Trade items do not match. Please review the trade details.',
+    });
+  }
+
+  return res.status(result.created ? 201 : 200).json({
+    message: result.created ? 'Trade created' : 'Trade updated',
+    tradeId: result.tradeId,
+    status: result.status,
+  });
+});
 
 // Removes both participants' offered items and matching wishlist entries
 // after both participants have completed the exchange.
 const deleteTradeItems = (trade, client) => {
   const items = [
-    [trade.user_id1, trade.item_id1, trade.color_id1],
-    [trade.user_id2, trade.item_id2, trade.color_id2],
-    [trade.user_id1, trade.item_id2, trade.color_id2],
-    [trade.user_id2, trade.item_id1, trade.color_id1],
+    [trade.user_id1, trade.item_id1, trade.color_id1, 'tradelist'],
+    [trade.user_id2, trade.item_id2, trade.color_id2, 'tradelist'],
+    [trade.user_id1, trade.item_id2, trade.color_id2, 'wishlist'],
+    [trade.user_id2, trade.item_id1, trade.color_id1, 'wishlist'],
   ];
 
   return Promise.all(
-    items.map(([userId, itemId, colorId]) =>
-      deleteItem(userId, itemId, colorId, true, client),
+    items.map(([userId, itemId, colorId, listType]) =>
+      deleteItem(userId, itemId, colorId, true, client, listType),
     ),
   );
 };
@@ -184,41 +224,55 @@ const finishTrade = async (trade, userId, client) => {
   return { tradeId: trade.id, status: 'archived' };
 };
 
-// Returns the authenticated user's archived trades and gifts in newest-first
-// order, formatted to match the history API response.
-export const getPastTradesFromDB = async (req, res) => {
-  try {
-    const userId = req.userId;
-    const [pastGifts, pastTrades] = await Promise.all([
-      queryAll(
-        `SELECT * FROM trades_history
-         WHERE (user_id1 = $1 OR user_id2 = $2) AND trade_id IS NULL
-         ORDER BY archived_at DESC`,
-        [userId, userId],
-      ),
-      queryAll(
-        `SELECT * FROM trades_history
-         WHERE (user_id1 = $1 OR user_id2 = $2) AND trade_id IS NOT NULL
-         ORDER BY archived_at DESC`,
-        [userId, userId],
-      ),
-    ]);
+export const getPastTradesFromDB = asyncHandler(async (req, res) => {
+  const rawPageSize = req.query.limit;
+  const pageSize =
+    rawPageSize === undefined ? DEFAULT_HISTORY_PAGE_SIZE : Number(rawPageSize);
+  if (
+    !Number.isSafeInteger(pageSize) ||
+    pageSize < 1 ||
+    pageSize > MAX_HISTORY_PAGE_SIZE
+  ) {
+    return res.status(400).json({
+      message: `Limit must be an integer between 1 and ${MAX_HISTORY_PAGE_SIZE}.`,
+    });
+  }
 
-    const toISOString = (timestamp) => new Date(timestamp).toISOString();
-    const currentUserId = Number(userId);
-    const formattedGifts = pastGifts.map((row) => {
+  const cursor = parseHistoryCursor(req.query.cursor);
+  if (cursor === undefined) {
+    return res.status(400).json({ message: 'Invalid past-trade cursor.' });
+  }
+
+  const rows = await queryAll(
+    `SELECT id, trade_id, user_id1, user_id2, status, item_id1, color_id1,
+            item_id2, color_id2, archived_at
+     FROM trades_history
+     WHERE (user_id1 = $1 OR user_id2 = $1)
+       AND ($2::timestamptz IS NULL
+         OR (archived_at, id) < ($2::timestamptz, $3::integer))
+     ORDER BY archived_at DESC, id DESC
+     LIMIT $4`,
+    [req.userId, cursor?.archivedAt ?? null, cursor?.id ?? null, pageSize + 1],
+  );
+
+  const hasMore = rows.length > pageSize;
+  const pageRows = rows.slice(0, pageSize);
+  const currentUserId = Number(req.userId);
+  const data = pageRows.map((row) => {
+    const archivedAt = new Date(row.archived_at).toISOString();
+    if (row.trade_id === null) {
       const isGiver = row.user_id1 === currentUserId;
       return {
         id: row.id,
         itemId: row.item_id1,
         colorId: row.color_id1,
-        archivedAt: toISOString(row.archived_at),
+        archivedAt,
         type: isGiver ? 'giftGiven' : 'giftReceived',
         userId: isGiver ? row.user_id2 : row.user_id1,
       };
-    });
+    }
 
-    const formattedTrades = pastTrades.map((row) => ({
+    return {
       id: row.id,
       status: row.status,
       tradeId: row.trade_id,
@@ -228,25 +282,19 @@ export const getPastTradesFromDB = async (req, res) => {
       userId2: row.user_id2,
       itemId2: row.item_id2,
       colorId2: row.color_id2,
-      archivedAt: toISOString(row.archived_at),
+      archivedAt,
       type: 'trade',
-    }));
+    };
+  });
 
-    const allPastTransactions = [...formattedGifts, ...formattedTrades].sort(
-      (a, b) => new Date(b.archivedAt) - new Date(a.archivedAt),
-    );
+  return res.status(200).json({
+    data,
+    nextCursor: hasMore ? createHistoryCursor(pageRows.at(-1)) : null,
+  });
+});
 
-    res.status(200).json(allPastTransactions);
-  } catch (error) {
-    console.error('Error fetching past trades:', error);
-    res.status(500).json({ message: 'Failed to retrieve past trades' });
-  }
-};
-
-// Records a completed gift and removes its item from both users' lists in one
-// transaction; only the giver may submit it.
-export const postFinishGifting = async (req, res) => {
-  const { giftedBy, giftedTo, itemId, colorId } = req.body;
+export const postFinishGifting = asyncHandler(async (req, res) => {
+  const { giftedBy, giftedTo, itemId, colorId } = req.body ?? {};
 
   const isPositiveInteger = (value) =>
     Number.isSafeInteger(Number(value)) && Number(value) > 0;
@@ -266,150 +314,135 @@ export const postFinishGifting = async (req, res) => {
       .json({ message: 'Only the gift giver can complete this gift.' });
   }
 
-  try {
-    await db.transaction(async (client) => {
-      await runQuery(
-        'INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES ($1, $2, $3, $4)',
-        [giftedBy, giftedTo, itemId, colorId],
-        client,
-      );
+  await db.transaction(async (client) => {
+    await runQuery(
+      'INSERT INTO trades_history (user_id1, user_id2, item_id1, color_id1) VALUES ($1, $2, $3, $4)',
+      [giftedBy, giftedTo, itemId, colorId],
+      client,
+    );
 
-      await deleteItem(giftedTo, itemId, colorId, true, client, 'wishlist');
-      await deleteItem(giftedBy, itemId, colorId, false, client, 'tradelist');
-    });
+    await deleteItem(giftedTo, itemId, colorId, true, client, 'wishlist');
+    await deleteItem(giftedBy, itemId, colorId, false, client, 'tradelist');
+  });
 
-    return res.status(200).json({
-      message: 'Gifting archived and items successfully deleted.',
-    });
-  } catch (err) {
-    console.error('Error finishing gifting:', err);
-    return res.status(500).json({
-      message: 'Failed to finish gifting',
-    });
-  }
-};
+  return res.status(200).json({
+    message: 'Gifting archived and items successfully deleted.',
+  });
+});
 
-// Marks the authenticated participant's confirmed trade as complete, archiving
-// it and removing reserved items after both participants finish.
-export const postFinishTrade = async (req, res) => {
+export const postFinishTrade = asyncHandler(async (req, res) => {
   const { tradeId } = req.params;
   const userId = req.userId;
 
-  try {
-    const result = await db.transaction(async (client) => {
-      const trade = await queryOne(
-        `SELECT * FROM trades WHERE id = $1 AND status = 'confirmed' FOR UPDATE`,
-        [tradeId],
-        (row) => row,
-        client,
-      );
+  if (!/^[1-9]\d*$/.test(tradeId) || !Number.isSafeInteger(Number(tradeId))) {
+    return res.status(400).json({ message: 'Invalid trade id.' });
+  }
 
-      if (!trade) return { notFound: true };
+  const result = await db.transaction(async (client) => {
+    const trade = await queryOne(
+      `SELECT * FROM trades WHERE id = $1 AND status = 'confirmed' FOR UPDATE`,
+      [tradeId],
+      (row) => row,
+      client,
+    );
 
-      return finishTrade(trade, userId, client);
-    });
+    if (!trade) return { notFound: true };
 
-    if (result.notFound) {
-      return res
-        .status(404)
-        .json({ error: 'Trade not found or not confirmed' });
-    }
+    return finishTrade(trade, userId, client);
+  });
 
-    if (result.forbidden) {
-      return res
-        .status(403)
-        .json({ error: 'You are not a party to this trade.' });
-    }
+  if (result.notFound) {
+    return res
+      .status(404)
+      .json({ message: 'Trade not found or not confirmed.' });
+  }
 
-    if (result.status === 'archived') {
-      return res.status(200).json({
-        message: 'Trade archived and items successfully deleted.',
-        tradeId: result.tradeId,
-        status: result.status,
-      });
-    }
+  if (result.forbidden) {
+    return res
+      .status(403)
+      .json({ message: 'You are not a party to this trade.' });
+  }
 
+  if (result.status === 'archived') {
     return res.status(200).json({
-      message: 'Trade updated',
+      message: 'Trade archived and items successfully deleted.',
       tradeId: result.tradeId,
       status: result.status,
     });
-  } catch (err) {
-    console.error('Error finishing trade:', err.message);
-    return res.status(500).json({ error: err.message });
   }
-};
 
-// Cancels a pending trade and releases its reserved items, locking both users
-// to avoid a race with trade acceptance.
-export const deletePendingTrade = async (req, res) => {
+  return res.status(200).json({
+    message: 'Trade updated',
+    tradeId: result.tradeId,
+    status: result.status,
+  });
+});
+
+export const deletePendingTrade = asyncHandler(async (req, res) => {
   const { tradeId } = req.params;
 
-  try {
-    const result = await db.transaction(async (client) => {
-      const currentTrade = await queryOne(
-        'SELECT * FROM trades WHERE id = $1',
-        [tradeId],
-        (row) => row,
-        client,
-      );
-
-      if (!currentTrade) return { notFound: true };
-
-      if (
-        ![
-          String(currentTrade.user_id1),
-          String(currentTrade.user_id2),
-        ].includes(req.userId)
-      ) {
-        return { forbidden: true };
-      }
-
-      if (currentTrade.status !== 'pending') {
-        return { alreadyAccepted: currentTrade.status === 'confirmed' };
-      }
-
-      await lockUserPair(client, currentTrade.user_id1, currentTrade.user_id2);
-      const trade = await queryOne(
-        'SELECT * FROM trades WHERE id = $1 FOR UPDATE',
-        [tradeId],
-        (row) => row,
-        client,
-      );
-
-      if (!trade) return { notFound: true };
-      if (trade.status !== 'pending') {
-        return { alreadyAccepted: trade.status === 'confirmed' };
-      }
-
-      await releaseTradeItems(trade, client);
-      await deleteTrade(trade.id, client);
-      return { cancelled: true };
-    });
-
-    if (result.notFound) {
-      return res.status(404).json({
-        message:
-          'This trade no longer exists; it may already have been cancelled.',
-      });
-    }
-
-    if (result.alreadyAccepted) {
-      return res.status(409).json({
-        message:
-          'This trade has already been accepted and cannot be cancelled.',
-      });
-    }
-
-    if (result.forbidden) {
-      return res
-        .status(403)
-        .json({ message: 'Only trade participants can cancel this trade.' });
-    }
-
-    return res.status(200).json({ message: 'Pending trade cancelled' });
-  } catch (error) {
-    console.error('Error cancelling pending trade:', error);
-    return res.status(500).json({ message: 'Failed to cancel pending trade' });
+  if (!/^[1-9]\d*$/.test(tradeId) || !Number.isSafeInteger(Number(tradeId))) {
+    return res.status(400).json({ message: 'Invalid trade id.' });
   }
-};
+
+  const result = await db.transaction(async (client) => {
+    const currentTrade = await queryOne(
+      'SELECT * FROM trades WHERE id = $1',
+      [tradeId],
+      (row) => row,
+      client,
+    );
+
+    if (!currentTrade) return { notFound: true };
+
+    if (
+      ![String(currentTrade.user_id1), String(currentTrade.user_id2)].includes(
+        req.userId,
+      )
+    ) {
+      return { forbidden: true };
+    }
+
+    if (currentTrade.status !== 'pending') {
+      return { alreadyAccepted: currentTrade.status === 'confirmed' };
+    }
+
+    await lockUserPair(client, currentTrade.user_id1, currentTrade.user_id2);
+    const trade = await queryOne(
+      'SELECT * FROM trades WHERE id = $1 FOR UPDATE',
+      [tradeId],
+      (row) => row,
+      client,
+    );
+
+    if (!trade) return { notFound: true };
+    if (trade.status !== 'pending') {
+      return { alreadyAccepted: trade.status === 'confirmed' };
+    }
+
+    await releaseTradeItems(trade, client);
+    await deleteTrade(trade.id, client);
+    return { cancelled: true };
+  });
+
+  if (result.notFound) {
+    return res.status(404).json({
+      message:
+        'This trade no longer exists; it may already have been cancelled.',
+    });
+  }
+
+  if (result.alreadyAccepted) {
+    return res.status(409).json({
+      message: 'This trade has already been accepted and cannot be cancelled.',
+    });
+  }
+
+  if (result.forbidden) {
+    return res
+      .status(403)
+      .json({ message: 'Only trade participants can cancel this trade.' });
+  }
+
+  return res.status(200).json({ message: 'Pending trade cancelled' });
+});
