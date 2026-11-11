@@ -62,6 +62,53 @@ describe('Profile page', () => {
     expect(saveButton).toBeEnabled();
   });
 
+  it('shows an inline hint and disables saving for an invalid email', () => {
+    renderProfile();
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'not-an-email' },
+    });
+
+    expect(
+      screen.getByText('Enter a valid email address.'),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+  });
+
+  it('shows inline password hints for short and mismatched passwords', () => {
+    renderProfile();
+
+    fireEvent.change(screen.getByLabelText('New Password'), {
+      target: { value: 'short' },
+    });
+    expect(
+      screen.getByText('Password must be at least 8 characters.'),
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText('New password again'), {
+      target: { value: 'different' },
+    });
+    expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
+  });
+
+  it('disables saving changed email while entered passwords are invalid', () => {
+    renderProfile();
+
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'maya.new@example.com' },
+    });
+    fireEvent.change(screen.getByLabelText('New Password'), {
+      target: { value: 'short' },
+    });
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('New password again'), {
+      target: { value: 'different-password' },
+    });
+    expect(screen.getByText('Passwords do not match.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save' })).toBeDisabled();
+  });
+
   it('saves changed account details and displays success feedback', async () => {
     renderProfile();
 
