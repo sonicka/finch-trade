@@ -40,6 +40,8 @@ const isValidPassword = (value) =>
 
 const isUniqueViolation = (error) => error?.code === '23505';
 
+// Validates signup details, prevents duplicate accounts, hashes the password,
+// and returns a signed token for the new user.
 export const signUp = asyncHandler(async (req, res) => {
   const body = isRecord(req.body) ? req.body : {};
   const email = normalizeEmail(body.email);
@@ -96,6 +98,8 @@ export const signUp = asyncHandler(async (req, res) => {
   }
 });
 
+// Authenticates credentials and returns a token without disclosing which
+// credential was invalid.
 export const login = asyncHandler(async (req, res) => {
   const body = isRecord(req.body) ? req.body : {};
   const email = normalizeEmail(body.email);
@@ -137,6 +141,7 @@ export const login = asyncHandler(async (req, res) => {
   return res.status(200).json({ token });
 });
 
+// Returns the public profile fields for the user identified by the route ID.
 export const getUserFromDB = asyncHandler(async (req, res) => {
   const userId = Number(req.params.userId);
   if (!Number.isSafeInteger(userId) || userId < 1) {
@@ -153,6 +158,7 @@ export const getUserFromDB = asyncHandler(async (req, res) => {
   return res.json(user);
 });
 
+// Allows an authenticated user to update their own email and/or password.
 export const editUser = asyncHandler(async (req, res) => {
   const { userId } = req.params;
   if (userId !== req.userId) {

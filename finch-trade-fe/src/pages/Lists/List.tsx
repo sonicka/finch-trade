@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import Item from './Item';
 import ItemAdd from './ItemAdd';
-import { useColors, useItems } from '../../shared/context/DataProvider';
+import {
+  useCatalogStatus,
+  useColors,
+  useItems,
+} from '../../shared/context/DataProvider';
 import { useUserItems } from '../../shared/context/UserProvider';
 import { useManageItem } from '../../shared/hooks/items';
 import { getColorName } from '../../shared/utils';
 import { ListType, UserItem } from '../../shared/types';
 import Alert from '../../shared/components/Alert';
+import InlineAlert from '../../shared/components/InlineAlert';
+import Spinner from '../../shared/components/Spinner';
 
 interface Props {
   type: ListType;
@@ -16,8 +22,10 @@ const maxHeight = `calc(100vh - ${147 + 66 + 99 + 93 + 32}px)`;
 
 const List: React.FC<Props> = ({ type }) => {
   const [allItems] = useItems();
-  const { data: wishlist = [] } = useUserItems('wishlist');
-  const { data: tradelist = [] } = useUserItems('tradelist');
+  const wishlistQuery = useUserItems('wishlist');
+  const tradelistQuery = useUserItems('tradelist');
+  const { data: wishlist = [] } = wishlistQuery;
+  const { data: tradelist = [] } = tradelistQuery;
   const allUserItems = { wishlist, tradelist };
   const userItems = allUserItems[type];
   const {
@@ -30,15 +38,17 @@ const List: React.FC<Props> = ({ type }) => {
     removingItem,
   } = useManageItem();
   const colors = useColors();
+  const catalogStatus = useCatalogStatus();
+  const userItemsLoading = wishlistQuery.isPending || tradelistQuery.isPending;
+  const userItemsError = wishlistQuery.isError || tradelistQuery.isError;
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const itemName = formData.get('itemName') as string;
+    const itemName = formData.get('itemName');
     const itemColor = Number(formData.get('itemColor'));
-    if (itemName && itemColor) {
-      await addNewItem(itemName, itemColor, type);
-    }
+    if (typeof itemName !== 'string' || !itemName || !itemColor) return false;
+    return addNewItem(itemName, itemColor, type);
   };
 
   const handleRemove = async (
@@ -59,9 +69,50 @@ const List: React.FC<Props> = ({ type }) => {
           userItems={allUserItems}
           type={type}
           isAdding={isAdding}
+          isCatalogLoading={catalogStatus.isLoading}
           clearError={clearMessage}
         />
       </div>
+      {catalogStatus.error && (
+        <div className="my-2">
+          <InlineAlert type="error" message={catalogStatus.error} />
+          <button
+            type="button"
+            className="mt-2 underline"
+            onClick={() => void catalogStatus.retry()}
+          >
+            Retry loading catalog
+          </button>
+        </div>
+      )}
+      {userItemsError && (
+        <div className="my-2">
+          <InlineAlert
+            type="error"
+            message="Could not load your items. Please try again."
+          />
+          <button
+            type="button"
+            className="mt-2 underline"
+            onClick={() =>
+              void Promise.all([
+                wishlistQuery.refetch(),
+                tradelistQuery.refetch(),
+              ])
+            }
+          >
+            Retry loading items
+          </button>
+        </div>
+      )}
+      {userItemsLoading && (
+        <div
+          className="flex items-center justify-center gap-2 py-6"
+          role="status"
+        >
+          <Spinner size={40} label="Loading your items" />
+        </div>
+      )}
       <div
         className="overflow-y-auto scrollbar scrollbar-thumb-darkBeige scrollbar-track-beige"
         style={{ maxHeight }}

@@ -16,6 +16,7 @@ type AuthRequest =
 
 const MIN_PASSWORD_LENGTH = 8;
 const MAX_EMAIL_LENGTH = 254;
+const MAX_PROFILE_FIELD_LENGTH = 64;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const ValidationHint: React.FC<{ message: string }> = ({ message }) => {
@@ -70,7 +71,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (user) navigate('/');
-  }, [user]);
+  }, [user, navigate]);
 
   useEffect(() => {
     setEmail('');
@@ -144,7 +145,7 @@ const Login: React.FC = () => {
                   }}
                   id="username"
                   required
-                  maxLength={64}
+                  maxLength={MAX_PROFILE_FIELD_LENGTH}
                 />
                 <FormInput
                   label="Birb name"
@@ -155,7 +156,7 @@ const Login: React.FC = () => {
                   }}
                   id="birbname"
                   required
-                  maxLength={64}
+                  maxLength={MAX_PROFILE_FIELD_LENGTH}
                 />
                 <FormInput
                   label="Friend code"
@@ -166,7 +167,7 @@ const Login: React.FC = () => {
                   }}
                   id="friendCode"
                   required
-                  maxLength={64}
+                  maxLength={MAX_PROFILE_FIELD_LENGTH}
                 />
               </>
             )}
@@ -243,6 +244,7 @@ const Login: React.FC = () => {
                     Don't have an account yet?
                     <br />
                     <button
+                      type="button"
                       onClick={() => {
                         clearError();
                         setIsLogin(false);
@@ -258,6 +260,7 @@ const Login: React.FC = () => {
                     Already have an account?
                     <br />
                     <button
+                      type="button"
                       onClick={() => {
                         clearError();
                         setIsLogin(true);
