@@ -32,15 +32,15 @@ const Trades: FC = () => {
   return (
     <div className="w-full md:w-1/2 m-auto pb-8">
       {catalogStatus.error && (
-        <div className="my-2">
-          <InlineAlert type="error" message={catalogStatus.error} />
-          <button
-            type="button"
-            className="mt-2 underline"
-            onClick={() => void catalogStatus.retry()}
-          >
-            Retry loading catalog
-          </button>
+        <div className="mx-10 mt-8">
+          <InlineAlert
+            type="error"
+            message={catalogStatus.error}
+            action={{
+              label: 'Retry loading catalog',
+              onClick: () => void catalogStatus.retry(),
+            }}
+          />
         </div>
       )}
       {catalogStatus.isLoading && (
@@ -50,15 +50,15 @@ const Trades: FC = () => {
         </div>
       )}
       {tradesError && (
-        <div className="my-4">
-          <InlineAlert type="error" message={tradesError} />
-          <button
-            type="button"
-            className="mt-2 underline"
-            onClick={retryTrades}
-          >
-            Retry loading trades
-          </button>
+        <div className="mx-10 mt-8">
+          <InlineAlert
+            type="error"
+            message={tradesError}
+            action={{
+              label: 'Retry loading trades',
+              onClick: retryTrades,
+            }}
+          />
         </div>
       )}
       {(tradesLoading || (pastTradesLoading && !pastTrades.length)) && (
@@ -84,19 +84,19 @@ const Trades: FC = () => {
         ))
       ) : null}
       {pastTradesError && (
-        <div className="mx-10 mt-4">
-          <InlineAlert type="error" message={pastTradesError} />
-          <button
-            type="button"
-            className="mt-2 underline"
-            onClick={retryPastTrades}
-          >
-            Retry loading past trades
-          </button>
+        <div className="mx-10 mt-8">
+          <InlineAlert
+            type="error"
+            message={pastTradesError}
+            action={{
+              label: 'Retry loading past trades',
+              onClick: retryPastTrades,
+            }}
+          />
         </div>
       )}
       {pastTrades?.length > 0 ? (
-        <div className="mx-10 mt-10">
+        <div className="mx-10 mt-8">
           <Card simple>
             <button
               type="button"
