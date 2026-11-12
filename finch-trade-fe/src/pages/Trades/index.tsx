@@ -127,35 +127,39 @@ const Trades: FC = () => {
           </Card>
           <div
             id="past-trades-list"
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            aria-hidden={!isPastTradesOpen}
+            inert={!isPastTradesOpen}
+            className={`grid transition-[grid-template-rows,opacity,transform] duration-300 ease-in-out ${
               isPastTradesOpen
-                ? 'max-h-[80vh] overflow-y-auto opacity-100 translate-y-0'
-                : 'max-h-0 opacity-0 -translate-y-2'
+                ? 'grid-rows-[1fr] translate-y-0 opacity-100'
+                : 'grid-rows-[0fr] -translate-y-2 opacity-0'
             }`}
           >
-            {pastTrades.map((p: PastGift | PastTrade) => (
-              <div className="mt-4" key={p.id}>
-                {p.type === 'trade' ? (
-                  <PastTradeCard
-                    pastTrade={p}
-                    user={user}
-                    traderId={p.userId1 === user.id ? p.userId2 : p.userId1}
-                  />
-                ) : (
-                  <PastGiftCard pastTrade={p} traderId={p.userId} />
-                )}
-              </div>
-            ))}
-            {hasMorePastTrades && isPastTradesOpen ? (
-              <button
-                type="button"
-                className="my-4 w-full rounded-xl border-2 border-darkBeige px-4 py-2 font-semibold text-darkBeige hover:bg-beige disabled:cursor-not-allowed disabled:opacity-60"
-                onClick={loadMorePastTrades}
-                disabled={isLoadingMorePastTrades}
-              >
-                {isLoadingMorePastTrades ? 'Loading...' : 'Load more'}
-              </button>
-            ) : null}
+            <div className="min-h-0 overflow-hidden">
+              {pastTrades.map((p: PastGift | PastTrade) => (
+                <div className="mt-4" key={p.id}>
+                  {p.type === 'trade' ? (
+                    <PastTradeCard
+                      pastTrade={p}
+                      user={user}
+                      traderId={p.userId1 === user.id ? p.userId2 : p.userId1}
+                    />
+                  ) : (
+                    <PastGiftCard pastTrade={p} traderId={p.userId} />
+                  )}
+                </div>
+              ))}
+              {hasMorePastTrades ? (
+                <button
+                  type="button"
+                  className="my-4 w-full rounded-xl border-2 border-darkBeige px-4 py-2 font-semibold text-darkBeige hover:bg-beige disabled:cursor-not-allowed disabled:opacity-60"
+                  onClick={loadMorePastTrades}
+                  disabled={isLoadingMorePastTrades}
+                >
+                  {isLoadingMorePastTrades ? 'Loading...' : 'Load more'}
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       ) : null}

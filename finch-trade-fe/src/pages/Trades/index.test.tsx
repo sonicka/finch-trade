@@ -378,8 +378,16 @@ describe('Trades page', () => {
       name: 'Past trades',
     });
     expect(pastTradesButton).toHaveAttribute('aria-expanded', 'true');
+    const pastTradesList = screen
+      .getByText('You gifted')
+      .closest('#past-trades-list');
+    expect(pastTradesList).toHaveAttribute('aria-hidden', 'false');
+    expect(pastTradesList).not.toHaveAttribute('inert');
+
     fireEvent.click(pastTradesButton);
     expect(pastTradesButton).toHaveAttribute('aria-expanded', 'false');
+    expect(pastTradesList).toHaveAttribute('aria-hidden', 'true');
+    expect(pastTradesList).toHaveAttribute('inert', '');
   });
 
   it('loads the next past-trade page on demand', () => {
