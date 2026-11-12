@@ -418,6 +418,26 @@ test('first trade completion waits; second completion archives and removes items
   assert.equal(calls.deleteTrade.length, 1);
 });
 
+test('malformed trade completion state fails without updating the trade', async () => {
+  behavior.queryOne = async () => confirmedTrade('["1","99"]');
+  const response = createResponse();
+  let forwardedError;
+
+  await postFinishTrade(
+    { userId: '2', params: { tradeId: '42' } },
+    response,
+    (error) => {
+      forwardedError = error;
+    },
+  );
+
+  assert.equal(forwardedError.code, 'INCONSISTENT_TRADE_STATE');
+  assert.equal(forwardedError.statusCode, 500);
+  assert.equal(calls.runQuery.length, 0);
+  assert.equal(calls.deleteItem.length, 0);
+  assert.equal(calls.archiveTrade.length, 0);
+});
+
 test('past trade history validates limits and returns cursor pages', async () => {
   const firstGift = {
     id: 12,
@@ -603,7 +623,7 @@ test('item deletion is scoped to the authenticated user', async () => {
   );
 
   assert.equal(response.statusCode, 200);
-  assert.deepEqual(calls.runQuery[0][1], [9, 4, 'wishlist', '17']);
+  assert.deepEqual(calls.runQuery[0][1], ['17', 9, 4, 'wishlist']);
 });
 
 test('item deletion reports a missing item', async () => {
@@ -620,6 +640,26 @@ test('item deletion reports a missing item', async () => {
 
   assert.equal(response.statusCode, 404);
   assert.deepEqual(response.body, { message: 'Item not found' });
+  assert.deepEqual(calls.queryOne[0][1], ['17', 9, 4, 'wishlist']);
+});
+
+test('item deletion rejects items reserved for a trade', async () => {
+  behavior.runQuery = async () => ({ lastID: undefined, changes: 0 });
+  behavior.queryOne = async () => ({ in_trade_with_user: 23 });
+  const response = createResponse();
+
+  await deleteItemFromDB(
+    {
+      userId: '17',
+      body: { itemId: 9, colorId: 4, listType: 'wishlist' },
+    },
+    response,
+  );
+
+  assert.equal(response.statusCode, 409);
+  assert.deepEqual(response.body, {
+    message: 'This item cannot be removed while it is reserved for a trade.',
+  });
 });
 
 test('signup validates account fields before database access', async () => {

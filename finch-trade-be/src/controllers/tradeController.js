@@ -74,12 +74,9 @@ const getTradeItemsForUser = (trade, userId) => {
 const sameItem = (first, second) =>
   first.id === second.id && first.colorId === second.colorId;
 
-// Parses existing requesters and adds new participant IDs without duplicates.
+// Adds participant IDs to an existing list without duplicates.
 const addRequester = (requestedBy, ...userIds) => [
-  ...new Set([
-    ...(requestedBy ? JSON.parse(requestedBy) : []),
-    ...userIds.map(String),
-  ]),
+  ...new Set([...requestedBy, ...userIds.map(String)]),
 ];
 
 // Validates the reciprocal request's item selections and confirms the trade
@@ -99,7 +96,11 @@ const updateExistingTrade = async (
     return { invalidSelection: true };
   }
 
-  const requestedBy = addRequester(trade.requested_by, userId1, userId2);
+  const requestedBy = addRequester(
+    JSON.parse(trade.requested_by || '[]'),
+    userId1,
+    userId2,
+  );
   const status = requestedBy.length === 2 ? 'confirmed' : 'pending';
   await updateTrade(trade.id, status, requestedBy, client);
   return { created: false, tradeId: trade.id, status };
@@ -210,7 +211,24 @@ const finishTrade = async (trade, userId, client) => {
     return { forbidden: true };
   }
 
-  const finishedBy = addRequester(trade.finished_by, userId);
+  const participantIds = [String(trade.user_id1), String(trade.user_id2)];
+  const finishedBy = JSON.parse(trade.finished_by || '[]');
+  if (
+    !Array.isArray(finishedBy) ||
+    finishedBy.some(
+      (finishedUserId) => !participantIds.includes(finishedUserId),
+    )
+  ) {
+    throw new HttpError(
+      500,
+      'INCONSISTENT_TRADE_STATE',
+      'Trade completion data is invalid.',
+    );
+  }
+
+  if (!finishedBy.includes(userId)) {
+    finishedBy.push(userId);
+  }
   await runQuery(
     `UPDATE trades
      SET status = $1, finished_by = $2
@@ -219,8 +237,12 @@ const finishTrade = async (trade, userId, client) => {
     client,
   );
 
-  if (trade.status === 'confirmed' && finishedBy.length !== 2)
+  const bothParticipantsFinished = participantIds.every((participantId) =>
+    finishedBy.includes(participantId),
+  );
+  if (!bothParticipantsFinished) {
     return { tradeId: trade.id, status: trade.status };
+  }
 
   await deleteTradeItems(trade, client);
   await archiveTrade(trade, client);

@@ -147,14 +147,29 @@ export const deleteItemFromDB = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'Missing required parameters' });
   }
 
-  const query =
-    'DELETE FROM user_items WHERE item_id = $1 AND color_id = $2 AND list_type = $3 AND user_id = $4;';
-  const result = await runQuery(query, [itemId, colorId, listType, userId]);
+  const result = await runQuery(
+    `DELETE FROM user_items
+     WHERE user_id = $1 AND item_id = $2 AND color_id = $3
+       AND list_type = $4 AND in_trade_with_user IS NULL`,
+    [userId, itemId, colorId, listType],
+  );
   if (result.changes === 0) {
+    const item = await queryOne(
+      `SELECT in_trade_with_user FROM user_items
+       WHERE user_id = $1 AND item_id = $2 AND color_id = $3 AND list_type = $4`,
+      [userId, itemId, colorId, listType],
+    );
+    if (item?.in_trade_with_user != null) {
+      return res.status(409).json({
+        message:
+          'This item cannot be removed while it is reserved for a trade.',
+      });
+    }
     return res.status(404).json({ message: 'Item not found' });
   }
   return res.status(200).json({ message: `Item removed from ${listType}` });
 });
+
 // Looks up a catalog item by ID.
 export const getItemByIdFromDB = asyncHandler(async (req, res) => {
   const { itemId } = req.params;
