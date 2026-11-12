@@ -75,14 +75,14 @@ const List: React.FC<Props> = ({ type }) => {
       </div>
       {catalogStatus.error && (
         <div className="my-2">
-          <InlineAlert type="error" message={catalogStatus.error} />
-          <button
-            type="button"
-            className="mt-2 underline"
-            onClick={() => void catalogStatus.retry()}
-          >
-            Retry loading catalog
-          </button>
+          <InlineAlert
+            type="error"
+            message={catalogStatus.error}
+            action={{
+              label: 'Retry loading catalog',
+              onClick: catalogStatus.retry,
+            }}
+          />
         </div>
       )}
       {userItemsError && (
@@ -90,19 +90,15 @@ const List: React.FC<Props> = ({ type }) => {
           <InlineAlert
             type="error"
             message="Could not load your items. Please try again."
+            action={{
+              label: 'Retry loading items',
+              onClick: () =>
+                Promise.all([
+                  wishlistQuery.refetch(),
+                  tradelistQuery.refetch(),
+                ]).then(() => undefined),
+            }}
           />
-          <button
-            type="button"
-            className="mt-2 underline"
-            onClick={() =>
-              void Promise.all([
-                wishlistQuery.refetch(),
-                tradelistQuery.refetch(),
-              ])
-            }
-          >
-            Retry loading items
-          </button>
         </div>
       )}
       {userItemsLoading && (

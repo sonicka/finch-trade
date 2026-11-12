@@ -113,6 +113,40 @@ describe('List item removal integration', () => {
     expect(screen.getByRole('option', { name: 'white' })).toBeInTheDocument();
   });
 
+  it('retries loading the catalog from the inline error alert action', () => {
+    const retry = vi.fn().mockResolvedValue(undefined);
+    mocks.useCatalogStatus.mockReturnValue({
+      isLoading: false,
+      error: 'Could not load the item catalog.',
+      retry,
+    });
+
+    renderList();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Retry loading catalog' }),
+    );
+
+    expect(retry).toHaveBeenCalledOnce();
+  });
+
+  it('retries both item lists from the inline error alert action', () => {
+    const refetchWishlist = vi.fn().mockResolvedValue({});
+    const refetchTradelist = vi.fn().mockResolvedValue({});
+    mocks.useUserItems.mockImplementation((type) => ({
+      data: [],
+      isError: true,
+      refetch: type === 'wishlist' ? refetchWishlist : refetchTradelist,
+    }));
+
+    renderList();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Retry loading items' }),
+    );
+
+    expect(refetchWishlist).toHaveBeenCalledOnce();
+    expect(refetchTradelist).toHaveBeenCalledOnce();
+  });
+
   it('shows a spinner in place of the remove button for the item being deleted', () => {
     mocks.useManageItem.mockReturnValue({
       addNewItem: mocks.addNewItem,
