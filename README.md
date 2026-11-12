@@ -77,6 +77,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 
 - Basic functionalities already built
 - Feedback form and Buy me coffee button implemented
+- Thorough testing of business logic is to be executed
 
 ### TODO General
 
@@ -89,5 +90,3 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 ### TODO Backend
 
 - [ ] Tie color options to each item separately (dynamic color sets)
-- [ ] Finish trade functionality needs refactor
-- [ ] Disabling item delete might need handling on BE as well
