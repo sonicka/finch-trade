@@ -89,4 +89,4 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 
 ### TODO Backend
 
-- [ ] Tie color options to each item separately (dynamic color sets)
+- [ ] Configure item-specific color sets in the catalog

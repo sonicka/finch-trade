@@ -64,6 +64,10 @@ export const fetchAllItems = async (): Promise<Item[]> => {
   return (await apiFetch('/api/items')) as Item[];
 };
 
+export const fetchItemColors = async (itemId: number): Promise<Color[]> => {
+  return (await apiFetch(`/api/items/item/${itemId}/colors`)) as Color[];
+};
+
 // userId is now implicit (taken from the auth token server-side), so it's
 // no longer a parameter here.
 export const fetchUserItems = async (

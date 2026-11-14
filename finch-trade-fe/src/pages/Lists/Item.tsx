@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import Tooltip from '../../shared/components/Tooltip';
 import { Color } from '../../shared/types';
+import { getColorSwatchStyle } from '../../shared/utils';
 import Card from '../../shared/components/Card';
 import IconButton from '../../shared/components/IconButton';
 
@@ -30,18 +31,12 @@ const Item: FC<Props> = ({
       <div className="w-full flex justify-between p-4 rounded-lg">
         <div className="flex gap-4">
           <Tooltip text={color.color}>
-            {color.id === 1 ? (
-              <div className="w-6 h-6 rounded-full bg-gradient-to-r from-red-500 via-yellow-500 to-blue-500"></div>
-            ) : (
-              <div
-                className={`w-6 h-6 rounded-full ${
-                  color.color === 'white' ? 'border border-darkBeige' : ''
-                }`}
-                style={{
-                  backgroundColor: color.color,
-                }}
-              />
-            )}
+            <div
+              className={`w-6 h-6 rounded-full ${
+                color.color === 'white' ? 'border border-darkBeige' : ''
+              }`}
+              style={getColorSwatchStyle(color.color)}
+            />
           </Tooltip>
           <p className="w-auto">{text}</p>
         </div>

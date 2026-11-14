@@ -50,6 +50,27 @@ export const postItemToDB = asyncHandler(async (req, res) => {
   );
   const itemId = result.lastID;
 
+  await runQuery(
+    `INSERT INTO item_colors (item_id, color_id)
+     SELECT $1, colors.id
+     FROM colors
+     WHERE NOT EXISTS (
+       SELECT 1 FROM item_colors WHERE item_id = $1
+     )
+     ON CONFLICT (item_id, color_id) DO NOTHING`,
+    [itemId],
+  );
+
+  const itemColor = await queryOne(
+    'SELECT 1 FROM item_colors WHERE item_id = $1 AND color_id = $2',
+    [itemId, colorId],
+  );
+  if (!itemColor) {
+    return res
+      .status(400)
+      .json({ message: 'This color is not available for this item.' });
+  }
+
   const existingUserItem = await queryOne(
     colorId === 1
       ? `SELECT list_type, color_id
@@ -108,6 +129,30 @@ export const getAllItemsFromDB = asyncHandler(async (_req, res) =>
     await queryAll('SELECT id, name FROM items ORDER BY LOWER(name), id'),
   ),
 );
+
+// Returns the colors configured for one catalog item.
+export const getItemColorsFromDB = asyncHandler(async (req, res) => {
+  const { itemId } = req.params;
+  if (!isPositiveInteger(itemId)) {
+    return res.status(400).json({ message: 'Invalid item id.' });
+  }
+
+  const item = await queryOne('SELECT id FROM items WHERE id = $1', [itemId]);
+  if (!item) {
+    return res.status(404).json({ message: 'Item not found.' });
+  }
+
+  return res.json(
+    await queryAll(
+      `SELECT colors.id, colors.color
+       FROM item_colors
+       JOIN colors ON colors.id = item_colors.color_id
+       WHERE item_colors.item_id = $1
+       ORDER BY colors.id`,
+      [itemId],
+    ),
+  );
+});
 
 // Returns the authenticated user's items from the requested list.
 export const getUserItemsFromDB = asyncHandler(async (req, res) => {

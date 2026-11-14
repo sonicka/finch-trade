@@ -23,6 +23,7 @@ test('migrations are numbered and include the current schema fixes', async () =>
     '006_use_timezone_aware_timestamps.sql',
     '007_remove_unused_trade_valid_until.sql',
     '008_index_trade_history_pagination.sql',
+    '009_item_colors.sql',
   ]);
 });
 
@@ -133,4 +134,29 @@ test('seed data creates a realistic local demo pair with matching trade potentia
     seed,
     /classic diner roller skates|classic diner sundae|classic diner visor|classic diner uniform/i,
   );
+});
+
+test('item color associations backfill existing catalog items and constrain any-color matches', async () => {
+  const migration = await readBackendFile('migrations/009_item_colors.sql');
+  const itemController = await readBackendFile(
+    'src/controllers/itemController.js',
+  );
+  const tradeHelpers = await readBackendFile('src/helpers/tradeHelpers.js');
+
+  assert.match(migration, /CREATE TABLE IF NOT EXISTS item_colors/);
+  assert.match(migration, /CROSS JOIN colors/);
+  assert.match(itemController, /FROM item_colors/);
+  assert.match(itemController, /This color is not available for this item/);
+  assert.match(tradeHelpers, /colorsByItem\.get\(item\.item_id\)/);
+});
+
+test('item colors have a dedicated catalog endpoint', async () => {
+  const routes = await readBackendFile('src/routes/itemRoutes.js');
+  const controller = await readBackendFile('src/controllers/itemController.js');
+
+  assert.match(
+    routes,
+    /router\.get\('\/item\/:itemId\/colors', getItemColorsFromDB\)/,
+  );
+  assert.match(controller, /export const getItemColorsFromDB/);
 });

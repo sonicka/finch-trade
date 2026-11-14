@@ -1,5 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { fetchItemColors } from '../../api/api';
 import List from './List';
 import { ListTypeEnum } from '../../shared/types';
 
@@ -33,6 +35,10 @@ vi.mock('../../shared/hooks/items', () => ({
   useManageItem: mocks.useManageItem,
 }));
 
+vi.mock('../../api/api', () => ({
+  fetchItemColors: vi.fn(),
+}));
+
 vi.mock('../../shared/components/Alert', () => ({
   default: ({
     action,
@@ -61,13 +67,26 @@ const leaf = {
   isInTrade: false,
 };
 
-const renderList = () => render(<List type={ListTypeEnum.Wishlist} />);
+const renderList = () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const getView = () => (
+    <QueryClientProvider client={client}>
+      <List type={ListTypeEnum.Wishlist} />
+    </QueryClientProvider>
+  );
+  const result = render(getView());
 
-const selectLeaf = () => {
+  return { ...result, rerenderList: () => result.rerender(getView()) };
+};
+
+const selectLeaf = async () => {
   fireEvent.change(screen.getByLabelText('Item name'), {
     target: { value: 'Leaf' },
   });
   fireEvent.click(screen.getByRole('option', { name: 'Leaf' }));
+  await screen.findByRole('combobox', { name: 'Color' });
   fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
 };
 
@@ -91,12 +110,13 @@ describe('List item removal integration', () => {
     });
     mocks.removeItem.mockResolvedValue(undefined);
     mocks.addNewItem.mockResolvedValue(true);
+    vi.mocked(fetchItemColors).mockResolvedValue(colors);
   });
 
-  it('removes an item with its name and makes its color available again', () => {
-    const { rerender } = renderList();
+  it('removes an item with its name and makes its color available again', async () => {
+    const { rerenderList } = renderList();
 
-    selectLeaf();
+    await selectLeaf();
     expect(
       screen.queryByRole('option', { name: 'white' }),
     ).not.toBeInTheDocument();
@@ -107,7 +127,7 @@ describe('List item removal integration', () => {
     expect(mocks.removeItem).toHaveBeenCalledWith(1, 'Leaf', 4, 'wishlist');
 
     mocks.useUserItems.mockReturnValue({ data: [] });
-    rerender(<List type={ListTypeEnum.Wishlist} />);
+    rerenderList();
 
     fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
     expect(screen.getByRole('option', { name: 'white' })).toBeInTheDocument();
