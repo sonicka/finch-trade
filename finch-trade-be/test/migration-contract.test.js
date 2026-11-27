@@ -25,6 +25,7 @@ test('migrations are numbered and include the current schema fixes', async () =>
     '008_index_trade_history_pagination.sql',
     '009_item_colors.sql',
     '010_import_item_catalog.sql',
+    '011_remove_item_name_asterisks.sql',
   ]);
 });
 
@@ -36,6 +37,9 @@ test('item catalog migrations load per-item colors from versioned JSON data', as
   const itemCatalogJson = await readBackendFile(
     'migrations/010_import_item_catalog.json',
   );
+  const cleanItemNames = await readBackendFile(
+    'migrations/011_remove_item_name_asterisks.sql',
+  );
   const migrationRunner = await readBackendFile('src/migrate.js');
 
   assert.match(itemColors, /CREATE TABLE IF NOT EXISTS item_colors/);
@@ -45,6 +49,8 @@ test('item catalog migrations load per-item colors from versioned JSON data', as
   assert.match(itemCatalog, /INSERT INTO item_colors \(item_id, color_id\)/);
   assert.match(itemCatalog, /ON CONFLICT \(item_id, color_id\) DO NOTHING/);
   assert.match(itemCatalog, /colors\.color = 'any'/);
+  assert.match(cleanItemNames, /REGEXP_REPLACE/);
+  assert.match(cleanItemNames, /cleaned item name already exists/);
   assert.match(itemCatalog, /__ITEM_CATALOG_JSON__/);
   assert.match(migrationRunner, /JSON\.parse\(catalogJson\)/);
   assert.match(migrationRunner, /replaceAll\("'\", \"''\"\)/);
@@ -53,6 +59,7 @@ test('item catalog migrations load per-item colors from versioned JSON data', as
   assert.equal(catalog.length, 638);
   assert.equal(new Set(catalog.map((item) => item.name)).size, catalog.length);
   assert.ok(catalog.every((item) => item.name && item.colors.length > 0));
+  assert.ok(catalog.every((item) => !/\*+\s*$/.test(item.name)));
 });
 
 test('database adapter passes PostgreSQL queries through without rewriting', async () => {
