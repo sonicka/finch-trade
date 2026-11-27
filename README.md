@@ -84,9 +84,3 @@ This project is licensed under the **MIT License** – see the [LICENSE](https:/
 - [ ] Thorough testing of the logic and potential optimization
 - [ ] Make it work publicly
 - [ ] Tests need recheck
-
-### TODO Frontend / UI / UX
-
-### TODO Backend
-
-- [ ] Configure item-specific color sets in the catalog
