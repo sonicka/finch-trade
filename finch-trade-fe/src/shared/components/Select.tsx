@@ -96,14 +96,14 @@ const Select = <T extends { id: number }>({
             <SelectPrimitive.Content
               position="popper"
               sideOffset={4}
-              className="z-20 min-w-[var(--radix-select-trigger-width)] max-h-40 overflow-y-auto text-darkBeige bg-lightBeige rounded-lg shadow-sm"
+              className="z-20 w-[var(--radix-select-trigger-width)] max-w-[var(--radix-select-trigger-width)] max-h-40 overflow-y-auto text-darkBeige bg-lightBeige rounded-lg shadow-sm"
             >
               <SelectPrimitive.Viewport>
                 {options.map((item: T) => (
                   <SelectPrimitive.Item
                     key={item.id}
                     value={item.id.toString()}
-                    className="p-2 cursor-pointer hover:bg-gray-200 data-[highlighted]:bg-beige data-[highlighted]:text-darkBeige outline-none"
+                    className="p-2 whitespace-normal break-words cursor-pointer hover:bg-gray-200 data-[highlighted]:bg-beige data-[highlighted]:text-darkBeige outline-none"
                   >
                     <SelectPrimitive.ItemText>
                       {typeof labelFormatter === 'function'

@@ -53,7 +53,7 @@ test('item catalog migrations load per-item colors from versioned JSON data', as
   assert.match(cleanItemNames, /cleaned item name already exists/);
   assert.match(itemCatalog, /__ITEM_CATALOG_JSON__/);
   assert.match(migrationRunner, /JSON\.parse\(catalogJson\)/);
-  assert.match(migrationRunner, /replaceAll\("'\", \"''\"\)/);
+  assert.match(migrationRunner, /replaceAll\("'", "''"\)/);
 
   const catalog = JSON.parse(itemCatalogJson);
   assert.equal(catalog.length, 638);
@@ -81,7 +81,7 @@ test('server security and error middleware are configured before routes', async 
   assert.match(routes, /router\.post\('\/login', loginRateLimit, login\)/);
 });
 
-test('API aliases preserve camelCase and item creation is conflict-safe', async () => {
+test('API aliases preserve camelCase and item creation requires a catalog item', async () => {
   const userController = await readBackendFile(
     'src/controllers/userController.js',
   );
@@ -91,8 +91,8 @@ test('API aliases preserve camelCase and item creation is conflict-safe', async 
 
   assert.match(userController, /AS "birbName"/);
   assert.match(userController, /AS "friendCode"/);
-  assert.match(itemController, /ON CONFLICT \(name\)/);
-  assert.match(itemController, /RETURNING id/);
+  assert.match(itemController, /SELECT id FROM items WHERE name = \$1/);
+  assert.doesNotMatch(itemController, /INSERT INTO items/);
 });
 
 test('database migrations protect active trades and item names', async () => {

@@ -178,6 +178,10 @@ describe('ItemAdd', () => {
     fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
 
     expect(screen.getByRole('option', { name: 'white' })).toBeInTheDocument();
+    expect(screen.getByRole('listbox')).toHaveClass(
+      'w-[var(--radix-select-trigger-width)]',
+      'max-w-[var(--radix-select-trigger-width)]',
+    );
   });
 
   it('only offers colors configured for the selected catalog item', async () => {
@@ -220,18 +224,64 @@ describe('ItemAdd', () => {
     expect(confirm).toBeEnabled();
   });
 
-  it('accepts a custom item name up to the shared length limit', () => {
-    renderItemAdd();
-    const itemName = 'a'.repeat(MAX_ITEM_NAME_LENGTH);
+  it('shows a small hint under the item field on blur without a catalog selection', () => {
+    const handleSubmit = vi.fn().mockResolvedValue(true);
+    renderItemAdd(handleSubmit);
 
     fireEvent.change(screen.getByLabelText('Item name'), {
-      target: { value: itemName },
+      target: { value: 'Unlisted item' },
     });
+    expect(
+      screen.queryByText('Select an item from the catalog.'),
+    ).not.toBeInTheDocument();
+
+    fireEvent.blur(screen.getByLabelText('Item name'));
+    const hint = screen.getByRole('status');
+    expect(hint).toHaveTextContent('Select an item from the catalog.');
+    expect(hint.className).toMatch(/(?:^|\s)absolute(?:\s|$)/);
+    expect(hint).not.toHaveClass('mt-1');
+    expect(hint.querySelector('span:last-child')).toHaveClass('break-words');
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+
+    const itemFieldWrapper =
+      screen.getByLabelText('Item name').parentElement?.parentElement;
+    const colorField = screen.getByRole('combobox', { name: 'Color' });
+    const colorFieldWrapper = colorField.parentElement?.parentElement;
+    expect(itemFieldWrapper).toHaveClass('flex-1', 'basis-0');
+    expect(colorFieldWrapper).toHaveClass('flex-1', 'basis-0');
+
     fireEvent.click(screen.getByRole('combobox', { name: 'Color' }));
     fireEvent.click(screen.getByRole('option', { name: 'white' }));
 
-    expect(screen.getByLabelText('Item name')).toHaveValue(itemName);
-    expect(screen.getByRole('button', { name: 'Confirm' })).toBeEnabled();
+    expect(screen.getByLabelText('Item name')).toHaveValue('Unlisted item');
+    expect(screen.getByRole('button', { name: 'Confirm' })).toBeDisabled();
+    fireEvent.submit(screen.getByLabelText('Item name').closest('form')!);
+    expect(handleSubmit).not.toHaveBeenCalled();
+  });
+
+  it('lets the container grow when the hint wraps onto multiple lines', () => {
+    const originalGetBoundingClientRect =
+      HTMLElement.prototype.getBoundingClientRect;
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      function (this: HTMLElement) {
+        if (this.textContent === 'Select an item from the catalog.') {
+          return { ...new DOMRect(), height: 32 } as DOMRect;
+        }
+        return originalGetBoundingClientRect.call(this);
+      },
+    );
+    const handleSubmit = vi.fn().mockResolvedValue(true);
+    renderItemAdd(handleSubmit);
+
+    fireEvent.change(screen.getByLabelText('Item name'), {
+      target: { value: 'Unlisted item' },
+    });
+    fireEvent.blur(screen.getByLabelText('Item name'));
+
+    expect(screen.getByRole('status')).toHaveClass('mt-1');
+    expect(screen.getByRole('status').className).not.toMatch(
+      /(?:^|\s)absolute(?:\s|$)/,
+    );
   });
 
   it('rejects custom item names beyond the shared length limit', () => {

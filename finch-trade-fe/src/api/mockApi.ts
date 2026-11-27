@@ -487,17 +487,11 @@ export const mockApiFetch = async (
     if (!normalizedName || normalizedName.length > MAX_ITEM_NAME_LENGTH) {
       throw new Error('Invalid item name.');
     }
-    let item = state.items.find(
-      (candidate) =>
-        candidate.name.toLowerCase() === normalizedName.toLowerCase(),
+    const item = state.items.find(
+      (candidate) => candidate.name === normalizedName,
     );
     if (!item) {
-      item = {
-        id: Math.max(...state.items.map(({ id }) => id), 0) + 1,
-        name: normalizedName,
-      };
-      state.items.push(item);
-      state.itemColors[item.id] = state.colors;
+      throw new Error('Choose an item from the existing catalog.');
     }
     if (!state.itemColors[item.id]?.some((color) => color.id === body.color)) {
       throw new Error('This color is not available for this item.');
