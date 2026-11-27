@@ -153,6 +153,31 @@ describe('mock trade flow', () => {
     ).rejects.toThrow('Tradelist items must have a specific color.');
   });
 
+  it('rejects adding an item that is not in the catalog', async () => {
+    const loginResponse = (await mockApiFetch('/api/users/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'demo1@finchtrade.local',
+        password: 'demo123',
+      }),
+    })) as { token: string };
+    localStorage.setItem('authToken', loginResponse.token);
+
+    const catalogBefore = await mockApiFetch('/api/items');
+    await expect(
+      mockApiFetch('/api/items/add', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: 'Unlisted Item',
+          color: 2,
+          listType: 'wishlist',
+        }),
+      }),
+    ).rejects.toThrow('Choose an item from the existing catalog.');
+
+    expect(await mockApiFetch('/api/items')).toEqual(catalogBefore);
+  });
+
   it('returns user lists alphabetically after adding an item', async () => {
     const loginResponse = (await mockApiFetch('/api/users/login', {
       method: 'POST',

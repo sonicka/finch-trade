@@ -21,6 +21,24 @@ const migrationFiles = (await readdir(migrationsDirectory))
   .filter((file) => extname(file) === '.sql')
   .sort();
 
+const loadMigrationSql = async (version, file) => {
+  const sql = await readFile(join(migrationsDirectory, file), 'utf8');
+  const dataToken = '__ITEM_CATALOG_JSON__';
+  const tokenCount = sql.split(dataToken).length - 1;
+
+  if (tokenCount === 0) return sql;
+  if (tokenCount !== 1) {
+    throw new Error(`${file} must contain exactly one ${dataToken} token`);
+  }
+
+  const catalogPath = join(migrationsDirectory, `${version}.json`);
+  const catalogJson = await readFile(catalogPath, 'utf8');
+  const catalog = JSON.parse(catalogJson);
+  const escapedCatalog = JSON.stringify(catalog).replaceAll("'", "''");
+
+  return sql.replace(dataToken, `'${escapedCatalog}'::jsonb`);
+};
+
 await client.connect();
 
 try {
@@ -53,7 +71,7 @@ try {
 
       if (appliedVersions.has(version)) continue;
 
-      const sql = await readFile(join(migrationsDirectory, file), 'utf8');
+      const sql = await loadMigrationSql(version, file);
       await client.query('BEGIN');
       try {
         await client.query(sql);

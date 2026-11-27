@@ -42,24 +42,16 @@ export const postItemToDB = asyncHandler(async (req, res) => {
       .json({ message: 'Tradelist items must have a specific color.' });
   }
 
-  const result = await runQuery(
-    `INSERT INTO items (name) VALUES ($1)
-     ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
-     RETURNING id`,
-    [normalizedName],
-  );
-  const itemId = result.lastID;
-
-  await runQuery(
-    `INSERT INTO item_colors (item_id, color_id)
-     SELECT $1, colors.id
-     FROM colors
-     WHERE NOT EXISTS (
-       SELECT 1 FROM item_colors WHERE item_id = $1
-     )
-     ON CONFLICT (item_id, color_id) DO NOTHING`,
-    [itemId],
-  );
+  // Only catalog entries may be added to a user's list; user input must not create catalog records.
+  const item = await queryOne('SELECT id FROM items WHERE name = $1', [
+    normalizedName,
+  ]);
+  if (!item) {
+    return res
+      .status(400)
+      .json({ message: 'Choose an item from the existing catalog.' });
+  }
+  const itemId = item.id;
 
   const itemColor = await queryOne(
     'SELECT 1 FROM item_colors WHERE item_id = $1 AND color_id = $2',

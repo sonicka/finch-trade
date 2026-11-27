@@ -597,7 +597,11 @@ test('item creation rejects an invalid list type before database access', async 
 });
 
 test('item creation rejects colors outside an item color mapping', async () => {
-  behavior.queryOne = async () => null;
+  let queryCount = 0;
+  behavior.queryOne = async () => {
+    queryCount += 1;
+    return queryCount === 1 ? { id: 42 } : null;
+  };
   const unavailableColorResponse = createResponse();
 
   await postItemToDB(
@@ -610,15 +614,37 @@ test('item creation rejects colors outside an item color mapping', async () => {
 
   assert.equal(unavailableColorResponse.statusCode, 400);
   assert.match(unavailableColorResponse.body.message, /not available/);
-  assert.match(calls.runQuery[1][0], /INSERT INTO item_colors/);
-  assert.equal(calls.queryOne.length, 1);
+  assert.equal(calls.runQuery.length, 0);
+  assert.equal(calls.queryOne.length, 2);
 });
 
-test('item creation initializes all current colors for an unmapped new item', async () => {
+test('item creation rejects names that are not in the catalog', async () => {
+  const response = createResponse();
+
+  await postItemToDB(
+    {
+      userId: '1',
+      body: { name: 'Unlisted Item', color: 4, listType: 'wishlist' },
+    },
+    response,
+  );
+
+  assert.equal(response.statusCode, 400);
+  assert.match(response.body.message, /existing catalog/);
+  assert.deepEqual(calls.queryOne[0], [
+    'SELECT id FROM items WHERE name = $1',
+    ['Unlisted Item'],
+  ]);
+  assert.equal(calls.runQuery.length, 0);
+});
+
+test('item creation adds an existing catalog item without creating it', async () => {
   let queryCount = 0;
   behavior.queryOne = async () => {
     queryCount += 1;
-    return queryCount === 1 ? { allowed: 1 } : null;
+    if (queryCount === 1) return { id: 42 };
+    if (queryCount === 2) return { allowed: 1 };
+    return null;
   };
   const response = createResponse();
 
@@ -631,8 +657,10 @@ test('item creation initializes all current colors for an unmapped new item', as
   );
 
   assert.equal(response.statusCode, 201);
-  assert.match(calls.runQuery[1][0], /INSERT INTO item_colors/);
-  assert.deepEqual(calls.runQuery[1][1], [42]);
+  assert.equal(calls.runQuery.length, 1);
+  assert.match(calls.runQuery[0][0], /INSERT INTO user_items/);
+  assert.deepEqual(calls.runQuery[0][1], ['1', 42, 4, 'wishlist']);
+  assert.equal(calls.queryOne.length, 3);
 });
 
 test('catalog items are returned without their per-item color lists', async () => {

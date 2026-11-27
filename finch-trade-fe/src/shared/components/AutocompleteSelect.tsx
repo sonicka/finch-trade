@@ -9,6 +9,7 @@ interface Props<T extends { id: string | number; name: string }> {
   inputRef?: Ref<HTMLInputElement>;
   autoFocus?: boolean;
   onInputChange?: (e: React.ChangeEvent<HTMLInputElement, Element>) => void;
+  onBlur?: () => void;
   onChange: (item: T) => void;
 }
 
@@ -20,6 +21,7 @@ const AutocompleteSelect = <T extends { id: string | number; name: string }>({
   inputRef,
   autoFocus = false,
   onInputChange,
+  onBlur,
   onChange,
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -98,6 +100,7 @@ const AutocompleteSelect = <T extends { id: string | number; name: string }>({
             value={value}
             onClick={() => setIsOpen(true)}
             onChange={handleInputChange}
+            onBlur={onBlur}
             onKeyDown={handleInputKeyDown}
             role="combobox"
             aria-autocomplete="list"

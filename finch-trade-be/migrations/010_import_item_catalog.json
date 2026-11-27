@@ -1,0 +1,9124 @@
+[
+  {
+    "name": "Island Hat",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Orange",
+      "Pink",
+      "Purple",
+      "Red",
+      "White"
+    ]
+  },
+  {
+    "name": "Island Flower",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Pink",
+      "Purple",
+      "Red",
+      "White",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Spooky Hat",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Warm Hat",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Fancy Top Hat",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Santa Hat",
+    "colors": [
+      "Red"
+    ]
+  },
+  {
+    "name": "Reindeer Antlers",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Warm Jammy Hat",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Fuzzy Snow Hat",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Snow Muffs",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lovely Headband",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Bear Cap",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Royal Crown",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Elegant Crown",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White"
+    ]
+  },
+  {
+    "name": "Frog Hood",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White"
+    ]
+  },
+  {
+    "name": "Chicken Hood",
+    "colors": [
+      "White",
+      "Brown",
+      "Black",
+      "Gray",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Dino Hood",
+    "colors": [
+      "Red",
+      "Pink",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Dog Hood",
+    "colors": [
+      "Brown",
+      "Blue",
+      "Pink",
+      "Black",
+      "Purple",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Cat Hood",
+    "colors": [
+      "Yellow",
+      "Pink",
+      "Orange",
+      "Black",
+      "White",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Bunny Hood",
+    "colors": [
+      "White",
+      "Brown",
+      "Gray",
+      "Black",
+      "Pink",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Classic Floral Crown",
+    "colors": [
+      "Red",
+      "Peach",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White"
+    ]
+  },
+  {
+    "name": "Gardening Hat",
+    "colors": [
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Plain"
+    ]
+  },
+  {
+    "name": "Gardening Sprout",
+    "colors": [
+      "Light Green",
+      "Dark Green"
+    ]
+  },
+  {
+    "name": "Hippie Headband",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Rainbow Headband",
+    "colors": [
+      "Classic",
+      "Genderqueer",
+      "Pansexual",
+      "Polysexual",
+      "Nonbinary",
+      "Asexual",
+      "Transgender",
+      "Genderfluid",
+      "Lesbian",
+      "Gay Men",
+      "Aromantic",
+      "Bisexual",
+      "Agender",
+      "Omnisexual",
+      "Intersex",
+      "Disability"
+    ]
+  },
+  {
+    "name": "Apple Hat",
+    "colors": [
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink"
+    ]
+  },
+  {
+    "name": "Avocado Hat",
+    "colors": [
+      "Green",
+      "Pink",
+      "Yellow",
+      "Blue",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Banana Hat",
+    "colors": [
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink"
+    ]
+  },
+  {
+    "name": "Citrus Hat",
+    "colors": [
+      "Orange",
+      "Lemon",
+      "Lime",
+      "Grapefruit",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Melon Hat",
+    "colors": [
+      "Cantaloupe",
+      "Honeydew",
+      "Raspberry",
+      "Blueberry",
+      "Chamoe",
+      "Watermelon"
+    ]
+  },
+  {
+    "name": "Peach Hat",
+    "colors": [
+      "Pink",
+      "Peach",
+      "Green",
+      "Blue",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Pineapple Hat",
+    "colors": [
+      "Yellow",
+      "Pink",
+      "Turquoise",
+      "Blue",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Strawberry Hat",
+    "colors": [
+      "Red",
+      "White",
+      "Pink",
+      "Green",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Coconut Hat",
+    "colors": [
+      "Brown",
+      "Green",
+      "White",
+      "Orange",
+      "Blue",
+      "Red"
+    ]
+  },
+  {
+    "name": "Pear Hat",
+    "colors": [
+      "Green",
+      "Yellow",
+      "Red",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Sporty Headband",
+    "colors": [
+      "Red and Black",
+      "Blue and Green",
+      "Pink and Lime",
+      "Yellow and Orange",
+      "Teal and Gray",
+      "Purple and Blue",
+      "Green and Brown",
+      "White and Blue",
+      "Black and Gray"
+    ]
+  },
+  {
+    "name": "Sporty Earphones",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Turquoise",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Sporty Waves Cap",
+    "colors": [
+      "Red and Black",
+      "Blue and Green",
+      "Pink and Lime",
+      "Yellow and Orange",
+      "Teal and Gray",
+      "Purple and Blue",
+      "Green and Brown",
+      "White and Blue",
+      "Black and Gray",
+      "Rainbow"
+    ]
+  },
+  {
+    "name": "Everyday Cap",
+    "colors": [
+      "Black",
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hearing Aids",
+    "colors": [
+      "Tan",
+      "Black",
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink"
+    ]
+  },
+  {
+    "name": "Preppy Hair Bow",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Navy",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fuzzy Monster Hood",
+    "colors": [
+      "Red",
+      "Yellow",
+      "Teal",
+      "Blue",
+      "Pink",
+      "Purple",
+      "Green",
+      "Orange",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Mummy Hood",
+    "colors": [
+      "White",
+      "Gray",
+      "Red",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Purple",
+      "Pink",
+      "Orange",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Bear Hood",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Fox Hood",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Raccoon Hood",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Bear Beanie",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Pineapple Beanie",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Penguin Jammy Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Wizard Hat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Magical Hat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Headband",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Beret",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Bucket Hat",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Baker Hat",
+    "colors": [
+      "White",
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Dance Party Headphones",
+    "colors": [
+      "Purple",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Dance Party Musical Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Spring Bloom Headband",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Spring Shower Umbrella Hat",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Spring Honeybee Headband",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Galaxy Pilot Helmet",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Galaxy Nomad Hood",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Ocean Fun Shell Visor",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ocean Fun Crown",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ocean Fun Shark Hood",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Medieval Dragon Hood",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Medieval Princess Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Medieval Knight Helmet",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Baseball Helmet",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Athletic Visor",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Steampunk Hat",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Steampunk Feather Clip",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Steampunk Aviator Helmet",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Pumpkin Hat",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Scarecrow Hat",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Candy Witch Hat",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Monkey Hood",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White"
+    ]
+  },
+  {
+    "name": "Tiger Hood",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Elephant Hood",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Queen Tiara",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter King Crown",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Snow Creature Hood",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Head Bandana",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Striped Headband",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Captain Hat",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Groovy Heart Glasses",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Groovy Headband",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Groovy Cap",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Woodsy Mushroom Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Woodsy Leaf Hat",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Woodsy Flower Hat",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Timeless Dapper Hat",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Timeless Feathered Hat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Timeless Cap",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Piggy Hood",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cow Hood",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sheep Hood",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Farm Straw Hat",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Sun Hat",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Outdoorsy Scout Cap",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Mystic Wing Hood",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Super Birb Goggles",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pteranodon Hood",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Triceratops Hood",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Paleontologist Hat",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Spooky Bride Veil",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lab Monster Hat",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mad Scientist Hat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "White",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Classic Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dazzling Top Hat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Befeathered Clip",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cosmic Crown",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Penguin Hood",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Keep Warm Headband",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Snow Hike Hood",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Forest King Crown",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Flower Princess Crown",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Playground Hat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetie Headband",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Bellhop Cap",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lounge Singer Flower",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Koala Hood",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cockatoo Hood",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Kangaroo Hood",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White"
+    ]
+  },
+  {
+    "name": "Carrot Hat",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Corn Hat",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Broccoli Hat",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lettuce Hat",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Veggie Garden Bandana",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hero of Myths Headband",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Divine Headdress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Divine Laurel Crown",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Divine Diadem",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lifeguard Visor",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ducky Cap",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fashion Designer Cap",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Artsy Beret",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Crafter Bandana",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Maiden Lacy Headband",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Elegant Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Dapper Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cute Fall Hat",
+    "colors": [
+      "Tan",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pastry Chef Hat",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Nutcracker Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sugar Plum Crown",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mouse King Crown",
+    "colors": [
+      "Purple",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Enchanted Scribe Cap",
+    "colors": [
+      "Purple",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Enchanted Librarian Clip",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dapper Rabbit Ears",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Queen of Hearts Crown",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Whimsical Hatter Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Barrette",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "Black",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Hat",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "Black",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Oz Scarecrow Hat",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Tin Woodpecker Hat",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Good Witch Hat",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Cowardly Lion Hood",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Wicked Witch Hat",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Stylish Boho Shades",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Soft Boho Head Wrap",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Classic Diner Visor",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Preppy Vintage Headband",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Punky Gamer Hat",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Techno Kitty Headphones",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Cozy Gamer Hood",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Celestial Witch Hat",
+    "colors": [
+      "Cool",
+      "Cute",
+      "Earthy",
+      "Kitschy",
+      "Passionate",
+      "Subdued"
+    ]
+  },
+  {
+    "name": "Floral Witch Hat",
+    "colors": [
+      "Cool",
+      "Cute",
+      "Earthy",
+      "Kitschy",
+      "Passionate",
+      "Subdued"
+    ]
+  },
+  {
+    "name": "Witch Assistant Hat",
+    "colors": [
+      "Cool",
+      "Cute",
+      "Earthy",
+      "Kitschy",
+      "Passionate",
+      "Subdued"
+    ]
+  },
+  {
+    "name": "Fall Forest Hat",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Forest Dweller Bonnet",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Alps Hat",
+    "colors": [
+      "Green",
+      "Brown",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Yellow",
+      "Red",
+      "Gray",
+      "Black",
+      "Orange",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Macaw Hood",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Balinese Udeng",
+    "colors": [
+      "White",
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Buenos Aires Hat",
+    "colors": [
+      "Yellow",
+      "Green",
+      "Pink",
+      "Purple. Blue",
+      "Brown",
+      "Gray",
+      "Orange"
+    ]
+  },
+  {
+    "name": "Cairo Nemes Headdress",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Chicago Baseball Cap",
+    "colors": [
+      "Black",
+      "Red",
+      "Dark Blue",
+      "Light Blue",
+      "White",
+      "Yellow",
+      "Pink",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Dubrovnik Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Edinburgh Balmoral Bonnet",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Squirrel Hood",
+    "colors": [
+      "Brown",
+      "Tan",
+      "White",
+      "Black",
+      "Pink",
+      "Blue",
+      "Green",
+      "Purple",
+      "Red"
+    ]
+  },
+  {
+    "name": "Mushroom Cap",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Light Blue",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Acorn Cap",
+    "colors": [
+      "Brown",
+      "Yellow",
+      "Orange",
+      "Green",
+      "Pink",
+      "Purple",
+      "Blue",
+      "Beige",
+      "Black"
+    ]
+  },
+  {
+    "name": "Galápagos Cap",
+    "colors": [
+      "Light Blue",
+      "Red",
+      "Orange",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "Green",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "London Guard Hat",
+    "colors": [
+      "Black",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "White"
+    ]
+  },
+  {
+    "name": "New York Liberty Crown",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Parisian Beret",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Icelandic Tail-Cap",
+    "colors": [
+      "Red",
+      "White",
+      "Gray",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Light Blue",
+      "Dark Blue",
+      "Pink",
+      "Brown",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Rome Gladiator Helmet",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "White",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Rome Colosseum Hat",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Carnival Headdress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Light Blue",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Silver"
+    ]
+  },
+  {
+    "name": "Explorer Hat",
+    "colors": [
+      "Tan",
+      "Brown",
+      "Khaki",
+      "Green",
+      "Blue",
+      "Red",
+      "Purple",
+      "Pink",
+      "Yellow",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Prickly Pear Hat",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Turquoise",
+      "Blue",
+      "Purple",
+      "Burgundy",
+      "Green"
+    ]
+  },
+  {
+    "name": "Sydney Opera House Hat",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Gray",
+      "Pink"
+    ]
+  },
+  {
+    "name": "Taipei 101 Hat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Coast Salish Hat",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Island Shades",
+    "colors": [
+      "Black"
+    ]
+  },
+  {
+    "name": "Spooky Mask",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "New Years Glasses",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fancy Monocle",
+    "colors": [
+      "Gold",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lovely Glasses",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Nerdy Specs",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Turquoise",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hippie Shades",
+    "colors": [
+      "Rose",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Light",
+      "Dark"
+    ]
+  },
+  {
+    "name": "Cat Eye Glasses",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Oval Glasses",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Skelly Mask",
+    "colors": [
+      "White",
+      "Gray",
+      "Blue",
+      "Yellow",
+      "Red",
+      "Pink",
+      "Purple",
+      "Tan",
+      "Green",
+      "Orange"
+    ]
+  },
+  {
+    "name": "Winter Penguin Eye Mask",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Dance Party Shades",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Cyan",
+      "Purple",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Galaxy Robot Glasses",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Ocean Fun Snorkel Mask",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Rainbow Shades",
+    "colors": [
+      "Classic",
+      "Genderqueer",
+      "Pansexual",
+      "Polysexual",
+      "Nonbinary",
+      "Asexual",
+      "Transgender",
+      "Genderfluid",
+      "Lesbian",
+      "Gay Men",
+      "Aromantic",
+      "Bisexual",
+      "Agender",
+      "Omnisexual",
+      "Intersex"
+    ]
+  },
+  {
+    "name": "Pirate Eye Patch",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Pineapple Shades",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mystic Wing Mask",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Wonder Finch Face Shield",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mad Scientist Goggles",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Classic Glasses",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dazzling Mask",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Befeathered Mask",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cosmic Mask",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Snow Hike Goggles",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Sun Fun Shades",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Stylish Glasses",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Enchanted Librarian Glasses",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Kara Casual Shades",
+    "colors": [
+      "Gold",
+      "Black",
+      "Silver",
+      "White"
+    ]
+  },
+  {
+    "name": "Lobo Mask",
+    "colors": [
+      "Black and Red only"
+    ]
+  },
+  {
+    "name": "Preppy Vintage Eyeglasses",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Raissa Glasses",
+    "colors": [
+      "Classic",
+      "Sunny Day",
+      "Sunset",
+      "Twilight"
+    ]
+  },
+  {
+    "name": "Macaw Shades",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Barong Mask",
+    "colors": [
+      "Red",
+      "Gold",
+      "Blue",
+      "Green",
+      "Pink",
+      "Purple",
+      "Teal",
+      "Silver",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cairo Anubis Mask",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Kitsune Mask",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fancy Bow Tie",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Warm Scarf",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Striped Scarf",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Elegant Jeweled Locket",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White"
+    ]
+  },
+  {
+    "name": "Pet Collar",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hippie Scarf",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sporty Towel",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Light Blue",
+      "White"
+    ]
+  },
+  {
+    "name": "Sporty Whistle",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Turquoise",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black"
+    ]
+  },
+  {
+    "name": "Preppy Neck Ribbon",
+    "colors": [
+      "Tan",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Preppy Necktie",
+    "colors": [
+      "Tan",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Classic Necktie",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Winter Bear Scarf",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Pineapple Scarf",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Wizard Necklace",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Magical Collar",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Necklace",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Neck Scarf",
+    "colors": [
+      "Red",
+      "Pink",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Dance Party Glow Necklace",
+    "colors": [
+      "Cyan",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Dance Party DJ Necklace",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Spring Bloom Collar",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Ocean Fun Necklace",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Scarecrow Scarf",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Groovy Bow Tie",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Groovy Heart Necklace",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Timeless Ribbon",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Timeless Bow Tie",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Outdoorsy Scout Scarf",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Keep Warm Cowl",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Garden Fairy Necklace",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hotel Staff Bowtie",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lounge Singer Necklace",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Measuring Tape",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Skeleton Key",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Elegant Necklace",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Dapper Ribbon",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Enchanted Adventurer Necklace",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dapper Rabbit Neck Ruff",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Whimsical Hatter Bow Tie",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Digital Camera",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Tin Woodpecker Bowtie",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Suave Boho Necklace",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Stylish Boho Scarf",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Lobo Necklace",
+    "colors": [
+      "Gray",
+      "Black",
+      "Gold",
+      "Silver"
+    ]
+  },
+  {
+    "name": "Preppy Vintage Neck Ribbon",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Raww Necklace",
+    "colors": [
+      "Classic",
+      "Sunny Day",
+      "Sunset",
+      "Twilight"
+    ]
+  },
+  {
+    "name": "Forest Maiden Necklace",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Delhi Scarf",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Moroccan Beaded Necklace",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Orange",
+      "Pink",
+      "Purple",
+      "Red",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Maui Lei",
+    "colors": [
+      "Pink",
+      "Blue",
+      "Purple",
+      "Yellow",
+      "White",
+      "Orange",
+      "Red",
+      "Teal",
+      "Colorful",
+      "Pastel"
+    ]
+  },
+  {
+    "name": "Bhutanese Necklace",
+    "colors": [
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Icelandic Whale Scarf",
+    "colors": [
+      "Light Blue",
+      "White",
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Dark Blue",
+      "Pink",
+      "Brown",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Carnival Necklace",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Light Blue",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Silver"
+    ]
+  },
+  {
+    "name": "Feathered Wings",
+    "colors": [
+      "Gold",
+      "Silver",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Royal Mantle",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Starry Wizard Cape",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Spring Honeybee Wings",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Galaxy Pilot Jetpack",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Galaxy Nomad Cloak",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Medieval Dragon Wings",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter King Cape",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mystic Wing Cape",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Super Birb Cape",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Forest King Cape",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Flower Princess Cape",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Garden Fairy Wings",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hero of Myths Cape",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sugar Plum Wings",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Queen of Hearts Mantle",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Raissa Wings",
+    "colors": [
+      "Pink only"
+    ]
+  },
+  {
+    "name": "Enchanted Librarian Top",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Enchanted Adventurer Coat",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Whimsical Hatter Top",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Vest",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "Black",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Ribboned Top",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "Black",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Soft Boho Top",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Stylish Boho Vest",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Suave Boho Shirt",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Lobo Top",
+    "colors": [
+      "Black",
+      "Green",
+      "Brown",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Quirky Vintage Polo",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Punky Gamer Tee",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Techno Gamer Jacket",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Cozy Gamer Sweatshirt",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Raww Vest",
+    "colors": [
+      "Classic",
+      "Sunny Day",
+      "Sunset",
+      "Twilight"
+    ]
+  },
+  {
+    "name": "Fall Forest Top",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Keep Warm Sweater",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Snow Hike Jacket",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Forest King Top",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Playground Shirt",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cool Kid Tie-Dye Shirt",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetie Top",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Bellhop Uniform",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hotel Staff Uniform",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Veggie Garden Top",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lifeguard Top",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ducky Pocket Tee",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fashion Designer Top",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White Brown"
+    ]
+  },
+  {
+    "name": "Cozy Crafter Top",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Stylish Autumnal Top",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Nutcracker Top",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Shirt and Vest",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Blouse",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Groovy Sweater Vest",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Groovy Jacket",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Woodsy Leaf Shirt",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Woodsy Flower Sweater",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Timeless Suit Jacket",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Timeless Buttoned Shirt",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Farm Plaid Shirt",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Pineapple Tee",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Palm Shirt",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Bandeau",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Outdoorsy Windbreaker Jacket",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Outdoorsy Plaid Hiking Shirt",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Outdoorsy Scout Vest",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Paleontologist Shirt",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lab Monster Shirt",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mad Scientist Coat",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Classic Vest",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Cozy Classic Cardigan",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dazzling Top",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Jammy Top",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Be Mine Tee",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Dance Party DJ Jacket",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White"
+    ]
+  },
+  {
+    "name": "Dance Party Musical Vest",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Dance Party Tee",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Spring Shower Raincoat",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Spring Honeybee Top",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Pride Heart Tee",
+    "colors": [
+      "Rainbow",
+      "Genderqueer",
+      "Pansexual",
+      "Polysexual",
+      "Nonbinary",
+      "Asexual",
+      "Transgender",
+      "Genderfluid",
+      "Lesbian",
+      "Gay Men",
+      "Aromantic",
+      "Bisexual",
+      "Agender",
+      "Omnisexual",
+      "Intersex"
+    ]
+  },
+  {
+    "name": "Ocean Fun Shell Top",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Everyday Bikini Top",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Medieval Knight Armor",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Athletic Tee",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Baseball Top",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Athletic Polo Shirt",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Steampunk Shirt and Vest",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Steampunk Ruffled Collar Top",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Steampunk Aviator Jacket",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Jungle Jammy Top",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Snow Jacket",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lovely Striped Top",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sprinkles Top",
+    "colors": [
+      "Banana",
+      "Tangerine",
+      "Mint",
+      "Blueberry",
+      "Watermelon",
+      "Licorice",
+      "Strawberry",
+      "Ube",
+      "Vanilla",
+      "Chocolate"
+    ]
+  },
+  {
+    "name": "Royal Coat",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Royal Ruffle Top",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Elegant Blouse",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Navy"
+    ]
+  },
+  {
+    "name": "Classic Floral Top",
+    "colors": [
+      "Peach",
+      "Yellow",
+      "Green",
+      "Aqua",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Patchwork Shirt",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "Light Blue",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Be You Tee",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Heart Tee",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pride Flag Tee",
+    "colors": [
+      "Rainbow",
+      "Genderqueer",
+      "Pansexual",
+      "Polysexual",
+      "Nonbinary",
+      "Asexual",
+      "Transgender",
+      "Genderfluid",
+      "Lesbian",
+      "Gay Men",
+      "Aromantic",
+      "Bisexual",
+      "Agender",
+      "Omnisexual",
+      "Intersex",
+      "Disability",
+      "Autism^"
+    ]
+  },
+  {
+    "name": "Sporty Tank",
+    "colors": [
+      "Red White and Black",
+      "Blue and Green",
+      "Lime and Pink",
+      "Yellow and Orange",
+      "Teal and Gray",
+      "Blue and Purple",
+      "Green and Brown",
+      "White and Blue",
+      "Gray and Black"
+    ]
+  },
+  {
+    "name": "Sporty Sweatshirt",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Preppy Cardigan",
+    "colors": [
+      "Tan",
+      "Red",
+      "Yellow",
+      "Green",
+      "Navy",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Classic Polo",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Cozy Bear Sweater",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Cozy Fox Sweater",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Raccoon Sweater",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Bear Sweater",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Pineapple Sweater",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Penguin Jammy Top",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Island Shirt",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Orange",
+      "Pink",
+      "Purple",
+      "Red",
+      "White"
+    ]
+  },
+  {
+    "name": "Coconut Bra",
+    "colors": [
+      "Brown",
+      "Green"
+    ]
+  },
+  {
+    "name": "Spooky Tux Jacket",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Spooky Lace Top",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Bear Hug Tee",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sleepy Star Tee",
+    "colors": [
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sleepy Ghost Tee",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Biz Vest",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Biz Blazer",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fancy Tux Top",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Holiday Sweater",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Reindeer Sweater",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Warm Jammy Top",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Capybara Tee",
+    "colors": [
+      "White",
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Norway Sweater",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cairo Ankh Tee",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cairo Sphinx Tee",
+    "colors": [
+      "Black",
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Chiang Mai Elephant Tee",
+    "colors": [
+      "Orange",
+      "White",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Chicago Hoodie",
+    "colors": [
+      "Black",
+      "Red",
+      "Dark Blue",
+      "Light Blue",
+      "White",
+      "Yellow",
+      "Pink",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Chicago Tee",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Croatian Tee",
+    "colors": [
+      "Dark Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Light Blue",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Edinburgh Tee",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "London Tee",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Moroccan Hamsa Tee",
+    "colors": [
+      "Black",
+      "Blue",
+      "Brown",
+      "Green",
+      "Orange",
+      "Pink",
+      "Purple",
+      "Red",
+      "White",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Maui Beach Shirt",
+    "colors": [
+      "Red",
+      "Blue",
+      "Purple",
+      "Green",
+      "Pink",
+      "Yellow",
+      "Orange",
+      "Teal",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "New York Tee",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Parisian Tee",
+    "colors": [
+      "White",
+      "Black",
+      "Red",
+      "Blue",
+      "Orange",
+      "Purple",
+      "Pink",
+      "Green",
+      "Yellow",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Icelandic Sweater",
+    "colors": [
+      "Light Blue",
+      "White",
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Dark Blue",
+      "Pink",
+      "Brown",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Icelandic Puffin Tee",
+    "colors": [
+      "White",
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Rome Tee",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Brazil Tee",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Explorer Top",
+    "colors": [
+      "Tan",
+      "Brown",
+      "Khaki",
+      "Green",
+      "Blue",
+      "Red",
+      "Purple",
+      "Pink",
+      "Yellow",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Galápagos Tortoise Tee",
+    "colors": [
+      "Black",
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sonoran Desert Tee",
+    "colors": [
+      "White",
+      "Red",
+      "Yellow",
+      "Green",
+      "Orange",
+      "Blue",
+      "Purple",
+      "Brown",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Sonoran Cactus Shirt",
+    "colors": [
+      "Green",
+      "Blue",
+      "Brown",
+      "Yellow",
+      "Pink",
+      "Purple",
+      "Red",
+      "Black",
+      "Orange",
+      "White",
+      "Teal"
+    ]
+  },
+  {
+    "name": "Sydney Tee",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Taipei Tee",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Toyko Tee",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Vancouver Raincoat",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Vancouver Orca Tee",
+    "colors": [
+      "White",
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Island Pants",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Khaki",
+      "Pink",
+      "Purple",
+      "Red",
+      "White"
+    ]
+  },
+  {
+    "name": "Grass Skirt",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Pink",
+      "Purple",
+      "Red",
+      "White",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Spooky Pants",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Spooky Skirt",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Comfy Pants",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Warm Jammy Pants",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Snow Pants",
+    "colors": [
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Waffle Pants",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Royal Pants",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Elegant Ribboned Skirt",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Navy"
+    ]
+  },
+  {
+    "name": "Classic Floral Skirt",
+    "colors": [
+      "Peach",
+      "Yellow",
+      "Green",
+      "Aqua",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Patchwork Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "Light Blue",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sporty Shorts",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Light Blue",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sporty Leggings",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Preppy Plaid Pants",
+    "colors": [
+      "Tan",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Preppy Plaid Skirt",
+    "colors": [
+      "Tan",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Classic Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Classic Pleated Skirt",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Winter Cozy Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Flannel Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Jammy Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Leggings",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Dance Party Cargo Pants",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Black",
+      "Purple",
+      "Pink",
+      "White"
+    ]
+  },
+  {
+    "name": "Dance Party DJ Pants",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Cyan",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White"
+    ]
+  },
+  {
+    "name": "Spring Honeybee Pants",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Ocean Mermaid Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Everyday Bikini Bottom",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Everyday Swim Trunks",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Medieval Knight Chainmail",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Athletic Shorts",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Baseball Pants",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Athletic Skirt",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "White"
+    ]
+  },
+  {
+    "name": "Steampunk Striped Trousers",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Steampunk Ruffled Skirt",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Steampunk Aviator Pants",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Jungle Jammy Pants",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Skirt",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Groovy Bell Bottoms",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Woodsy Leaf Pants",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Woodsy Flower Pants",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Timeless Trousers",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Timeless Suspender Pants",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Farm Overalls",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Pineapple Swim Trunks",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Palm Shorts",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Sarong",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Outdoorsy Windbreaker Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Outdoorsy Hiking Pants",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Outdoorsy Scout Shorts",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Paleontologist Pants",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black"
+    ]
+  },
+  {
+    "name": "Lab Monster Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Classic Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Cozy Classic Skirt",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dazzling Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Keep Warm Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Snow Hike Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Forest King Pants",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Playground Overalls",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cool Kid Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetie Skirt",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Bellhop Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Veggie Garden Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lifeguard Shorts",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ducky Swim Trunks",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Fashion Designer Pants",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Crafter Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Stylish Autumnal Pants",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Nutcracker Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Enchanted Librarian Skirt",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Enchanted Adventurer Pants",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Whimsical Hatter Pants",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Pants",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Skirt",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Suave Boho Pants",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Stylish Boho Skirt",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Soft Boho Skirt",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Lobo Pants",
+    "colors": [
+      "Black",
+      "Green",
+      "Brown",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Quirky Vintage Pants",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Punky Gamer Pants",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Techno Skirt",
+    "colors": [
+      "Primary",
+      "Monochrome",
+      "Sweet",
+      "Chill",
+      "Groovy",
+      "Modern"
+    ]
+  },
+  {
+    "name": "Raww Shorts",
+    "colors": [
+      "Classic",
+      "Sunny Day",
+      "Sunset",
+      "Twilight"
+    ]
+  },
+  {
+    "name": "Fall Forest Pants",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Chiang Mai Elephant Pants",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Explorer Pants",
+    "colors": [
+      "Tan",
+      "Brown",
+      "Khaki",
+      "Green",
+      "Blue",
+      "Red",
+      "Purple",
+      "Pink",
+      "Yellow",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Cozy Heart Robe",
+    "colors": [
+      "Yellow",
+      "Orange",
+      "Green",
+      "Blue",
+      "Red",
+      "Black",
+      "Pink",
+      "Purple",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Frog Costume",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White"
+    ]
+  },
+  {
+    "name": "Chicken Costume",
+    "colors": [
+      "White",
+      "Brown",
+      "Black",
+      "Gray",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Dino Costume",
+    "colors": [
+      "Red",
+      "Pink",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple"
+    ]
+  },
+  {
+    "name": "Dog Costume",
+    "colors": [
+      "Brown",
+      "Blue",
+      "Pink",
+      "Black",
+      "Purple",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Cat Costume",
+    "colors": [
+      "Yellow",
+      "Pink",
+      "Orange",
+      "Black",
+      "White",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Bunny Costume",
+    "colors": [
+      "White",
+      "Brown",
+      "Gray",
+      "Black",
+      "Pink",
+      "Blue"
+    ]
+  },
+  {
+    "name": "Gardening Overalls",
+    "colors": [
+      "Red",
+      "Brown",
+      "Yellow",
+      "Green",
+      "Light Blue",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "Black"
+    ]
+  },
+  {
+    "name": "Fruit Skirt",
+    "colors": [
+      "Red and Green",
+      "Orange",
+      "Brown",
+      "Yellow",
+      "Red",
+      "Light Green",
+      "Olive and Brown",
+      "Pink",
+      "Blue",
+      "Purple",
+      "Black and White"
+    ]
+  },
+  {
+    "name": "Fruit Trousers",
+    "colors": [
+      "Red and Green",
+      "Orange",
+      "Brown",
+      "Yellow",
+      "Red",
+      "Light Green",
+      "Olive and Brown",
+      "Pink",
+      "Blue",
+      "Purple",
+      "Black and White"
+    ]
+  },
+  {
+    "name": "Fuzzy Monster Costume",
+    "colors": [
+      "Red",
+      "Yellow",
+      "Teal",
+      "Blue",
+      "Pink",
+      "Purple",
+      "Green",
+      "Orange",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Skelly Costume",
+    "colors": [
+      "Black",
+      "Gray",
+      "Blue",
+      "Yellow",
+      "Red",
+      "Pink",
+      "Purple",
+      "Brown",
+      "Green",
+      "Orange"
+    ]
+  },
+  {
+    "name": "Mummy Costume",
+    "colors": [
+      "White",
+      "Gray",
+      "Red",
+      "Blue",
+      "Green",
+      "Yellow",
+      "Purple",
+      "Pink",
+      "Orange",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Bear Costume",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White"
+    ]
+  },
+  {
+    "name": "Fox Costume",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Raccoon Costume",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Wizard Robe",
+    "colors": [
+      "Purple",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Starry Magical Outfit",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Overalls",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweetheart Baker Apron",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Spring Bloom Dress",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Tan",
+      "Black"
+    ]
+  },
+  {
+    "name": "Galaxy Pilot Suit",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Galaxy Nomad Robe",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Galaxy Robot Suit",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Ocean Fun Inner Tube",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ocean Fun Shark Costume",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Medieval Dragon Costume",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Medieval Princess Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pumpkin Costume",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Scarecrow Costume",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Candy Witch Costume",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Monkey Costume",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White"
+    ]
+  },
+  {
+    "name": "Tiger Costume",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Elephant Costume",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter Queen Dress",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Winter King Outfit",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Snow Creature Costume",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pirate Captain Coat",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Groovy Dress",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Woodsy Mushroom Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black",
+      "Beige"
+    ]
+  },
+  {
+    "name": "Timeless Gown",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Piggy Costume",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cow Costume",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sheep Costume",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Tropical Sun Dress",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mystic Wing Robe",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Super Birb Suit",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Wonder Finch Bodysuit",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Pteranodon Costume",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Triceratops Costume",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Spooky Bride Dress",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cozy Classic Apron Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray",
+      "Black"
+    ]
+  },
+  {
+    "name": "Befeathered Gown",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cosmic Gown",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Penguin Costume",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Flower Princess Gown",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Garden Fairy Dress",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Lounge Singer Dress",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Koala Costume",
+    "colors": [
+      "Gray",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cockatoo Costume",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Kangaroo Costume",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "White"
+    ]
+  },
+  {
+    "name": "Veggie Garden Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Hero of Myths Outfit",
+    "colors": [
+      "Orange",
+      "Red",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Divine Armor",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Divine Robe",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Divine Gown",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sun Fun Swimsuit",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Ducky Inner Tube",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "PInk",
+      "Black",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Artsy Smock",
+    "colors": [
+      "Blue",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Maiden Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Elegant Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Gothic Dapper Outfit",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cute Fall Dress",
+    "colors": [
+      "Tan",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Cafe Uniform",
+    "colors": [
+      "Brown",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Pastry Chef Outfit",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Sugar Plum Dress",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Mouse King Outfit",
+    "colors": [
+      "Purple",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Pink",
+      "Gray",
+      "Black",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Enchanted Scribe Outfit",
+    "colors": [
+      "Purple",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Pink",
+      "Gray",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Dapper Rabbit Outfit",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Queen of Hearts Gown",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Teal",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black and White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Sweet Sakura Kimono",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "Black",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Oz Scarecrow Outfit",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Tin Woodpecker Outfit",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Black"
+    ]
+  },
+  {
+    "name": "Good Witch Dress",
+    "colors": [
+      "Pink",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Cowardly Lion Costume",
+    "colors": [
+      "Yellow",
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Wicked Witch Dress",
+    "colors": [
+      "Green",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "White",
+      "Black"
+    ]
+  },
+  {
+    "name": "Supergirl Outfit",
+    "colors": [
+      "Red and Blue Only"
+    ]
+  },
+  {
+    "name": "Kara Casual Outfit",
+    "colors": [
+      "Black",
+      "Purple",
+      "White",
+      "Red"
+    ]
+  },
+  {
+    "name": "Classic Diner Uniform",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Preppy Vintage Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Black",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Raissa Outfit",
+    "colors": [
+      "Classic",
+      "Sunny Day",
+      "Sunset",
+      "Twilight"
+    ]
+  },
+  {
+    "name": "Jo Overalls",
+    "colors": [
+      "Classic",
+      "Sunny Day",
+      "Sunset",
+      "Twilight"
+    ]
+  },
+  {
+    "name": "Celestial Witch Outfit",
+    "colors": [
+      "Cool",
+      "Cute",
+      "Earthy",
+      "Kitschy",
+      "Passionate",
+      "Subdued"
+    ]
+  },
+  {
+    "name": "Floral Witch Dress",
+    "colors": [
+      "Cool",
+      "Cute",
+      "Earthy",
+      "Kitschy",
+      "Passionate",
+      "Subdued"
+    ]
+  },
+  {
+    "name": "Witch Assistant Outfit",
+    "colors": [
+      "Cool",
+      "Cute",
+      "Earthy",
+      "Kitschy",
+      "Passionate",
+      "Subdued"
+    ]
+  },
+  {
+    "name": "Forest Dweller Dress",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Forest Maiden Dress",
+    "colors": [
+      "Cozy Red",
+      "Fall Orange",
+      "Warm Yellow",
+      "Forest Green",
+      "Wintry Blue",
+      "Dusk Purple",
+      "Tender Pink",
+      "Woodsy Brown",
+      "Hushed Gray",
+      "Mystic Black"
+    ]
+  },
+  {
+    "name": "Alps Trousers",
+    "colors": [
+      "Green",
+      "Brown",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Yellow",
+      "Red",
+      "Gray",
+      "Black",
+      "Orange",
+      "Tan"
+    ]
+  },
+  {
+    "name": "Macaw Costume",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Dark Blue",
+      "Purple",
+      "Pink",
+      "White",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Balinese Outfit",
+    "colors": [
+      "Black",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Bergensbunad Outfit",
+    "colors": [
+      "Black",
+      "Blue",
+      "Red",
+      "Brown",
+      "Green",
+      "Purple",
+      "Pink",
+      "Gray"
+    ]
+  },
+  {
+    "name": "Buenos Aires Dress",
+    "colors": [
+      "Red",
+      "Purple",
+      "Teal",
+      "Blue",
+      "Light Blue",
+      "Brown",
+      "Gray",
+      "Orange"
+    ]
+  },
+  {
+    "name": "Delhi Sari",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Delhi Kurta",
+    "colors": [
+      "White",
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Dubrovnik Dress",
+    "colors": [
+      "Red",
+      "Orange",
+      "Green",
+      "Blue",
+      "Purple",
+      "Black",
+      "Pink",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Edinburgh Kilt Outfit",
+    "colors": [
+      "Red",
+      "Orange",
+      "Yellow",
+      "Green",
+      "Blue",
+      "Purple",
+      "Pink",
+      "Gray",
+      "Brown"
+    ]
+  },
+  {
+    "name": "Galápagos Dress",
+    "colors": [
+      "Green and Blue",
+      "Orange and Pink",
+      "Yellow and Green",
+      "Blue and Red",
+      "Purple and Pink",
+      "Gray and Black",
+      "Brown and Orange"
+    ]
+  },
+  {
+    "name": "Squirrel Costume",
+    "colors": [
+      "Brown",
+      "Tan",
+      "White",
+      "Black",
+      "Pink",
+      "Blue",
+      "Green",
+      "Purple",
+      "Red"
+    ]
+  },
+  {
+    "name": "Moroccan Takchita",
+    "colors": [
+      "Black",
+      "Blue",
+      "Green",
+      "Orange",
+      "Pink",
+      "Purple",
+      "Red",
+      "Yellow"
+    ]
+  },
+  {
+    "name": "Bhutanese Gho",
+    "colors": [
+      "Red",
+      "Blue",
+      "Yellow",
+      "Green",
+      "Pink",
+      "Gray",
+      "Purple",
+      "Brown",
+      "Teal"
+    ]
+  },
+  {
+    "name": "Black Unruly Hairstyle",
+    "colors": [
+      "Black"
+    ]
+  },
+  {
+    "name": "Blonde Carefree Hairstyle",
+    "colors": [
+      "Blonde"
+    ]
+  },
+  {
+    "name": "Blonde Poofy Ribboned Ponytail",
+    "colors": [
+      "Blonde"
+    ]
+  },
+  {
+    "name": "Dark Brown Wavy Sideswept Hairstyle",
+    "colors": [
+      "Dark Brown"
+    ]
+  },
+  {
+    "name": "Punky Gamer Sidesweep",
+    "colors": [
+      "Navy Blue"
+    ]
+  },
+  {
+    "name": "Techno Highlights Hairstyle",
+    "colors": [
+      "Black with bangs and a purple streak on each side"
+    ]
+  },
+  {
+    "name": "Cozy Curly Hairstyle",
+    "colors": [
+      "Black tight curls that frame the face"
+    ]
+  },
+  {
+    "name": "Raissa Side Shave",
+    "colors": [
+      "Black with one shaven side, long hair combed away from that side over the top, long fall of hair down below waist, and various wave locks sticking up"
+    ]
+  },
+  {
+    "name": "Jo Upbeat Hairstyle",
+    "colors": [
+      "Black gathered into a spike on top with a purple and a red flower, a gold headband with a green gem, and bangs cut into triangles"
+    ]
+  },
+  {
+    "name": "Raww Spiky Hair",
+    "colors": [
+      "Light brown with lighter brown tips, dark brown fox ears with pink lining, and a yellow headband"
+    ]
+  },
+  {
+    "name": "Charming Goddess Braids",
+    "colors": [
+      "Long dark hair in braids"
+    ]
+  },
+  {
+    "name": "Cute Braided Pigtails",
+    "colors": [
+      "Red pigtails"
+    ]
+  },
+  {
+    "name": "Orange Short Tousled Locks",
+    "colors": [
+      "Orange short hair with curls"
+    ]
+  },
+  {
+    "name": "Silver Elegant Flowing Hair",
+    "colors": [
+      "Silver/Grey"
+    ]
+  }
+]

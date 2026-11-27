@@ -14,6 +14,13 @@ falling back to `DATABASE_URL` for local setups. Run migrations explicitly
 before starting the server; application startup does not create or modify the
 database schema.
 
+Migration `010_import_item_catalog.sql` reads its item data from the adjacent
+`010_import_item_catalog.json` file. Keep the JSON and SQL migration together;
+the migration runner substitutes the JSON for the migration's
+`__ITEM_CATALOG_JSON__` token and applies both within the migration transaction.
+Applied migrations are not rerun, so future catalog changes should use a new
+migration and its corresponding JSON file.
+
 Use `npm run migrate:status` to see which migration files are applied or
 pending. Both commands use the direct database URL when it is configured.
 
