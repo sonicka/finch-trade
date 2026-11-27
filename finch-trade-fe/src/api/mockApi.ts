@@ -1,8 +1,8 @@
 import {
   Color,
   ActiveTradeStatus,
-  Item,
   ListType,
+  Item,
   PastTrades,
   PastTradesPage,
   Trader,
@@ -50,6 +50,7 @@ interface DemoState {
   users: DemoUser[];
   colors: Color[];
   items: Item[];
+  itemColors: Record<number, Color[]>;
   userItems: (UserItem & { listType: ListType })[];
   trades: DemoTrade[];
   pastTrades: PastTrades;
@@ -137,6 +138,7 @@ const createInitialState = (): DemoState => ({
   ],
   colors,
   items,
+  itemColors: Object.fromEntries(items.map((item) => [item.id, colors])),
   userItems: [...seedItems].map(
     ([user_id, item_id, color, listType, isInTrade]) => ({
       user_id,
@@ -158,6 +160,9 @@ const getState = (): DemoState => {
   try {
     const parsed = JSON.parse(saved) as DemoState;
     parsed.gifts ??= [];
+    parsed.itemColors ??= Object.fromEntries(
+      parsed.items.map((item) => [item.id, parsed.colors ?? colors]),
+    );
     if (parsed.trades.length === 0 && parsed.pastTrades.length === 0) {
       parsed.trades = [];
     }
@@ -457,6 +462,15 @@ export const mockApiFetch = async (
   if (path === '/api/items/colors') return state.colors;
   if (path === '/api/items' && method === 'GET') return getSortedItems();
 
+  const itemColorsMatch = path.match(/^\/api\/items\/item\/(\d+)\/colors$/);
+  if (itemColorsMatch && method === 'GET') {
+    const itemId = Number(itemColorsMatch[1]);
+    if (!state.items.some((item) => item.id === itemId)) {
+      throw new Error('Item not found');
+    }
+    return state.itemColors[itemId] ?? [];
+  }
+
   const itemListMatch = path.match(/^\/api\/items\/(wishlist|tradelist)$/);
   if (itemListMatch)
     return getUserItems(getUserId(), itemListMatch[1] as ListType);
@@ -483,6 +497,10 @@ export const mockApiFetch = async (
         name: normalizedName,
       };
       state.items.push(item);
+      state.itemColors[item.id] = state.colors;
+    }
+    if (!state.itemColors[item.id]?.some((color) => color.id === body.color)) {
+      throw new Error('This color is not available for this item.');
     }
     const existingItem = state.userItems.some(
       (candidate) =>
