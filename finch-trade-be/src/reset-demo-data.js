@@ -16,7 +16,7 @@ const resetDemoData = async () => {
     await client.query('BEGIN');
 
     await client.query(
-      `TRUNCATE TABLE user_items, trades_history, trades, users, items, colors RESTART IDENTITY CASCADE;`,
+      `TRUNCATE TABLE user_items, trades_history, trades, users, item_colors, items, colors RESTART IDENTITY CASCADE;`,
     );
 
     await client.query(`
@@ -68,6 +68,14 @@ const resetDemoData = async () => {
         ('Vintage Saddle Shoes'),
         ('Vintage Soda')
       ON CONFLICT (name) DO NOTHING;
+    `);
+
+    await client.query(`
+      INSERT INTO item_colors (item_id, color_id)
+      SELECT items.id, colors.id
+      FROM items
+      CROSS JOIN colors
+      ON CONFLICT (item_id, color_id) DO NOTHING;
     `);
 
     await client.query(

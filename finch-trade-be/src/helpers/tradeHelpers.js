@@ -3,7 +3,7 @@ import { queryOne, queryAll, runQuery } from '../utils.js';
 
 export const findTrades = async (userId) => {
   try {
-    const colors = await getNonAnyColors();
+    const colorsByItem = await getNonAnyItemColors();
     const [existingTrades, wishItems, tradeItems] = await Promise.all([
       getTradeByUser(userId),
       getWishItems(userId),
@@ -14,8 +14,8 @@ export const findTrades = async (userId) => {
       existingTrades ?? [],
       userId,
     );
-    const updatedWishItems = expandAnyColor(wishItems, colors);
-    const updatedTradeItems = expandAnyColor(tradeItems, colors);
+    const updatedWishItems = expandAnyColor(wishItems, colorsByItem);
+    const updatedTradeItems = expandAnyColor(tradeItems, colorsByItem);
     const updatedPotentialGifts = await findPotentialGifts(
       updatedTradeItems,
       inTradeWithUsers,
@@ -48,8 +48,22 @@ export const findTrades = async (userId) => {
 };
 
 // helpers for findTrades
-const getNonAnyColors = () =>
-  queryAll(`SELECT * FROM colors WHERE color != $1`, ['any']);
+const getNonAnyItemColors = async () => {
+  const rows = await queryAll(
+    `SELECT item_colors.item_id, colors.id, colors.color
+     FROM item_colors
+     JOIN colors ON colors.id = item_colors.color_id
+     WHERE colors.color != $1
+     ORDER BY item_colors.item_id, colors.id`,
+    ['any'],
+  );
+  return rows.reduce((colorsByItem, row) => {
+    const itemColors = colorsByItem.get(row.item_id) ?? [];
+    itemColors.push({ id: row.id, color: row.color });
+    colorsByItem.set(row.item_id, itemColors);
+    return colorsByItem;
+  }, new Map());
+};
 
 const getTradeByUser = (userId) => {
   return new Promise((resolve, reject) => {
@@ -124,10 +138,13 @@ const extractUsersFromTrades = (trades, userId) => {
   });
 };
 
-const expandAnyColor = (items, colors) =>
+const expandAnyColor = (items, colorsByItem) =>
   items.flatMap((item) =>
     item.color_id === 1
-      ? colors.map((color) => ({ ...item, color_id: color.id }))
+      ? (colorsByItem.get(item.item_id) ?? []).map((color) => ({
+          ...item,
+          color_id: color.id,
+        }))
       : item,
   );
 

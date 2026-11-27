@@ -1,5 +1,6 @@
-import * as SelectPrimitive from '@radix-ui/react-select';
 import { useState } from 'react';
+import * as SelectPrimitive from '@radix-ui/react-select';
+import Spinner from './Spinner';
 
 interface Props<T extends { id: number }> {
   id: string;
@@ -8,6 +9,8 @@ interface Props<T extends { id: number }> {
   placeholder?: string;
   onChange: (value: T) => void;
   labelFormatter?: (value: T) => string;
+  disabled?: boolean;
+  loading?: boolean;
 }
 
 const Select = <T extends { id: number }>({
@@ -17,6 +20,8 @@ const Select = <T extends { id: number }>({
   placeholder = 'Select an option',
   onChange,
   labelFormatter,
+  disabled = false,
+  loading = false,
 }: Props<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const noValue =
@@ -30,6 +35,7 @@ const Select = <T extends { id: number }>({
     <div className="relative inline-block w-full">
       <SelectPrimitive.Root
         name={id}
+        disabled={disabled || loading}
         value={value ? value.id.toString() : ''}
         onValueChange={(selectedId) => {
           const selectedValue = options.find(
@@ -43,7 +49,7 @@ const Select = <T extends { id: number }>({
           id={id}
           aria-labelledby={`${id}-label`}
           className={`relative w-full border-2 rounded-xl cursor-pointer flex justify-between items-center transition-all p-2 text-darkBeige
-                   bg-transparent text-left outline-none focus:ring-2 focus:ring-darkBeige focus:ring-offset-1
+                   bg-transparent text-left outline-none focus:ring-2 focus:ring-darkBeige focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60
                    ${isOpen ? 'border-darkBeige' : 'border-mediumBeige'}`}
         >
           <span
@@ -62,24 +68,28 @@ const Select = <T extends { id: number }>({
               {selectedLabel}
             </span>
           </SelectPrimitive.Value>
-          <SelectPrimitive.Icon>
-            <svg
-              className={`w-4 h-4 transition-transform ${
-                isOpen ? 'transform rotate-180' : ''
-              }`}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="3"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </SelectPrimitive.Icon>
+          {loading ? (
+            <Spinner size={14} label="Loading colors" />
+          ) : (
+            <SelectPrimitive.Icon>
+              <svg
+                className={`w-4 h-4 transition-transform ${
+                  isOpen ? 'transform rotate-180' : ''
+                }`}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </SelectPrimitive.Icon>
+          )}
         </SelectPrimitive.Trigger>
         {options.length > 0 && (
           <SelectPrimitive.Portal>

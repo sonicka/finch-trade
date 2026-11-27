@@ -3,6 +3,7 @@ import {
   deleteItemFromDB,
   getAllItemsFromDB,
   getColorsFromDB,
+  getItemColorsFromDB,
   getItemByIdFromDB,
   getUserItemsFromDB,
   postItemToDB,
@@ -13,6 +14,7 @@ const router = Router();
 // not user-specific data, no auth needed
 router.get('/colors', getColorsFromDB);
 router.get('/', getAllItemsFromDB);
+router.get('/item/:itemId/colors', getItemColorsFromDB);
 router.get('/item/:itemId', getItemByIdFromDB);
 
 // all these mutate or read a specific user's lists - requires auth

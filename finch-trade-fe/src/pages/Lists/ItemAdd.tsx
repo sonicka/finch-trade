@@ -1,9 +1,12 @@
 import { FC, FormEvent, useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import AutocompleteSelect from '../../shared/components/AutocompleteSelect';
 import Select from '../../shared/components/Select';
 import Card from '../../shared/components/Card';
 import IconButton from '../../shared/components/IconButton';
-import { Item, Color, ListType, UserItems } from '../../shared/types';
+import InlineAlert from '../../shared/components/InlineAlert';
+import { Color, Item, ListType, UserItems } from '../../shared/types';
+import { fetchItemColors } from '../../api/api';
 import { MAX_ITEM_NAME_LENGTH } from '../../../../shared/src/constants/limits.js';
 
 interface Props {
@@ -32,6 +35,15 @@ const ItemAdd: FC<Props> = ({
   const [nameValue, setNameValue] = useState<string>('');
   const [selectedItem, setSelectedItem] = useState<Item>();
   const [selectedColor, setSelectedColor] = useState<Color>();
+  const itemColorsQuery = useQuery({
+    queryKey: ['catalog', 'item-colors', selectedItem?.id],
+    queryFn: () => {
+      if (!selectedItem) throw new Error('No catalog item is selected.');
+      return fetchItemColors(selectedItem.id);
+    },
+    enabled: selectedItem !== undefined,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
     setFilteredOptions(items);
@@ -44,6 +56,8 @@ const ItemAdd: FC<Props> = ({
   const disabled =
     isAdding ||
     isCatalogLoading ||
+    (selectedItem !== undefined && itemColorsQuery.isFetching) ||
+    itemColorsQuery.isError ||
     !selectedColor ||
     !nameValue ||
     !isValidItemName(nameValue);
@@ -59,7 +73,8 @@ const ItemAdd: FC<Props> = ({
       .filter((item) => item.item_id === selectedItem?.id)
       .map((item) => item.color),
   );
-  const filteredColors = colors.filter(
+  const itemColors = selectedItem ? (itemColorsQuery.data ?? []) : colors;
+  const filteredColors = itemColors.filter(
     (color: Color) =>
       (type === 'wishlist' || color.color !== 'any') &&
       !usedColorIds.has(color.id),
@@ -111,49 +126,64 @@ const ItemAdd: FC<Props> = ({
   };
 
   return (
-    <Card>
-      <form
-        onSubmit={handleFormSubmit}
-        className="relative w-full h-auto flex items-stretch space-x-4"
-        autoComplete="off"
-      >
-        <AutocompleteSelect
-          id="itemName"
-          options={availableItems(filteredOptions)}
-          value={nameValue}
-          placeholder="Item name"
-          inputRef={itemNameInputRef}
-          autoFocus
-          onInputChange={handleItemInputChange}
-          onChange={handleItemOptionClick}
-        />
-        <Select
-          id="itemColor"
-          options={filteredColors}
-          value={selectedColor}
-          placeholder="Color"
-          onChange={handleColorChange}
-          labelFormatter={(color: Color) => color?.color}
-        />
-        <IconButton
-          icon={
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m4.5 12.75 6 6 9-13.5"
-            />
-          }
-          loading={isAdding || isCatalogLoading}
-          loadingLabel={isAdding ? 'Adding item' : 'Loading item catalog'}
-          disabled={disabled}
-          buttonProps={{
-            'aria-label': isAdding ? 'Adding item' : 'Confirm',
-            type: 'submit',
-          }}
-          size="h-10 w-10"
-        />
-      </form>
-    </Card>
+    <>
+      <Card>
+        <form
+          onSubmit={handleFormSubmit}
+          className="relative w-full h-auto flex items-stretch space-x-4"
+          autoComplete="off"
+        >
+          <AutocompleteSelect
+            id="itemName"
+            options={availableItems(filteredOptions)}
+            value={nameValue}
+            placeholder="Item name"
+            inputRef={itemNameInputRef}
+            autoFocus
+            onInputChange={handleItemInputChange}
+            onChange={handleItemOptionClick}
+          />
+          <Select
+            id="itemColor"
+            options={filteredColors}
+            value={selectedColor}
+            placeholder="Color"
+            loading={selectedItem !== undefined && itemColorsQuery.isFetching}
+            onChange={handleColorChange}
+            labelFormatter={(color: Color) => color?.color}
+          />
+          <IconButton
+            icon={
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m4.5 12.75 6 6 9-13.5"
+              />
+            }
+            loading={isAdding || isCatalogLoading}
+            loadingLabel={isAdding ? 'Adding item' : 'Loading item catalog'}
+            disabled={disabled}
+            buttonProps={{
+              'aria-label': isAdding ? 'Adding item' : 'Confirm',
+              type: 'submit',
+            }}
+            size="h-10 w-10"
+          />
+        </form>
+      </Card>
+      {itemColorsQuery.isError && (
+        <div className="my-2">
+          <InlineAlert
+            type="error"
+            message="Could not load colors for this item."
+            action={{
+              label: 'Retry',
+              onClick: () => itemColorsQuery.refetch().then(() => undefined),
+            }}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

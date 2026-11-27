@@ -86,8 +86,12 @@ const {
   postFinishTrade,
   postRequestTrade,
 } = await import('../src/controllers/tradeController.js');
-const { deleteItemFromDB, postItemToDB } =
-  await import('../src/controllers/itemController.js');
+const {
+  deleteItemFromDB,
+  getAllItemsFromDB,
+  getItemColorsFromDB,
+  postItemToDB,
+} = await import('../src/controllers/itemController.js');
 process.env.JWT_SECRET = 'backend-test-secret';
 const { editUser, signUp } =
   await import('../src/controllers/userController.js');
@@ -590,6 +594,69 @@ test('item creation rejects an invalid list type before database access', async 
 
   assert.equal(response.statusCode, 400);
   assert.equal(calls.runQuery.length, 0);
+});
+
+test('item creation rejects colors outside an item color mapping', async () => {
+  behavior.queryOne = async () => null;
+  const unavailableColorResponse = createResponse();
+
+  await postItemToDB(
+    {
+      userId: '1',
+      body: { name: 'Leaf', color: 4, listType: 'wishlist' },
+    },
+    unavailableColorResponse,
+  );
+
+  assert.equal(unavailableColorResponse.statusCode, 400);
+  assert.match(unavailableColorResponse.body.message, /not available/);
+  assert.match(calls.runQuery[1][0], /INSERT INTO item_colors/);
+  assert.equal(calls.queryOne.length, 1);
+});
+
+test('item creation initializes all current colors for an unmapped new item', async () => {
+  let queryCount = 0;
+  behavior.queryOne = async () => {
+    queryCount += 1;
+    return queryCount === 1 ? { allowed: 1 } : null;
+  };
+  const response = createResponse();
+
+  await postItemToDB(
+    {
+      userId: '1',
+      body: { name: 'Leaf', color: 4, listType: 'wishlist' },
+    },
+    response,
+  );
+
+  assert.equal(response.statusCode, 201);
+  assert.match(calls.runQuery[1][0], /INSERT INTO item_colors/);
+  assert.deepEqual(calls.runQuery[1][1], [42]);
+});
+
+test('catalog items are returned without their per-item color lists', async () => {
+  const response = createResponse();
+  behavior.queryAll = async () => [{ id: 1, name: 'Leaf' }];
+
+  await getAllItemsFromDB({}, response);
+
+  assert.deepEqual(response.body, [{ id: 1, name: 'Leaf' }]);
+  assert.match(calls.queryAll[0][0], /SELECT id, name FROM items/);
+  assert.doesNotMatch(calls.queryAll[0][0], /item_colors/);
+});
+
+test('item color lookup returns only colors mapped to that item', async () => {
+  const response = createResponse();
+  behavior.queryOne = async () => ({ id: 42 });
+  behavior.queryAll = async () => [{ id: 4, color: 'white' }];
+
+  await getItemColorsFromDB({ params: { itemId: '42' } }, response);
+
+  assert.deepEqual(response.body, [{ id: 4, color: 'white' }]);
+  assert.deepEqual(calls.queryOne[0][1], ['42']);
+  assert.deepEqual(calls.queryAll[0][1], ['42']);
+  assert.match(calls.queryAll[0][0], /FROM item_colors/);
 });
 
 test('item creation enforces the shared maximum item-name length', async () => {
